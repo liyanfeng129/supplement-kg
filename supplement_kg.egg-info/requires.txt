@@ -1,0 +1,12 @@
+pandas
+numpy
+anthropic
+python-dotenv
+spacy
+nltk
+networkx
+
+[dev]
+pytest
+jupyter
+ipykernel

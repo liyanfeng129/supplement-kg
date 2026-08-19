@@ -1,0 +1,28 @@
+[project]
+name = "supplement-kg"
+version = "0.1.0"
+description = "Knowledge graph construction for dietary supplements"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas",
+    "numpy",
+    "anthropic",
+    "python-dotenv",
+    "spacy",
+    "nltk",
+    "networkx",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "jupyter",
+    "ipykernel",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["engine*"]

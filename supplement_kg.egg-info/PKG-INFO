@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: supplement-kg
+Version: 0.1.0
+Summary: Knowledge graph construction for dietary supplements
+Requires-Python: >=3.10
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: anthropic
+Requires-Dist: python-dotenv
+Requires-Dist: spacy
+Requires-Dist: nltk
+Requires-Dist: networkx
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: jupyter; extra == "dev"
+Requires-Dist: ipykernel; extra == "dev"
