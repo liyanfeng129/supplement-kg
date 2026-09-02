@@ -1,0 +1,62 @@
+{
+  "claim_id": "SEED-001",
+  "claim_text": null,
+  "substance": "Serenoa repens",
+  "health_terms": [
+    "benign prostatic hyperplasia",
+    "lower urinary tract symptoms"
+  ],
+  "query": "(\"Serenoa repens\"[tiab] OR \"Serenoa repens\"[mh] OR \"saw palmetto\"[tiab] OR \"saw palmetto\"[mh]) AND (\"benign prostatic hyperplasia\"[tiab] OR \"benign prostatic hyperplasia\"[mh] OR \"lower urinary tract symptoms\"[tiab] OR \"lower urinary tract symptoms\"[mh]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Serenoa repens\"[Title/Abstract] OR \"saw palmetto\"[Title/Abstract]) AND (\"benign prostatic hyperplasia\"[Title/Abstract] OR \"lower urinary tract symptoms\"[Title/Abstract] OR \"lower urinary tract symptoms\"[MeSH Terms]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 199,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T16:14:18.221663+00:00",
+  "pmids": [
+    "37067043",
+    "37327163",
+    "37345871",
+    "37933457",
+    "38411727",
+    "38636573",
+    "38966030",
+    "39017714",
+    "39042923",
+    "39675037",
+    "40263040",
+    "40395126",
+    "40731854",
+    "40963131",
+    "41031781",
+    "41038861",
+    "41098072",
+    "41271371",
+    "41507085",
+    "41754167",
+    "42023747",
+    "42280395",
+    "42287322",
+    "42480876",
+    "42575271"
+  ],
+  "pmid_hash": "ab5a6313a17bf777",
+  "spec": {
+    "substance": "Serenoa repens",
+    "health_terms": [
+      "benign prostatic hyperplasia",
+      "lower urinary tract symptoms"
+    ],
+    "substance_synonyms": [
+      "saw palmetto"
+    ],
+    "claim_id": "SEED-001",
+    "claim_text": null,
+    "interventional_only": false,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}

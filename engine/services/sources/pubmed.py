@@ -333,6 +333,56 @@ def run_query(
     return abstracts, manifest
 
 
+def new_run_dir(base: str | Path, label: str | None = None) -> Path:
+    """Mint a fresh timestamped directory for one run.
+
+    Runs are immutable: each execution gets its own directory rather than
+    overwriting the last. That makes two runs directly comparable -- change a
+    filter, re-run, and diff the manifests to see exactly which PMIDs moved.
+
+    Format: 20260902T171045Z-label
+    """
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    name = f"{stamp}-{label}" if label else stamp
+    run_dir = Path(base) / name
+    run_dir.mkdir(parents=True, exist_ok=False)
+    return run_dir
+
+
+def save_run_manifest(
+    manifests: list[dict],
+    run_dir: str | Path,
+    params: dict | None = None,
+) -> Path:
+    """Write the run-level manifest summarising every query in this run.
+
+    The per-claim manifests record each query; this records the *run* -- the
+    parameters in force, and the totals across claims. Without it you cannot
+    tell, months later, which filter settings produced a given directory.
+    """
+    run_dir = Path(run_dir)
+    all_pmids = sorted({p for m in manifests for p in m["pmids"]})
+    doc = {
+        "run_id": run_dir.name,
+        "executed_at": datetime.now(timezone.utc).isoformat(),
+        "params": params or {},
+        "n_queries": len(manifests),
+        "total_hits": sum(m["total_hits"] for m in manifests),
+        "total_fetched": sum(m["fetched"] for m in manifests),
+        "unique_pmids": len(all_pmids),
+        "corpus_hash": hashlib.sha256(",".join(all_pmids).encode()).hexdigest()[:16],
+        "queries": [
+            {k: m[k] for k in
+             ("claim_id", "substance", "health_terms", "query",
+              "total_hits", "fetched", "pmid_hash")}
+            for m in manifests
+        ],
+    }
+    path = run_dir / "run.json"
+    path.write_text(json.dumps(doc, indent=2))
+    return path
+
+
 def save_run(
     abstracts: list[Abstract],
     manifest: dict,

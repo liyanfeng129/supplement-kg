@@ -1,0 +1,123 @@
+{
+  "run_id": "20260902T161349Z-seed8-strict",
+  "executed_at": "2026-09-02T16:14:06.082519+00:00",
+  "params": {
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null,
+    "limit_per_claim": 25,
+    "max_claims": 8,
+    "label": "seed8-strict"
+  },
+  "n_queries": 8,
+  "total_hits": 5015,
+  "total_fetched": 200,
+  "unique_pmids": 199,
+  "corpus_hash": "97e02863a05f2d40",
+  "queries": [
+    {
+      "claim_id": "SEED-001",
+      "substance": "Serenoa repens",
+      "health_terms": [
+        "benign prostatic hyperplasia",
+        "lower urinary tract symptoms"
+      ],
+      "query": "(\"Serenoa repens\"[tiab] OR \"Serenoa repens\"[mh] OR \"saw palmetto\"[tiab] OR \"saw palmetto\"[mh]) AND (\"benign prostatic hyperplasia\"[tiab] OR \"benign prostatic hyperplasia\"[mh] OR \"lower urinary tract symptoms\"[tiab] OR \"lower urinary tract symptoms\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 73,
+      "fetched": 25,
+      "pmid_hash": "e8fd215dade4937d"
+    },
+    {
+      "claim_id": "SEED-002",
+      "substance": "Melatonin",
+      "health_terms": [
+        "sleep quality",
+        "insomnia",
+        "sleep latency"
+      ],
+      "query": "(Melatonin[tiab] OR Melatonin[mh]) AND (\"sleep quality\"[tiab] OR \"sleep quality\"[mh] OR insomnia[tiab] OR insomnia[mh] OR \"sleep latency\"[tiab] OR \"sleep latency\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 542,
+      "fetched": 25,
+      "pmid_hash": "e936e0f837c7c594"
+    },
+    {
+      "claim_id": "SEED-003",
+      "substance": "Docosahexaenoic acid",
+      "health_terms": [
+        "brain development",
+        "cognitive function"
+      ],
+      "query": "(\"Docosahexaenoic acid\"[tiab] OR \"Docosahexaenoic acid\"[mh] OR DHA[tiab] OR DHA[mh] OR \"omega-3 fatty acids\"[tiab] OR \"omega-3 fatty acids\"[mh]) AND (\"brain development\"[tiab] OR \"brain development\"[mh] OR \"cognitive function\"[tiab] OR \"cognitive function\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 142,
+      "fetched": 25,
+      "pmid_hash": "d868aba32a62b6c3"
+    },
+    {
+      "claim_id": "SEED-004",
+      "substance": "Vitamin D",
+      "health_terms": [
+        "bone mineral density",
+        "osteoporosis",
+        "fracture"
+      ],
+      "query": "(\"Vitamin D\"[tiab] OR \"Vitamin D\"[mh] OR cholecalciferol[tiab] OR cholecalciferol[mh] OR ergocalciferol[tiab] OR ergocalciferol[mh]) AND (\"bone mineral density\"[tiab] OR \"bone mineral density\"[mh] OR osteoporosis[tiab] OR osteoporosis[mh] OR fracture[tiab] OR fracture[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 2036,
+      "fetched": 25,
+      "pmid_hash": "eef5d7e33a3ffc9e"
+    },
+    {
+      "claim_id": "SEED-005",
+      "substance": "Curcuma longa",
+      "health_terms": [
+        "inflammation",
+        "osteoarthritis",
+        "joint pain"
+      ],
+      "query": "(\"Curcuma longa\"[tiab] OR \"Curcuma longa\"[mh] OR curcumin[tiab] OR curcumin[mh] OR turmeric[tiab] OR turmeric[mh]) AND (inflammation[tiab] OR inflammation[mh] OR osteoarthritis[tiab] OR osteoarthritis[mh] OR \"joint pain\"[tiab] OR \"joint pain\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 310,
+      "fetched": 25,
+      "pmid_hash": "b1d0fb0261e26d35"
+    },
+    {
+      "claim_id": "SEED-006",
+      "substance": "Probiotics",
+      "health_terms": [
+        "irritable bowel syndrome",
+        "gut microbiota"
+      ],
+      "query": "(Probiotics[tiab] OR Probiotics[mh] OR Lactobacillus[tiab] OR Lactobacillus[mh] OR Bifidobacterium[tiab] OR Bifidobacterium[mh]) AND (\"irritable bowel syndrome\"[tiab] OR \"irritable bowel syndrome\"[mh] OR \"gut microbiota\"[tiab] OR \"gut microbiota\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 1621,
+      "fetched": 25,
+      "pmid_hash": "11475c89d0433b53"
+    },
+    {
+      "claim_id": "SEED-007",
+      "substance": "Zinc",
+      "health_terms": [
+        "common cold",
+        "immune function"
+      ],
+      "query": "(Zinc[tiab] OR Zinc[mh] OR \"zinc supplementation\"[tiab] OR \"zinc supplementation\"[mh]) AND (\"common cold\"[tiab] OR \"common cold\"[mh] OR \"immune function\"[tiab] OR \"immune function\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 101,
+      "fetched": 25,
+      "pmid_hash": "1ddc9d39a0191ee4"
+    },
+    {
+      "claim_id": "SEED-008",
+      "substance": "Ginkgo biloba",
+      "health_terms": [
+        "cognitive function",
+        "memory",
+        "dementia"
+      ],
+      "query": "(\"Ginkgo biloba\"[tiab] OR \"Ginkgo biloba\"[mh] OR ginkgo[tiab] OR ginkgo[mh]) AND (\"cognitive function\"[tiab] OR \"cognitive function\"[mh] OR memory[tiab] OR memory[mh] OR dementia[tiab] OR dementia[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 190,
+      "fetched": 25,
+      "pmid_hash": "36b764b9ba0de097"
+    }
+  ]
+}

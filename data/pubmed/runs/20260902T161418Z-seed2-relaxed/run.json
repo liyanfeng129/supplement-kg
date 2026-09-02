@@ -1,0 +1,44 @@
+{
+  "run_id": "20260902T161418Z-seed2-relaxed",
+  "executed_at": "2026-09-02T16:14:20.844337+00:00",
+  "params": {
+    "interventional_only": false,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "limit_per_claim": 25,
+    "label": "seed2-relaxed"
+  },
+  "n_queries": 2,
+  "total_hits": 669,
+  "total_fetched": 50,
+  "unique_pmids": 50,
+  "corpus_hash": "cb53f0729feb47f5",
+  "queries": [
+    {
+      "claim_id": "SEED-001",
+      "substance": "Serenoa repens",
+      "health_terms": [
+        "benign prostatic hyperplasia",
+        "lower urinary tract symptoms"
+      ],
+      "query": "(\"Serenoa repens\"[tiab] OR \"Serenoa repens\"[mh] OR \"saw palmetto\"[tiab] OR \"saw palmetto\"[mh]) AND (\"benign prostatic hyperplasia\"[tiab] OR \"benign prostatic hyperplasia\"[mh] OR \"lower urinary tract symptoms\"[tiab] OR \"lower urinary tract symptoms\"[mh]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 199,
+      "fetched": 25,
+      "pmid_hash": "ab5a6313a17bf777"
+    },
+    {
+      "claim_id": "SEED-007",
+      "substance": "Zinc",
+      "health_terms": [
+        "common cold",
+        "immune function"
+      ],
+      "query": "(Zinc[tiab] OR Zinc[mh] OR \"zinc supplementation\"[tiab] OR \"zinc supplementation\"[mh]) AND (\"common cold\"[tiab] OR \"common cold\"[mh] OR \"immune function\"[tiab] OR \"immune function\"[mh]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+      "total_hits": 470,
+      "fetched": 25,
+      "pmid_hash": "d6ad0fb483275b97"
+    }
+  ]
+}

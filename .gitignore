@@ -5,12 +5,15 @@ __pycache__/
 .venv/
 .env
 .vscode/
-runs/
+/runs/
 
-# Manifests are the reproducible record of a fetch run (query, counts, PMIDs).
-# Git never descends into an excluded directory, so every directory on the path
-# is re-included and only the leaf payload dirs are excluded.
+# Each fetch run writes an immutable timestamped directory under data/pubmed/runs/.
+# Manifests (query, counts, PMID lists, hashes) are the reproducible record and
+# are tracked; the raw abstract payloads they describe are not. Git never
+# descends into an excluded directory, so every directory on the path is
+# re-included and only the raw/ leaf is excluded.
 !data/pubmed/
-!data/pubmed/*/
-data/pubmed/*/raw/
-!data/pubmed/*/manifests/
+!data/pubmed/runs/
+!data/pubmed/runs/*/
+data/pubmed/runs/*/raw/
+!data/pubmed/runs/*/manifests/

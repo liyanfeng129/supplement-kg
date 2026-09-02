@@ -1,0 +1,62 @@
+{
+  "claim_id": "SEED-007",
+  "claim_text": null,
+  "substance": "Zinc",
+  "health_terms": [
+    "common cold",
+    "immune function"
+  ],
+  "query": "(Zinc[tiab] OR Zinc[mh] OR \"zinc supplementation\"[tiab] OR \"zinc supplementation\"[mh]) AND (\"common cold\"[tiab] OR \"common cold\"[mh] OR \"immune function\"[tiab] OR \"immune function\"[mh]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Zinc\"[Title/Abstract] OR \"Zinc\"[MeSH Terms] OR \"zinc supplementation\"[Title/Abstract]) AND (\"common cold\"[Title/Abstract] OR \"common cold\"[MeSH Terms] OR \"immune function\"[Title/Abstract]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 470,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T16:14:19.365414+00:00",
+  "pmids": [
+    "41228451",
+    "41286897",
+    "41297619",
+    "41324263",
+    "41383597",
+    "41456808",
+    "41569441",
+    "41572191",
+    "41574791",
+    "41701327",
+    "41731507",
+    "41746279",
+    "41754074",
+    "41805020",
+    "41819749",
+    "41886633",
+    "41978181",
+    "42035317",
+    "42105948",
+    "42142246",
+    "42144425",
+    "42154818",
+    "42377383",
+    "42425421",
+    "42479213"
+  ],
+  "pmid_hash": "d6ad0fb483275b97",
+  "spec": {
+    "substance": "Zinc",
+    "health_terms": [
+      "common cold",
+      "immune function"
+    ],
+    "substance_synonyms": [
+      "zinc supplementation"
+    ],
+    "claim_id": "SEED-007",
+    "claim_text": null,
+    "interventional_only": false,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}
