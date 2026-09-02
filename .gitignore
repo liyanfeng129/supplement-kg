@@ -1,5 +1,8 @@
 data
+datasets/
 __pycache__/
 *.pyc
 .venv/
 .env
+.vscode/
+runs/
