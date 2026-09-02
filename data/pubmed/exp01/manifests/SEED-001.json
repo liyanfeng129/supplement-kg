@@ -1,0 +1,62 @@
+{
+  "claim_id": "SEED-001",
+  "claim_text": "Saw palmetto for benign prostatic hyperplasia",
+  "substance": "Serenoa repens",
+  "health_terms": [
+    "benign prostatic hyperplasia",
+    "lower urinary tract symptoms"
+  ],
+  "query": "(\"Serenoa repens\"[tiab] OR \"Serenoa repens\"[mh] OR \"saw palmetto\"[tiab] OR \"saw palmetto\"[mh]) AND (\"benign prostatic hyperplasia\"[tiab] OR \"benign prostatic hyperplasia\"[mh] OR \"lower urinary tract symptoms\"[tiab] OR \"lower urinary tract symptoms\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Serenoa repens\"[Title/Abstract] OR \"saw palmetto\"[Title/Abstract]) AND (\"benign prostatic hyperplasia\"[Title/Abstract] OR \"lower urinary tract symptoms\"[Title/Abstract] OR \"lower urinary tract symptoms\"[MeSH Terms]) AND (\"randomized controlled trial\"[Publication Type] OR \"controlled clinical trial\"[Publication Type] OR \"clinical trial\"[Publication Type] OR \"Meta-Analysis\"[Publication Type] OR \"systematic review\"[Publication Type]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 73,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T15:10:21.583273+00:00",
+  "pmids": [
+    "23253958",
+    "23383975",
+    "23683667",
+    "24399119",
+    "24450252",
+    "24938176",
+    "24988203",
+    "25154739",
+    "25614155",
+    "26306400",
+    "26891611",
+    "29569389",
+    "29694707",
+    "30027406",
+    "30880074",
+    "31451276",
+    "31952967",
+    "32274957",
+    "34488251",
+    "34933534",
+    "35334848",
+    "39042923",
+    "39675037",
+    "41098072",
+    "42280395"
+  ],
+  "pmid_hash": "e8fd215dade4937d",
+  "spec": {
+    "substance": "Serenoa repens",
+    "health_terms": [
+      "benign prostatic hyperplasia",
+      "lower urinary tract symptoms"
+    ],
+    "substance_synonyms": [
+      "saw palmetto"
+    ],
+    "claim_id": "SEED-001",
+    "claim_text": "Saw palmetto for benign prostatic hyperplasia",
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}

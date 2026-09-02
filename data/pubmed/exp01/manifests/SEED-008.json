@@ -1,0 +1,64 @@
+{
+  "claim_id": "SEED-008",
+  "claim_text": "Ginkgo biloba for cognitive function",
+  "substance": "Ginkgo biloba",
+  "health_terms": [
+    "cognitive function",
+    "memory",
+    "dementia"
+  ],
+  "query": "(\"Ginkgo biloba\"[tiab] OR \"Ginkgo biloba\"[mh] OR ginkgo[tiab] OR ginkgo[mh]) AND (\"cognitive function\"[tiab] OR \"cognitive function\"[mh] OR memory[tiab] OR memory[mh] OR dementia[tiab] OR dementia[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Ginkgo biloba\"[Title/Abstract] OR \"Ginkgo biloba\"[MeSH Terms] OR \"ginkgo\"[Title/Abstract] OR \"Ginkgo biloba\"[MeSH Terms]) AND (\"cognitive function\"[Title/Abstract] OR \"memory\"[Title/Abstract] OR \"memory\"[MeSH Terms] OR \"dementia\"[Title/Abstract] OR \"dementia\"[MeSH Terms]) AND (\"randomized controlled trial\"[Publication Type] OR \"controlled clinical trial\"[Publication Type] OR \"clinical trial\"[Publication Type] OR \"Meta-Analysis\"[Publication Type] OR \"systematic review\"[Publication Type]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 190,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T15:10:28.743857+00:00",
+  "pmids": [
+    "35159288",
+    "35333451",
+    "36501109",
+    "36728740",
+    "36762332",
+    "36880363",
+    "37012306",
+    "37573807",
+    "37592293",
+    "38097097",
+    "38472398",
+    "38875437",
+    "38904550",
+    "38972848",
+    "39068924",
+    "39312316",
+    "39317299",
+    "39534953",
+    "39895346",
+    "40083108",
+    "40362791",
+    "41198594",
+    "41226670",
+    "41641880",
+    "41678913"
+  ],
+  "pmid_hash": "36b764b9ba0de097",
+  "spec": {
+    "substance": "Ginkgo biloba",
+    "health_terms": [
+      "cognitive function",
+      "memory",
+      "dementia"
+    ],
+    "substance_synonyms": [
+      "ginkgo"
+    ],
+    "claim_id": "SEED-008",
+    "claim_text": "Ginkgo biloba for cognitive function",
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}

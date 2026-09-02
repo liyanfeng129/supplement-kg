@@ -1,0 +1,65 @@
+{
+  "claim_id": "SEED-004",
+  "claim_text": "Vitamin D helps maintain normal bones",
+  "substance": "Vitamin D",
+  "health_terms": [
+    "bone mineral density",
+    "osteoporosis",
+    "fracture"
+  ],
+  "query": "(\"Vitamin D\"[tiab] OR \"Vitamin D\"[mh] OR cholecalciferol[tiab] OR cholecalciferol[mh] OR ergocalciferol[tiab] OR ergocalciferol[mh]) AND (\"bone mineral density\"[tiab] OR \"bone mineral density\"[mh] OR osteoporosis[tiab] OR osteoporosis[mh] OR fracture[tiab] OR fracture[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Vitamin D\"[Title/Abstract] OR \"Vitamin D\"[MeSH Terms] OR \"cholecalciferol\"[Title/Abstract] OR \"cholecalciferol\"[MeSH Terms] OR \"ergocalciferol\"[Title/Abstract] OR \"ergocalciferols\"[MeSH Terms]) AND (\"bone mineral density\"[Title/Abstract] OR \"osteoporosis\"[Title/Abstract] OR (\"osteoporosis, postmenopausal\"[MeSH Terms] OR \"osteoporosis\"[MeSH Terms]) OR \"fracture\"[Title/Abstract] OR \"fractures, bone\"[MeSH Terms]) AND (\"randomized controlled trial\"[Publication Type] OR \"controlled clinical trial\"[Publication Type] OR \"clinical trial\"[Publication Type] OR \"Meta-Analysis\"[Publication Type] OR \"systematic review\"[Publication Type]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 2036,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T15:10:24.137682+00:00",
+  "pmids": [
+    "41498229",
+    "41499390",
+    "41579420",
+    "41603552",
+    "41677903",
+    "41697310",
+    "41703971",
+    "41740615",
+    "41749413",
+    "41754122",
+    "41802552",
+    "41831771",
+    "41949509",
+    "41949681",
+    "41975407",
+    "42097280",
+    "42155162",
+    "42161415",
+    "42226402",
+    "42259062",
+    "42356242",
+    "42460309",
+    "42501079",
+    "42564695",
+    "42615470"
+  ],
+  "pmid_hash": "eef5d7e33a3ffc9e",
+  "spec": {
+    "substance": "Vitamin D",
+    "health_terms": [
+      "bone mineral density",
+      "osteoporosis",
+      "fracture"
+    ],
+    "substance_synonyms": [
+      "cholecalciferol",
+      "ergocalciferol"
+    ],
+    "claim_id": "SEED-004",
+    "claim_text": "Vitamin D helps maintain normal bones",
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}

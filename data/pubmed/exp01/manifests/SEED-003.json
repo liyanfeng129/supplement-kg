@@ -1,0 +1,63 @@
+{
+  "claim_id": "SEED-003",
+  "claim_text": "DHA contributes to normal brain development",
+  "substance": "Docosahexaenoic acid",
+  "health_terms": [
+    "brain development",
+    "cognitive function"
+  ],
+  "query": "(\"Docosahexaenoic acid\"[tiab] OR \"Docosahexaenoic acid\"[mh] OR DHA[tiab] OR DHA[mh] OR \"omega-3 fatty acids\"[tiab] OR \"omega-3 fatty acids\"[mh]) AND (\"brain development\"[tiab] OR \"brain development\"[mh] OR \"cognitive function\"[tiab] OR \"cognitive function\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Docosahexaenoic acid\"[Title/Abstract] OR \"DHA\"[Title/Abstract] OR \"omega-3 fatty acids\"[Title/Abstract]) AND (\"brain development\"[Title/Abstract] OR \"cognitive function\"[Title/Abstract]) AND (\"randomized controlled trial\"[Publication Type] OR \"controlled clinical trial\"[Publication Type] OR \"clinical trial\"[Publication Type] OR \"Meta-Analysis\"[Publication Type] OR \"systematic review\"[Publication Type]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 142,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T15:10:23.245998+00:00",
+  "pmids": [
+    "36878083",
+    "36986229",
+    "37150266",
+    "37513559",
+    "37689008",
+    "37874103",
+    "37892412",
+    "38061271",
+    "38244783",
+    "38300291",
+    "38468309",
+    "38623777",
+    "38680033",
+    "38952108",
+    "39317299",
+    "39861437",
+    "40044083",
+    "40139917",
+    "40292560",
+    "40499235",
+    "40639301",
+    "40877830",
+    "41061594",
+    "41764841",
+    "42019293"
+  ],
+  "pmid_hash": "d868aba32a62b6c3",
+  "spec": {
+    "substance": "Docosahexaenoic acid",
+    "health_terms": [
+      "brain development",
+      "cognitive function"
+    ],
+    "substance_synonyms": [
+      "DHA",
+      "omega-3 fatty acids"
+    ],
+    "claim_id": "SEED-003",
+    "claim_text": "DHA contributes to normal brain development",
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}

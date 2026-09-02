@@ -1,0 +1,65 @@
+{
+  "claim_id": "SEED-005",
+  "claim_text": "Curcumin for joint health and inflammation",
+  "substance": "Curcuma longa",
+  "health_terms": [
+    "inflammation",
+    "osteoarthritis",
+    "joint pain"
+  ],
+  "query": "(\"Curcuma longa\"[tiab] OR \"Curcuma longa\"[mh] OR curcumin[tiab] OR curcumin[mh] OR turmeric[tiab] OR turmeric[mh]) AND (inflammation[tiab] OR inflammation[mh] OR osteoarthritis[tiab] OR osteoarthritis[mh] OR \"joint pain\"[tiab] OR \"joint pain\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Curcuma longa\"[Title/Abstract] OR \"curcumin\"[Title/Abstract] OR \"curcumin\"[MeSH Terms] OR \"turmeric\"[Title/Abstract] OR \"curcuma\"[MeSH Terms]) AND (\"inflammation\"[Title/Abstract] OR \"inflammation\"[MeSH Terms] OR \"osteoarthritis\"[Title/Abstract] OR \"osteoarthritis\"[MeSH Terms] OR \"joint pain\"[Title/Abstract]) AND (\"randomized controlled trial\"[Publication Type] OR \"controlled clinical trial\"[Publication Type] OR \"clinical trial\"[Publication Type] OR \"Meta-Analysis\"[Publication Type] OR \"systematic review\"[Publication Type]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 310,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T15:10:25.340032+00:00",
+  "pmids": [
+    "41418633",
+    "41525872",
+    "41534183",
+    "41573560",
+    "41652864",
+    "41670379",
+    "41812185",
+    "41828611",
+    "41978084",
+    "41984245",
+    "42015491",
+    "42021338",
+    "42039854",
+    "42047771",
+    "42059434",
+    "42075011",
+    "42077070",
+    "42123439",
+    "42171191",
+    "42197097",
+    "42247029",
+    "42258027",
+    "42356263",
+    "42356379",
+    "42499105"
+  ],
+  "pmid_hash": "b1d0fb0261e26d35",
+  "spec": {
+    "substance": "Curcuma longa",
+    "health_terms": [
+      "inflammation",
+      "osteoarthritis",
+      "joint pain"
+    ],
+    "substance_synonyms": [
+      "curcumin",
+      "turmeric"
+    ],
+    "claim_id": "SEED-005",
+    "claim_text": "Curcumin for joint health and inflammation",
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}

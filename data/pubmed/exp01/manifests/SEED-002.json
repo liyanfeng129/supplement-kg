@@ -1,0 +1,62 @@
+{
+  "claim_id": "SEED-002",
+  "claim_text": "Melatonin contributes to the reduction of time taken to fall asleep",
+  "substance": "Melatonin",
+  "health_terms": [
+    "sleep quality",
+    "insomnia",
+    "sleep latency"
+  ],
+  "query": "(Melatonin[tiab] OR Melatonin[mh]) AND (\"sleep quality\"[tiab] OR \"sleep quality\"[mh] OR insomnia[tiab] OR insomnia[mh] OR \"sleep latency\"[tiab] OR \"sleep latency\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Melatonin\"[Title/Abstract] OR \"Melatonin\"[MeSH Terms]) AND (\"sleep quality\"[Title/Abstract] OR \"sleep quality\"[MeSH Terms] OR \"insomnia\"[Title/Abstract] OR \"sleep initiation and maintenance disorders\"[MeSH Terms] OR \"sleep latency\"[Title/Abstract] OR \"sleep latency\"[MeSH Terms]) AND (\"randomized controlled trial\"[Publication Type] OR \"controlled clinical trial\"[Publication Type] OR \"clinical trial\"[Publication Type] OR \"Meta-Analysis\"[Publication Type] OR \"systematic review\"[Publication Type]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 542,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T15:10:22.352519+00:00",
+  "pmids": [
+    "41240877",
+    "41297371",
+    "41327037",
+    "41369870",
+    "41381785",
+    "41386535",
+    "41418645",
+    "41515133",
+    "41531275",
+    "41540766",
+    "41578909",
+    "41627537",
+    "41781909",
+    "41787942",
+    "41794313",
+    "41816875",
+    "41841489",
+    "41874004",
+    "41924884",
+    "41991369",
+    "42138936",
+    "42371549",
+    "42378431",
+    "42458137",
+    "42533530"
+  ],
+  "pmid_hash": "e936e0f837c7c594",
+  "spec": {
+    "substance": "Melatonin",
+    "health_terms": [
+      "sleep quality",
+      "insomnia",
+      "sleep latency"
+    ],
+    "substance_synonyms": [],
+    "claim_id": "SEED-002",
+    "claim_text": "Melatonin contributes to the reduction of time taken to fall asleep",
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}

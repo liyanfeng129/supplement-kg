@@ -1,4 +1,4 @@
-data
+data/*
 datasets/
 __pycache__/
 *.pyc
@@ -6,3 +6,11 @@ __pycache__/
 .env
 .vscode/
 runs/
+
+# Manifests are the reproducible record of a fetch run (query, counts, PMIDs).
+# Git never descends into an excluded directory, so every directory on the path
+# is re-included and only the leaf payload dirs are excluded.
+!data/pubmed/
+!data/pubmed/*/
+data/pubmed/*/raw/
+!data/pubmed/*/manifests/

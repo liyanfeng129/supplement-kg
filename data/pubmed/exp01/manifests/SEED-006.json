@@ -1,0 +1,63 @@
+{
+  "claim_id": "SEED-006",
+  "claim_text": "Probiotics support digestive health",
+  "substance": "Probiotics",
+  "health_terms": [
+    "irritable bowel syndrome",
+    "gut microbiota"
+  ],
+  "query": "(Probiotics[tiab] OR Probiotics[mh] OR Lactobacillus[tiab] OR Lactobacillus[mh] OR Bifidobacterium[tiab] OR Bifidobacterium[mh]) AND (\"irritable bowel syndrome\"[tiab] OR \"irritable bowel syndrome\"[mh] OR \"gut microbiota\"[tiab] OR \"gut microbiota\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Probiotics\"[Title/Abstract] OR \"Probiotics\"[MeSH Terms] OR \"Lactobacillus\"[Title/Abstract] OR \"Lactobacillus\"[MeSH Terms] OR \"Bifidobacterium\"[Title/Abstract] OR \"Bifidobacterium\"[MeSH Terms]) AND (\"irritable bowel syndrome\"[Title/Abstract] OR \"irritable bowel syndrome\"[MeSH Terms] OR \"gut microbiota\"[Title/Abstract]) AND (\"randomized controlled trial\"[Publication Type] OR \"controlled clinical trial\"[Publication Type] OR \"clinical trial\"[Publication Type] OR \"Meta-Analysis\"[Publication Type] OR \"systematic review\"[Publication Type]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 1621,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T15:10:26.793367+00:00",
+  "pmids": [
+    "42456558",
+    "42477222",
+    "42485904",
+    "42487409",
+    "42487516",
+    "42506336",
+    "42509727",
+    "42514326",
+    "42514393",
+    "42528393",
+    "42530959",
+    "42533554",
+    "42553205",
+    "42568357",
+    "42577968",
+    "42588089",
+    "42588107",
+    "42588161",
+    "42614164",
+    "42635599",
+    "42640624",
+    "42643445",
+    "42674774",
+    "42675742",
+    "42678923"
+  ],
+  "pmid_hash": "11475c89d0433b53",
+  "spec": {
+    "substance": "Probiotics",
+    "health_terms": [
+      "irritable bowel syndrome",
+      "gut microbiota"
+    ],
+    "substance_synonyms": [
+      "Lactobacillus",
+      "Bifidobacterium"
+    ],
+    "claim_id": "SEED-006",
+    "claim_text": "Probiotics support digestive health",
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "claim_id": "SEED-007",
+  "claim_text": "Zinc contributes to the normal function of the immune system",
+  "substance": "Zinc",
+  "health_terms": [
+    "common cold",
+    "immune function"
+  ],
+  "query": "(Zinc[tiab] OR Zinc[mh] OR \"zinc supplementation\"[tiab] OR \"zinc supplementation\"[mh]) AND (\"common cold\"[tiab] OR \"common cold\"[mh] OR \"immune function\"[tiab] OR \"immune function\"[mh]) AND (Randomized Controlled Trial[pt] OR Controlled Clinical Trial[pt] OR Clinical Trial[pt] OR Meta-Analysis[pt] OR Systematic Review[pt]) AND Humans[mh] AND hasabstract AND English[lang] NOT Editorial[pt] NOT Comment[pt] NOT Letter[pt] NOT News[pt] NOT Retracted Publication[pt]",
+  "query_translation": "((((((\"Zinc\"[Title/Abstract] OR \"Zinc\"[MeSH Terms] OR \"zinc supplementation\"[Title/Abstract]) AND (\"common cold\"[Title/Abstract] OR \"common cold\"[MeSH Terms] OR \"immune function\"[Title/Abstract]) AND (\"randomized controlled trial\"[Publication Type] OR \"controlled clinical trial\"[Publication Type] OR \"clinical trial\"[Publication Type] OR \"Meta-Analysis\"[Publication Type] OR \"systematic review\"[Publication Type]) AND \"humans\"[MeSH Terms] AND \"hasabstract\"[All Fields] AND \"English\"[Language]) NOT \"Editorial\"[Publication Type]) NOT \"Comment\"[Publication Type]) NOT \"Letter\"[Publication Type]) NOT \"News\"[Publication Type]) NOT \"retracted publication\"[Publication Type]",
+  "total_hits": 101,
+  "fetched": 25,
+  "limit": 25,
+  "executed_at": "2026-09-02T15:10:27.777761+00:00",
+  "pmids": [
+    "28874323",
+    "29138201",
+    "29565716",
+    "29877169",
+    "30516076",
+    "31980506",
+    "32119742",
+    "32342851",
+    "32823974",
+    "33472840",
+    "33710626",
+    "34626488",
+    "34836314",
+    "35285906",
+    "38109004",
+    "38542760",
+    "38719213",
+    "39275285",
+    "39770887",
+    "40665462",
+    "40787612",
+    "41076985",
+    "41085920",
+    "41094366",
+    "41731507"
+  ],
+  "pmid_hash": "1ddc9d39a0191ee4",
+  "spec": {
+    "substance": "Zinc",
+    "health_terms": [
+      "common cold",
+      "immune function"
+    ],
+    "substance_synonyms": [
+      "zinc supplementation"
+    ],
+    "claim_id": "SEED-007",
+    "claim_text": "Zinc contributes to the normal function of the immune system",
+    "interventional_only": true,
+    "humans_only": true,
+    "exclude_non_research": true,
+    "require_abstract": true,
+    "english_only": true,
+    "date_from": null,
+    "date_to": null
+  }
+}
