@@ -45,3 +45,6 @@ def require(name: str) -> str:
 
 NCBI_API_KEY = get("NCBI_API_KEY")
 NCBI_EMAIL = get("NCBI_EMAIL")
+
+# Anthropic API key, for LLM extraction of purpose/risk from DSLD label text.
+ANTHROPIC_API_KEY = get("ANTHROPIC_API_KEY")

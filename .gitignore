@@ -17,3 +17,10 @@ __pycache__/
 !data/pubmed/runs/*/
 data/pubmed/runs/*/raw/
 !data/pubmed/runs/*/manifests/
+
+# Same rule for DSLD label runs: manifests tracked, raw label payloads not.
+!data/dsld/
+!data/dsld/runs/
+!data/dsld/runs/*/
+data/dsld/runs/*/raw/
+!data/dsld/runs/*/manifests/
