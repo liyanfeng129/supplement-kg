@@ -333,6 +333,14 @@ between the census and iDISK. So the order is: census once (~3 min) to learn
 every ID, then a concurrent `label/{id}` sweep over whichever subset needs
 statement text.
 
+The sweep itself is `dsld_bulk.sweep_labels()`, which streams: JSONL is one
+record per line, so each label is appended and flushed as it arrives, and an
+interrupted run keeps everything already fetched. On restart it reads back the
+IDs on disk and fetches only the remainder -- including truncating a torn
+final line from a `kill -9`, which would otherwise stay corrupt forever.
+(`save_labels()` takes a materialised list instead, so it writes nothing until
+the whole sweep succeeds -- fine for a short run, wrong for a 30-minute one.)
+
 `harvest()` writes that split directly -- every row is tagged `in_idisk`, and
 the corpus is also emitted as `-idisk.jsonl`, `-new.jsonl` and a bare
 `-new-ids.txt` that feeds straight into `fetch_concurrent()`. Sweeping only

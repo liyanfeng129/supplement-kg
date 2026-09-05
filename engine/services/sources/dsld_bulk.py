@@ -18,6 +18,7 @@ import json
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Iterable
 
 from .dsld import DSLD_API, DSLDClient, Label, parse_dsld_ids, parse_label
 
@@ -125,3 +126,84 @@ def harvest(
     if wanted:
         paths |= {"idisk": sub_path, "new": new_path, "new_ids": ids_path}
     return paths
+
+
+def sweep_labels(
+    ids: Iterable[int | str],
+    out_dir: str | Path,
+    client: DSLDClient | None = None,
+    run_name: str = "labels",
+    workers: int = 8,
+    resume: bool = True,
+) -> dict[str, Path]:
+    """Fetch full labels for `ids`, streaming each one to disk as it lands.
+
+    The statement text that purpose/risk extraction needs only comes from
+    `label/{id}`, so this sweep is unavoidable for those fields -- but at ~58k
+    requests it runs for half an hour, which is long enough that finishing is
+    not guaranteed.
+
+    So nothing is buffered: JSONL is one record per line, so each label is
+    appended and flushed as it arrives and an interrupted run keeps everything
+    fetched so far. `resume` then reads back the IDs already on disk and skips
+    them, which makes a stopped sweep cheap to continue rather than restart.
+    Contrast `save_labels()`, which takes a materialised list and therefore
+    writes nothing until the whole sweep has succeeded.
+
+    IDs that exhaust their retries are recorded in the manifest instead of
+    aborting the run; feed `manifest["failed"]` back in to retry them.
+    """
+    client = client or DSLDClient()
+    started = datetime.now(timezone.utc)
+
+    out_dir = Path(out_dir)
+    raw_dir, man_dir = out_dir / "raw", out_dir / "manifests"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    man_dir.mkdir(parents=True, exist_ok=True)
+    raw_path = raw_dir / f"{run_name}.jsonl"
+
+    ids = [int(i) for i in ids]
+    done: set[int] = set()
+    if resume and raw_path.exists():
+        # A run killed mid-write leaves a torn final line. Appending after it
+        # would leave that corruption in the file forever, so rewind to the
+        # end of the last complete record and carry on from there.
+        keep = 0
+        with raw_path.open("rb") as fh:
+            for line in fh:
+                try:
+                    done.add(int(json.loads(line)["dsld_id"]))
+                except (ValueError, KeyError, json.JSONDecodeError):
+                    break
+                keep += len(line)
+        if keep < raw_path.stat().st_size:
+            with raw_path.open("r+b") as fh:
+                fh.truncate(keep)
+    todo = [i for i in ids if i not in done]
+
+    failed: list = []
+    written = 0
+    with raw_path.open("a") as fh:
+        for label in client.fetch_concurrent(todo, workers=workers, on_failure=failed):
+            fh.write(json.dumps(asdict(label)) + "\n")
+            # Flush per record so a kill -9 costs one label, not the run.
+            fh.flush()
+            written += 1
+
+    manifest = {
+        "source": "dsld",
+        "mode": "labels",
+        "api": DSLD_API,
+        "executed_at": started.isoformat(),
+        "finished_at": datetime.now(timezone.utc).isoformat(),
+        "workers": workers,
+        "requested": len(ids),
+        "skipped_already_done": len(ids) - len(todo),
+        "written_this_run": written,
+        "total_on_disk": len(done) + written,
+        # Absent from DSLD, or out of retries -- retry these.
+        "failed": sorted(str(f) for f in failed),
+    }
+    man_path = man_dir / f"{run_name}.json"
+    man_path.write_text(json.dumps(manifest, indent=2))
+    return {"raw": raw_path, "manifest": man_path}
