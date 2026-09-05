@@ -284,9 +284,33 @@ a time, so the corpus can be paged instead of fetched one ID at a time.
   **0% of 2023-2025**. Its DSLD snapshot stops mid-2022, so ~58k labels from
   the last three years are absent from iDISK entirely. Only 14 of its 156,957
   IDs have no DSLD label at all.
-- **Concurrency is the real lever.** `label/{id}` shows no rate limiting: 16
-  parallel workers sustained ~15 req/s with zero non-200s, versus 1.3 req/s
-  serially. That turns the ~157k sweep from ~9h into **under 3h**.
+- **Concurrency helps, but `label/{id}` IS rate limited** -- despite
+  advertising no limit, and despite small samples suggesting none. Measured
+  by stepping 1 -> 64 workers over disjoint IDs (2026-09-05):
+
+  | workers | req/s | p50 | p95 | result |
+  |---------|-------|-----|-----|--------|
+  | 1  | 4.4  | 225ms | 245ms | all 200 |
+  | 4  | 17.0 | 222ms | 242ms | all 200 |
+  | 8  | 33.9 | 211ms | 232ms | all 200 -- last clean level |
+  | 16 | 62.7 | 211ms | 758ms | all 200, but p95 triples |
+  | 24 | 91.6 | 188ms | 768ms | 70% **429** |
+  | 32+| --   | --    | --    | 100% **429** |
+
+  The req/s above 24 is an illusion -- refusals are fast because no work is
+  done. Two things make this sharper than a simple ceiling:
+
+  - **The limit is a budget over time, not a concurrency cap.** After the
+    sweep above, *every* level including 12 workers returned 429, and a
+    single-threaded request did too. Concurrency alone does not describe it.
+  - **It escalates.** Tripping the budget moved the endpoint from 429 to a
+    bare `403` from the AWS load balancer (`Server: awselb/2.0`, no
+    rate-limit headers on any response). That decayed back to 429 after
+    ~3.5 min, but access was degraded for far longer than the burst.
+
+  **Use 8 workers.** ~34 req/s with flat latency puts the 57,837 new labels
+  under 30 minutes; the wall clock was never the binding constraint, and
+  overrunning the budget risks the project's access rather than one run.
 
 So: use `iter_all()` for a cheap full-corpus census (ingredients, claims,
 brands), and a concurrent `label/{id}` sweep when statement text is needed.
@@ -296,7 +320,9 @@ truncated run looks identical to a complete one.
 A verified full run: 214,780 labels in **2m48s** over 100 slices (87 MB
 JSONL), against ~9h for the per-ID equivalent. Note the census is
 *sequential* -- it is fast because it is ~371 requests, not because it is
-parallel. Only `fetch_concurrent()` uses threads.
+parallel. Only `fetch_concurrent()` uses threads. Being ~371 requests is
+also why the census never troubles the rate limit that a per-ID sweep must
+respect.
 
 ### The census is also the ID discovery step
 

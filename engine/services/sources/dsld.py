@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
@@ -88,6 +89,52 @@ class DSLDNotFound(LookupError):
     """
 
 
+class _RateGate:
+    """Shared, self-adjusting pace for concurrent DSLD requests.
+
+    DSLD's limit is a budget over time, so a fixed worker count cannot respect
+    it: a burst that stays under the concurrency ceiling can still exhaust the
+    budget and get every later request refused. This gate spaces requests
+    across all workers by a shared interval that grows on each 429/403 and
+    decays back toward `floor` on sustained success -- fast while the server
+    is happy, automatically slower once it complains.
+    """
+
+    def __init__(self, floor: float = 0.02, ceiling: float = 2.0):
+        self._floor = floor
+        self._ceiling = ceiling
+        self._interval = floor
+        self._next = 0.0
+        self._ok_streak = 0
+        self._lock = threading.Lock()
+
+    def wait(self) -> None:
+        """Block until this caller's turn, keeping the global pace."""
+        with self._lock:
+            now = time.monotonic()
+            # Serialise the *slot*, not the sleep: holding the lock while
+            # sleeping would collapse the pool to one worker.
+            start = max(now, self._next)
+            self._next = start + self._interval
+        delay = start - time.monotonic()
+        if delay > 0:
+            time.sleep(delay)
+
+    def penalise(self) -> None:
+        """Back off after a refusal."""
+        with self._lock:
+            self._ok_streak = 0
+            self._interval = min(max(self._interval * 2, self._floor * 2), self._ceiling)
+
+    def reward(self) -> None:
+        """Ease back up after a run of clean responses."""
+        with self._lock:
+            self._ok_streak += 1
+            if self._ok_streak >= 50 and self._interval > self._floor:
+                self._interval = max(self._interval * 0.9, self._floor)
+                self._ok_streak = 0
+
+
 class DSLDClient:
     """Thin DSLD Label API client with rate limiting and retries."""
 
@@ -152,36 +199,58 @@ class DSLDClient:
     def fetch_concurrent(
         self,
         dsld_ids: Iterable[int | str],
-        workers: int = 12,
+        workers: int = 8,
         skip_missing: bool = True,
+        on_failure: "list | None" = None,
     ) -> Iterator[Label]:
         """Yield parsed labels for many IDs, fetched in parallel.
 
-        `label/{id}` shows no server-side rate limiting -- 16 workers sustain
-        roughly 15 req/s against 1.3 serially -- which is the difference
-        between a nine-hour sweep and a sub-three-hour one. Each worker gets
-        its own session and skips the shared throttle, so `workers` alone sets
-        the request rate; keep it modest, as ODS publishes no published limit
-        and this is still someone else's server.
+        `label/{id}` *is* rate limited, despite advertising no limit. Measured
+        2026-09-05: 8 workers hold ~34 req/s with flat latency; 16 still
+        returns 200s but p95 latency triples (232ms -> 758ms), which is the
+        server straining; 24 starts returning 429 and 32 is refused outright.
+        Worse, the limit is a budget over time rather than a concurrency
+        ceiling -- a burst that trips it leaves even a single-threaded caller
+        getting 429, escalating to a load-balancer 403 that took minutes to
+        decay. Hence the conservative default; raising it risks blocking the
+        whole project's access, not just one sweep.
 
-        Results arrive out of order. Labels are yielded as they complete so a
+        So `workers` sets the ceiling, but `_RateGate` sets the actual pace:
+        every 429 backs the shared rate off and every success slowly restores
+        it, which keeps a long sweep under the limit instead of hammering it.
+
+        IDs that exhaust their retries are appended to `on_failure` (when
+        given) rather than aborting the run -- across ~58k requests some
+        failures are near-certain, and losing a 30-minute sweep to one blip
+        is worse than a second pass over the stragglers.
+
+        Results arrive out of order, and are yielded as they complete so a
         long sweep can be checkpointed rather than held in memory.
         """
         import threading
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
         local = threading.local()
+        gate = _RateGate()
 
         def one(did: int | str) -> Label | None:
             session = getattr(local, "session", None)
             if session is None:
                 session = local.session = requests.Session()
             for attempt in range(self._max_retries):
+                gate.wait()
                 try:
                     r = session.get(f"{DSLD_API}/label/{did}", timeout=self.timeout)
-                    if r.status_code in (429, 500, 502, 503, 504):
+                    # 403 shows up here too: once the budget is blown the load
+                    # balancer rejects outright, and it is recoverable, so it
+                    # has to back off rather than raise like a real 403.
+                    if r.status_code in (403, 429):
+                        gate.penalise()
+                        raise requests.HTTPError(str(r.status_code), response=r)
+                    if r.status_code in (500, 502, 503, 504):
                         raise requests.HTTPError(str(r.status_code), response=r)
                     r.raise_for_status()
+                    gate.reward()
                     doc = r.json()
                     if not doc or not isinstance(doc, dict):
                         if skip_missing:
@@ -190,12 +259,15 @@ class DSLDClient:
                     return parse_label(doc)
                 except (requests.HTTPError, requests.ConnectionError, requests.Timeout):
                     if attempt == self._max_retries - 1:
-                        raise
+                        if on_failure is None:
+                            raise
+                        on_failure.append(did)
+                        return None
                     time.sleep(2.0 ** attempt)
             return None
 
         with ThreadPoolExecutor(max_workers=workers) as pool:
-            futures = {pool.submit(one, d): d for d in dsld_ids}
+            futures = [pool.submit(one, d) for d in dsld_ids]
             for fut in as_completed(futures):
                 label = fut.result()
                 if label is not None:
