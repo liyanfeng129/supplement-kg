@@ -294,7 +294,24 @@ Checkpoint per slice either way -- the silent-empty behaviour means a
 truncated run looks identical to a complete one.
 
 A verified full run: 214,780 labels in **2m48s** over 100 slices (87 MB
-JSONL), against ~9h for the per-ID equivalent.
+JSONL), against ~9h for the per-ID equivalent. Note the census is
+*sequential* -- it is fast because it is ~371 requests, not because it is
+parallel. Only `fetch_concurrent()` uses threads.
+
+### The census is also the ID discovery step
+
+`search-filter` returns each hit's DSLD ID, which matters because nothing
+else enumerates the labels iDISK has never heard of. iDISK supplies the IDs
+for its own 156,957 rows; the other 57,837 exist only as the difference
+between the census and iDISK. So the order is: census once (~3 min) to learn
+every ID, then a concurrent `label/{id}` sweep over whichever subset needs
+statement text.
+
+`harvest()` writes that split directly -- every row is tagged `in_idisk`, and
+the corpus is also emitted as `-idisk.jsonl`, `-new.jsonl` and a bare
+`-new-ids.txt` that feeds straight into `fetch_concurrent()`. Sweeping only
+the 57,837 new labels takes **~40 min** at the observed ~23 req/s, rather
+than ~3h for all 157k.
 
 Both live in `engine/services/sources/`: `dsld_bulk.harvest()` for the census,
 `DSLDClient.fetch_concurrent()` for the statement sweep. `harvest()` asserts

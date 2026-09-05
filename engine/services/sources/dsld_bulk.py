@@ -39,8 +39,15 @@ def harvest(
     """Harvest all DSLD labels, and mark which ones iDISK points at.
 
     Writes the full corpus as JSONL plus a manifest. When `dsp_csv` is given,
-    the iDISK subset is written alongside it and the manifest records which
-    requested IDs DSLD has no label for.
+    each label is tagged `in_idisk` and the corpus is also split into the
+    iDISK subset and its complement -- the labels DSLD has gained since
+    iDISK's snapshot, which is where a refresh has anything to add. The
+    manifest records which requested IDs DSLD has no label for.
+
+    The split is possible because the census *is* the ID discovery step:
+    `search-filter` returns each hit's DSLD ID, so the new labels are simply
+    the ones iDISK never mentions. Those IDs are what a later
+    `fetch_concurrent()` sweep needs, since nothing else enumerates them.
     """
     client = client or DSLDClient()
     started = datetime.now(timezone.utc)
@@ -59,27 +66,39 @@ def harvest(
 
     all_path = raw_dir / f"{run_name}.jsonl"
     sub_path = raw_dir / f"{run_name}-idisk.jsonl"
+    new_path = raw_dir / f"{run_name}-new.jsonl"
+    ids_path = raw_dir / f"{run_name}-new-ids.txt"
 
     seen: set[int] = set()
     matched: set[str] = set()
-    n_all = n_sub = 0
+    n_all = n_sub = n_new = 0
 
-    with all_path.open("w") as fa, sub_path.open("w") as fs:
+    with all_path.open("w") as fa, sub_path.open("w") as fs, \
+            new_path.open("w") as fn, ids_path.open("w") as fi:
         for doc in client.iter_all(slices):
             if doc["id"] in seen:
                 continue
             seen.add(doc["id"])
             label: Label = parse_label(doc)
-            row = json.dumps(asdict(label))
+            in_idisk = str(label.dsld_id) in wanted
+            # Tag every row, so a consumer loading the full corpus can split
+            # it without re-reading the iDISK CSV.
+            row = json.dumps(asdict(label) | {"in_idisk": in_idisk})
             fa.write(row + "\n")
             n_all += 1
-            if str(label.dsld_id) in wanted:
+            if in_idisk:
                 fs.write(row + "\n")
                 matched.add(str(label.dsld_id))
                 n_sub += 1
+            elif wanted:
+                fn.write(row + "\n")
+                # A bare ID list is what feeds a follow-up statement sweep.
+                fi.write(f"{label.dsld_id}\n")
+                n_new += 1
 
     if not wanted:
-        sub_path.unlink()
+        for path in (sub_path, new_path, ids_path):
+            path.unlink()
 
     manifest = {
         "source": "dsld",
@@ -95,6 +114,8 @@ def harvest(
         "slices": slices,
         "idisk_requested": len(wanted),
         "idisk_matched": n_sub,
+        # Labels DSLD has that iDISK's snapshot predates.
+        "new_since_idisk": n_new,
         "idisk_missing": sorted(wanted - matched),
     }
     man_path = man_dir / f"{run_name}.json"
@@ -102,5 +123,5 @@ def harvest(
 
     paths = {"raw": all_path, "manifest": man_path}
     if wanted:
-        paths["idisk"] = sub_path
+        paths |= {"idisk": sub_path, "new": new_path, "new_ids": ids_path}
     return paths
