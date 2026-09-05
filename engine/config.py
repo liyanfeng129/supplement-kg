@@ -48,3 +48,8 @@ NCBI_EMAIL = get("NCBI_EMAIL")
 
 # Anthropic API key, for LLM extraction of purpose/risk from DSLD label text.
 ANTHROPIC_API_KEY = get("ANTHROPIC_API_KEY")
+
+# DSLD (NIH ODS) API key, issued via api.data.gov. Optional: DSLD answers
+# unauthenticated requests too, but at 1,000/hour/IP -- low enough that a
+# per-label sweep is measured in days. See docs/dsld-purpose-risk-findings.md.
+DSLD_API_KEY = get("DSLD_API_KEY")

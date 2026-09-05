@@ -18,6 +18,8 @@ from typing import Iterable, Iterator
 
 import requests
 
+from ... import config
+
 # The public API host. Note this is *not* dsld.od.nih.gov -- that host sits
 # behind a Cloudflare interstitial and answers programmatic GETs with a 403.
 DSLD_API = "https://api.ods.od.nih.gov/dsld/v9"
@@ -41,12 +43,27 @@ FIRST_ENTRY_YEAR = 2011
 # The API guide documents 1,000 requests/hour/IP -- 0.28 req/s, or one request
 # every 3.6s. No response carries a rate-limit header, so this number cannot be
 # discovered at runtime; it has to be encoded here.
+# Unauthenticated ceiling, per the DSLD API guide.
 HOURLY_REQUEST_BUDGET = 1000
+# With an api.data.gov key. Their default registered tier is also 1,000/hour,
+# so a key is not assumed to raise anything -- set DSLD_HOURLY_BUDGET once the
+# granted quota is known (the signup mail, or the X-RateLimit-Limit header on
+# an authenticated response, states it). Guessing high here is what got the
+# unauthenticated IP throttled.
+HOURLY_REQUEST_BUDGET_WITH_KEY = int(
+    config.get("DSLD_HOURLY_BUDGET") or HOURLY_REQUEST_BUDGET
+)
+
 # 5% headroom. The exact interval would sit right on the limit, and a run
 # holds no margin for the server counting differently (a fixed window, or
 # retries billed against the same budget) -- being throttled costs far more
 # than the ~3 minutes the margin adds per thousand requests.
-SAFE_REQUEST_INTERVAL = 3600 / (HOURLY_REQUEST_BUDGET * 0.95)
+def safe_interval(budget: int) -> float:
+    """Seconds between requests that keeps `budget` per hour with headroom."""
+    return 3600 / (budget * 0.95)
+
+
+SAFE_REQUEST_INTERVAL = safe_interval(HOURLY_REQUEST_BUDGET)
 
 
 @dataclass
@@ -157,14 +174,54 @@ class DSLDClient:
         timeout: int = 30,
         max_retries: int = 4,
         min_interval: float = 0.2,
+        api_key: str | None = None,
     ):
         self.timeout = timeout
-        # ODS publishes no rate limit, so this is self-imposed politeness --
-        # a full DSP sweep is ~90k requests and should not look like a flood.
+        # Politeness floor for the sequential path. The documented quota is
+        # enforced separately by `_RateGate` on the concurrent path.
         self._min_interval = min_interval
         self._last_call = 0.0
         self._max_retries = max_retries
-        self._session = requests.Session()
+        # Falls back to the environment so callers need not thread the key
+        # through; pass `api_key` explicitly to override.
+        self._api_key = api_key or config.DSLD_API_KEY
+        self._session = self._new_session()
+
+    def _new_session(self) -> requests.Session:
+        """A session carrying the API key, if one is configured.
+
+        DSLD sits behind api.data.gov, which accepts the key either as the
+        `X-Api-Key` header or an `api_key` query parameter. The header is used
+        here so the key stays out of URLs, and therefore out of logs, proxy
+        records and anything that captures a request line.
+        """
+        session = requests.Session()
+        if self._api_key:
+            session.headers["X-Api-Key"] = self._api_key
+        return session
+
+    def check_quota(self) -> dict:
+        """Ask the API what quota this client actually has.
+
+        api.data.gov reports `X-RateLimit-Limit` and `X-RateLimit-Remaining`
+        on every response, which is the only authoritative answer -- the
+        unauthenticated endpoint sends no such headers, so their absence is
+        itself the signal that the key was not accepted. Costs one request.
+        """
+        r = self._session.get(f"{DSLD_API}/label/741", timeout=self.timeout)
+        limit = r.headers.get("X-RateLimit-Limit")
+        return {
+            "status": r.status_code,
+            "authenticated": bool(limit),
+            "hourly_limit": int(limit) if limit and limit.isdigit() else None,
+            "remaining": r.headers.get("X-RateLimit-Remaining"),
+            "key_configured": self.has_api_key,
+        }
+
+    @property
+    def has_api_key(self) -> bool:
+        """Whether requests are authenticated -- decides the safe request rate."""
+        return bool(self._api_key)
 
     def _throttle(self) -> None:
         elapsed = time.monotonic() - self._last_call
@@ -248,12 +305,19 @@ class DSLDClient:
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
         local = threading.local()
-        gate = _RateGate()
+        # Pace to whichever quota this client is actually entitled to.
+        budget = (
+            HOURLY_REQUEST_BUDGET_WITH_KEY if self.has_api_key
+            else HOURLY_REQUEST_BUDGET
+        )
+        gate = _RateGate(floor=safe_interval(budget))
 
         def one(did: int | str) -> Label | None:
             session = getattr(local, "session", None)
             if session is None:
-                session = local.session = requests.Session()
+                # Per-thread session (requests.Session is not thread-safe),
+                # built through the same helper so it carries the API key.
+                session = local.session = self._new_session()
             for attempt in range(self._max_retries):
                 gate.wait()
                 try:
