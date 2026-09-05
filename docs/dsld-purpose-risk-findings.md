@@ -305,6 +305,37 @@ a time, so the corpus can be paged instead of fetched one ID at a time.
   own set, ~215h for the whole database. The "under 30 minutes" figure from
   the benchmark was never achievable.
 
+### The official full download supersedes both
+
+ODS does publish a whole-database export after all (dated `2025-09-25` in the
+files' own `src` field). Verified against the live API for label 542: the
+downloaded record has **exactly the same key set** as `label/{id}` -- including
+`statements`, `ingredientRows`, `servingSizes`, `contacts` and
+`otheringredients`, the fields `search-filter` omits -- and, after one repair
+below, identical values.
+
+**The dump is mojibaked.** Text was decoded as cp1252 and re-encoded as UTF-8,
+so `®` reads as `Â®` and `©` as `Â©`. It is fully reversible, and repairing it
+made the file byte-identical to the API response:
+
+```python
+def unmojibake(o):
+    if isinstance(o, str):
+        try:
+            return o.encode("cp1252").decode("utf-8")
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            return o   # already clean; leave it alone
+    ...
+```
+
+Left unrepaired this would corrupt any string field feeding extraction or
+entity matching, so it must be fixed at load time -- ideally with a check that
+the repair actually round-trips rather than assuming every string is affected.
+
+This removes the rate limit from the critical path entirely: no per-ID sweep is
+needed for statement text, so the ~58h estimate below is moot as long as the
+2025-09-25 snapshot is recent enough for the question being asked.
+
 So the census is not merely the faster option, it is the only per-label
 route that fits the budget: `iter_all()` covers all 214,780 labels in ~371
 requests, comfortably inside a single hour's allowance, while the equivalent
