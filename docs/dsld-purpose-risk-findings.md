@@ -254,14 +254,59 @@ Verified live, 2026-09-04. Each of these fails silently rather than erroring:
 - **Product type, physical state, and claims are LanguaL-coded** — read
   `langualCodeDescription`, not `langualCode`.
 
-A full sweep is ~157k requests (~9h at the 0.2s self-imposed throttle). Decide
-on concurrency and checkpointing before dropping the `limit`.
+## 8. Bulk retrieval vs. per-label fetch
+
+Verified live, 2026-09-05. ODS publishes **no bulk export** -- the ODS site has
+promised a whole-database download "as resources permit" for years, and the v9
+API has no such endpoint. But `search-filter` returns label documents 1,000 at
+a time, so the corpus can be paged instead of fetched one ID at a time.
+
+- **`search-filter?q=*` reports `stats.count` = 214,780 labels.** `size` is
+  honoured up to 10,000.
+- **`from` is capped at 10,000** (Elasticsearch's `max_result_window`). Past
+  it the API returns HTTP 200 with `hits: []` -- silent, like every other
+  failure here. Paging alone therefore reaches only the first 10k labels.
+- **Slicing by `date_start`/`date_end` (entry year), then `status`, then
+  `product_type` where needed, partitions the database into 100 slices that
+  each fit the window.** The slice counts sum to exactly 214,780, so the
+  partition is provably lossless. Cost: ~371 requests, a few minutes.
+- **The catch: `search-filter` returns a *summary* document, not a full
+  label.** It carries `allIngredients`, claims, product type, brand and
+  `netContents`, but omits `statements`, `ingredientRows`, `servingSizes`,
+  `otheringredients`, `upcSku` and `targetGroups`. Since **`statements` is
+  where the purpose/risk text lives**, bulk paging cannot replace the
+  per-label sweep for extraction -- it is a fast census, not a substitute.
+- **Filtering to iDISK barely helps, and reveals a snapshot gap.** iDISK's DSP
+  rows reference 156,957 unique DSLD IDs -- 73% of the database -- so
+  "download everything, then intersect" saves little over fetching the iDISK
+  IDs directly. More useful is *which* labels it misses: sampling by entry
+  year, iDISK covers 100% of labels entered through 2021, ~92% of 2022, and
+  **0% of 2023-2025**. Its DSLD snapshot stops mid-2022, so ~58k labels from
+  the last three years are absent from iDISK entirely. Only 14 of its 156,957
+  IDs have no DSLD label at all.
+- **Concurrency is the real lever.** `label/{id}` shows no rate limiting: 16
+  parallel workers sustained ~15 req/s with zero non-200s, versus 1.3 req/s
+  serially. That turns the ~157k sweep from ~9h into **under 3h**.
+
+So: use `iter_all()` for a cheap full-corpus census (ingredients, claims,
+brands), and a concurrent `label/{id}` sweep when statement text is needed.
+Checkpoint per slice either way -- the silent-empty behaviour means a
+truncated run looks identical to a complete one.
+
+A verified full run: 214,780 labels in **2m48s** over 100 slices (87 MB
+JSONL), against ~9h for the per-ID equivalent.
+
+Both live in `engine/services/sources/`: `dsld_bulk.harvest()` for the census,
+`DSLDClient.fetch_concurrent()` for the statement sweep. `harvest()` asserts
+its own completeness by checking the fetched count against both the summed
+slice counts and an unfiltered `search_count()` -- without that check a short
+run is indistinguishable from a full one.
 
 Client: [`engine/services/sources/dsld.py`](../engine/services/sources/dsld.py) absorbs all four.
 
 ---
 
-## 8. Open questions
+## 9. Open questions
 
 - **Where is the explicit/weak boundary?** This is a judgment call that directly
   sets the coverage number (the ±8pp above). Worth pinning down by hand on a

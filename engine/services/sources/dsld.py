@@ -21,6 +21,22 @@ import requests
 # behind a Cloudflare interstitial and answers programmatic GETs with a 403.
 DSLD_API = "https://api.ods.od.nih.gov/dsld/v9"
 
+# Elasticsearch's default max_result_window. `search-filter` honours `size` up
+# to this, but a `from` at or past it yields an empty `hits` with HTTP 200 --
+# another of this API's silent failures. Any bulk slice must stay under it.
+MAX_RESULT_WINDOW = 10_000
+PAGE_SIZE = 1_000
+
+# Product type LanguaL codes, used only to subdivide a (year, status) slice
+# that is still over the window. Values from the v9 `search-filter` docs.
+PRODUCT_TYPE_CODES = (
+    "a1305", "a1306", "a1326", "a1310", "a1302", "a1299",
+    "a1316", "a1315", "a1317", "a1309", "a1325",
+)
+
+# DSLD's first entry year; earlier years return nothing.
+FIRST_ENTRY_YEAR = 2011
+
 
 @dataclass
 class Ingredient:
@@ -133,6 +149,58 @@ class DSLDClient:
         label.idisk_id = idisk_id
         return label
 
+    def fetch_concurrent(
+        self,
+        dsld_ids: Iterable[int | str],
+        workers: int = 12,
+        skip_missing: bool = True,
+    ) -> Iterator[Label]:
+        """Yield parsed labels for many IDs, fetched in parallel.
+
+        `label/{id}` shows no server-side rate limiting -- 16 workers sustain
+        roughly 15 req/s against 1.3 serially -- which is the difference
+        between a nine-hour sweep and a sub-three-hour one. Each worker gets
+        its own session and skips the shared throttle, so `workers` alone sets
+        the request rate; keep it modest, as ODS publishes no published limit
+        and this is still someone else's server.
+
+        Results arrive out of order. Labels are yielded as they complete so a
+        long sweep can be checkpointed rather than held in memory.
+        """
+        import threading
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        local = threading.local()
+
+        def one(did: int | str) -> Label | None:
+            session = getattr(local, "session", None)
+            if session is None:
+                session = local.session = requests.Session()
+            for attempt in range(self._max_retries):
+                try:
+                    r = session.get(f"{DSLD_API}/label/{did}", timeout=self.timeout)
+                    if r.status_code in (429, 500, 502, 503, 504):
+                        raise requests.HTTPError(str(r.status_code), response=r)
+                    r.raise_for_status()
+                    doc = r.json()
+                    if not doc or not isinstance(doc, dict):
+                        if skip_missing:
+                            return None
+                        raise DSLDNotFound(str(did))
+                    return parse_label(doc)
+                except (requests.HTTPError, requests.ConnectionError, requests.Timeout):
+                    if attempt == self._max_retries - 1:
+                        raise
+                    time.sleep(2.0 ** attempt)
+            return None
+
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = {pool.submit(one, d): d for d in dsld_ids}
+            for fut in as_completed(futures):
+                label = fut.result()
+                if label is not None:
+                    yield label
+
     def fetch_many(
         self,
         dsld_ids: Iterable[int | str],
@@ -151,6 +219,69 @@ class DSLDClient:
             except DSLDNotFound:
                 if not skip_missing:
                     raise
+
+
+    def search_count(self, **filters) -> int:
+        """Number of labels matching `filters`, without fetching them.
+
+        `search-filter` reports the match count in `stats.count` even when
+        `size=1`, which makes it cheap to size a slice before paging it.
+        """
+        r = self._get("search-filter", q="*", size=1, **filters)
+        return r.json().get("stats", {}).get("count", 0)
+
+    def search_page(self, frm: int, size: int, **filters) -> list[dict]:
+        """One page of raw label documents from `search-filter`."""
+        r = self._get(
+            "search-filter",
+            q="*",
+            sort_by="fullName.keyword",
+            sort_order="asc",
+            **{"from": frm, "size": size},
+            **filters,
+        )
+        return [h["_source"] | {"id": int(h["_id"])} for h in r.json().get("hits", [])]
+
+    def plan_slices(self) -> list[dict]:
+        """Partition the whole database into slices that fit the result window.
+
+        Paging alone cannot reach past label 10,000, so the corpus is cut by
+        entry year, then by market status, then -- only where still needed --
+        by product type. Each key is exhaustive and disjoint, so the slices
+        together cover every label exactly once; the caller can assert that by
+        comparing the summed counts against an unfiltered `search_count()`.
+        """
+        this_year = datetime.now(timezone.utc).year
+        slices: list[dict] = []
+        for year in range(FIRST_ENTRY_YEAR, this_year + 1):
+            for status in (0, 1):
+                base = {"date_start": year, "date_end": year, "status": status}
+                count = self.search_count(**base)
+                if count == 0:
+                    continue
+                if count < MAX_RESULT_WINDOW:
+                    slices.append({**base, "expected": count})
+                    continue
+                for code in PRODUCT_TYPE_CODES:
+                    sub = {**base, "product_type": code}
+                    sub_count = self.search_count(**sub)
+                    if sub_count:
+                        slices.append({**sub, "expected": sub_count})
+        return slices
+
+    def iter_all(self, slices: list[dict] | None = None) -> Iterator[dict]:
+        """Yield every raw label document in DSLD, slice by slice.
+
+        Deduplication is the caller's job only across slices that a future
+        DSLD schema change might overlap; the current keys are disjoint.
+        """
+        for sl in slices if slices is not None else self.plan_slices():
+            filters = {k: v for k, v in sl.items() if k != "expected"}
+            for frm in range(0, sl["expected"], PAGE_SIZE):
+                page = self.search_page(frm, PAGE_SIZE, **filters)
+                if not page:
+                    break
+                yield from page
 
 
 def parse_dsld_ids(cell: object) -> list[str]:

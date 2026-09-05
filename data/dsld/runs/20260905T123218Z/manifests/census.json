@@ -1,0 +1,708 @@
+{
+  "source": "dsld",
+  "mode": "bulk",
+  "api": "https://api.ods.od.nih.gov/dsld/v9",
+  "executed_at": "2026-09-05T12:32:18.793357+00:00",
+  "finished_at": "2026-09-05T12:35:06.937188+00:00",
+  "reported_total": 214780,
+  "expected_total": 214780,
+  "fetched": 214780,
+  "complete": true,
+  "slices": [
+    {
+      "date_start": 2011,
+      "date_end": 2011,
+      "status": 0,
+      "expected": 2260
+    },
+    {
+      "date_start": 2011,
+      "date_end": 2011,
+      "status": 1,
+      "expected": 1162
+    },
+    {
+      "date_start": 2012,
+      "date_end": 2012,
+      "status": 0,
+      "expected": 8291
+    },
+    {
+      "date_start": 2012,
+      "date_end": 2012,
+      "status": 1,
+      "expected": 3647
+    },
+    {
+      "date_start": 2013,
+      "date_end": 2013,
+      "status": 0,
+      "expected": 6766
+    },
+    {
+      "date_start": 2013,
+      "date_end": 2013,
+      "status": 1,
+      "expected": 5180
+    },
+    {
+      "date_start": 2014,
+      "date_end": 2014,
+      "status": 0,
+      "expected": 8438
+    },
+    {
+      "date_start": 2014,
+      "date_end": 2014,
+      "status": 1,
+      "expected": 3500
+    },
+    {
+      "date_start": 2015,
+      "date_end": 2015,
+      "status": 0,
+      "expected": 8802
+    },
+    {
+      "date_start": 2015,
+      "date_end": 2015,
+      "status": 1,
+      "expected": 3188
+    },
+    {
+      "date_start": 2016,
+      "date_end": 2016,
+      "status": 0,
+      "expected": 8292
+    },
+    {
+      "date_start": 2016,
+      "date_end": 2016,
+      "status": 1,
+      "expected": 3688
+    },
+    {
+      "date_start": 2017,
+      "date_end": 2017,
+      "status": 0,
+      "expected": 6856
+    },
+    {
+      "date_start": 2017,
+      "date_end": 2017,
+      "status": 1,
+      "expected": 5273
+    },
+    {
+      "date_start": 2018,
+      "date_end": 2018,
+      "status": 0,
+      "expected": 6584
+    },
+    {
+      "date_start": 2018,
+      "date_end": 2018,
+      "status": 1,
+      "expected": 4401
+    },
+    {
+      "date_start": 2019,
+      "date_end": 2019,
+      "status": 0,
+      "expected": 8360
+    },
+    {
+      "date_start": 2019,
+      "date_end": 2019,
+      "status": 1,
+      "expected": 5787
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1305",
+      "expected": 437
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1306",
+      "expected": 2210
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1326",
+      "expected": 88
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1310",
+      "expected": 494
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1302",
+      "expected": 652
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1299",
+      "expected": 457
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1316",
+      "expected": 82
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1315",
+      "expected": 120
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1317",
+      "expected": 467
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1309",
+      "expected": 1195
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 0,
+      "product_type": "a1325",
+      "expected": 4081
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1305",
+      "expected": 478
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1306",
+      "expected": 4173
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1326",
+      "expected": 119
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1310",
+      "expected": 582
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1302",
+      "expected": 683
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1299",
+      "expected": 429
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1316",
+      "expected": 137
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1315",
+      "expected": 138
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1317",
+      "expected": 446
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1309",
+      "expected": 1666
+    },
+    {
+      "date_start": 2020,
+      "date_end": 2020,
+      "status": 1,
+      "product_type": "a1325",
+      "expected": 4301
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 0,
+      "expected": 6377
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1305",
+      "expected": 530
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1306",
+      "expected": 2602
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1326",
+      "expected": 101
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1310",
+      "expected": 477
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1302",
+      "expected": 642
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1299",
+      "expected": 477
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1316",
+      "expected": 153
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1315",
+      "expected": 296
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1317",
+      "expected": 555
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1309",
+      "expected": 1690
+    },
+    {
+      "date_start": 2021,
+      "date_end": 2021,
+      "status": 1,
+      "product_type": "a1325",
+      "expected": 4135
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 0,
+      "expected": 4582
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1305",
+      "expected": 549
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1306",
+      "expected": 4771
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1326",
+      "expected": 136
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1310",
+      "expected": 551
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1302",
+      "expected": 786
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1299",
+      "expected": 475
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1316",
+      "expected": 173
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1315",
+      "expected": 299
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1317",
+      "expected": 795
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1309",
+      "expected": 1543
+    },
+    {
+      "date_start": 2022,
+      "date_end": 2022,
+      "status": 1,
+      "product_type": "a1325",
+      "expected": 4541
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 0,
+      "expected": 4351
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1305",
+      "expected": 543
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1306",
+      "expected": 8993
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1326",
+      "expected": 156
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1310",
+      "expected": 459
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1302",
+      "expected": 639
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1299",
+      "expected": 412
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1316",
+      "expected": 96
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1315",
+      "expected": 122
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1317",
+      "expected": 847
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1309",
+      "expected": 1507
+    },
+    {
+      "date_start": 2023,
+      "date_end": 2023,
+      "status": 1,
+      "product_type": "a1325",
+      "expected": 3995
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 0,
+      "expected": 2086
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1305",
+      "expected": 941
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1306",
+      "expected": 4705
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1326",
+      "expected": 126
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1310",
+      "expected": 550
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1302",
+      "expected": 881
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1299",
+      "expected": 627
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1316",
+      "expected": 125
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1315",
+      "expected": 164
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1317",
+      "expected": 1034
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1309",
+      "expected": 1912
+    },
+    {
+      "date_start": 2024,
+      "date_end": 2024,
+      "status": 1,
+      "product_type": "a1325",
+      "expected": 4849
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 0,
+      "expected": 493
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1305",
+      "expected": 520
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1306",
+      "expected": 4364
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1326",
+      "expected": 90
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1310",
+      "expected": 335
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1302",
+      "expected": 609
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1299",
+      "expected": 596
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1316",
+      "expected": 114
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1315",
+      "expected": 156
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1317",
+      "expected": 802
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1309",
+      "expected": 1274
+    },
+    {
+      "date_start": 2025,
+      "date_end": 2025,
+      "status": 1,
+      "product_type": "a1325",
+      "expected": 4161
+    }
+  ],
+  "idisk_requested": 156957,
+  "idisk_matched": 156943,
+  "idisk_missing": [
+    "19363",
+    "240572",
+    "243823",
+    "259088",
+    "259091",
+    "259092",
+    "259093",
+    "259094",
+    "42975",
+    "67026",
+    "67027",
+    "67028",
+    "67029",
+    "77833"
+  ]
+}
