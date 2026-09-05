@@ -284,36 +284,33 @@ a time, so the corpus can be paged instead of fetched one ID at a time.
   **0% of 2023-2025**. Its DSLD snapshot stops mid-2022, so ~58k labels from
   the last three years are absent from iDISK entirely. Only 14 of its 156,957
   IDs have no DSLD label at all.
-- **Concurrency helps, but `label/{id}` IS rate limited** -- despite
-  advertising no limit, and despite small samples suggesting none. Measured
-  by stepping 1 -> 64 workers over disjoint IDs (2026-09-05):
+- **`label/{id}` is capped at 1,000 requests/hour/IP** -- documented in the
+  DSLD API guide (dsld.od.nih.gov/api-guide). That is **0.28 req/s, one
+  request every 3.6s**, and it is the binding constraint on every per-ID
+  plan. No response carries a rate-limit header, so nothing at runtime
+  reveals it; it has to be read from the guide.
 
-  | workers | req/s | p50 | p95 | result |
-  |---------|-------|-----|-----|--------|
-  | 1  | 4.4  | 225ms | 245ms | all 200 |
-  | 4  | 17.0 | 222ms | 242ms | all 200 |
-  | 8  | 33.9 | 211ms | 232ms | all 200 -- last clean level |
-  | 16 | 62.7 | 211ms | 758ms | all 200, but p95 triples |
-  | 24 | 91.6 | 188ms | 768ms | 70% **429** |
-  | 32+| --   | --    | --    | 100% **429** |
+  A concurrency benchmark run before finding that number is a cautionary
+  tale worth recording. Stepping 1 -> 64 workers looked clean through 8
+  workers at ~34 req/s -- **122x the documented limit** -- because a short
+  burst *spends the hourly budget* rather than being refused up front. Past
+  that the endpoint returned 429 at every concurrency including 1, then
+  escalated to a bare `403` from the load balancer (`Server: awselb/2.0`)
+  that took minutes to decay. **A passing benchmark proves nothing against a
+  budget limit; it just drains it faster.** The 240-request test alone was
+  24% of an hour's allowance.
 
-  The req/s above 24 is an illusion -- refusals are fast because no work is
-  done. Two things make this sharper than a simple ceiling:
+  The consequence for planning: at 1,000/h a per-ID sweep is **days, not
+  hours** -- ~58h for the 57,837 labels new since iDISK, ~157h for iDISK's
+  own set, ~215h for the whole database. The "under 30 minutes" figure from
+  the benchmark was never achievable.
 
-  - **The limit is a budget over time, not a concurrency cap.** After the
-    sweep above, *every* level including 12 workers returned 429, and a
-    single-threaded request did too. Concurrency alone does not describe it.
-  - **It escalates.** Tripping the budget moved the endpoint from 429 to a
-    bare `403` from the AWS load balancer (`Server: awselb/2.0`, no
-    rate-limit headers on any response). That decayed back to 429 after
-    ~3.5 min, but access was degraded for far longer than the burst.
-
-  **Use 8 workers.** ~34 req/s with flat latency puts the 57,837 new labels
-  under 30 minutes; the wall clock was never the binding constraint, and
-  overrunning the budget risks the project's access rather than one run.
-
-So: use `iter_all()` for a cheap full-corpus census (ingredients, claims,
-brands), and a concurrent `label/{id}` sweep when statement text is needed.
+So the census is not merely the faster option, it is the only per-label
+route that fits the budget: `iter_all()` covers all 214,780 labels in ~371
+requests, comfortably inside a single hour's allowance, while the equivalent
+per-ID sweep would take nine days. Use `label/{id}` only for fields the
+summary documents genuinely lack -- above all the statement text -- and
+scope that sweep as narrowly as the question allows.
 Checkpoint per slice either way -- the silent-empty behaviour means a
 truncated run looks identical to a complete one.
 

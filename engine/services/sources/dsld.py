@@ -38,6 +38,16 @@ PRODUCT_TYPE_CODES = (
 # DSLD's first entry year; earlier years return nothing.
 FIRST_ENTRY_YEAR = 2011
 
+# The API guide documents 1,000 requests/hour/IP -- 0.28 req/s, or one request
+# every 3.6s. No response carries a rate-limit header, so this number cannot be
+# discovered at runtime; it has to be encoded here.
+HOURLY_REQUEST_BUDGET = 1000
+# 5% headroom. The exact interval would sit right on the limit, and a run
+# holds no margin for the server counting differently (a fixed window, or
+# retries billed against the same budget) -- being throttled costs far more
+# than the ~3 minutes the margin adds per thousand requests.
+SAFE_REQUEST_INTERVAL = 3600 / (HOURLY_REQUEST_BUDGET * 0.95)
+
 
 @dataclass
 class Ingredient:
@@ -92,15 +102,19 @@ class DSLDNotFound(LookupError):
 class _RateGate:
     """Shared, self-adjusting pace for concurrent DSLD requests.
 
-    DSLD's limit is a budget over time, so a fixed worker count cannot respect
-    it: a burst that stays under the concurrency ceiling can still exhaust the
-    budget and get every later request refused. This gate spaces requests
-    across all workers by a shared interval that grows on each 429/403 and
-    decays back toward `floor` on sustained success -- fast while the server
-    is happy, automatically slower once it complains.
+    DSLD's documented limit is 1,000 requests/hour/IP -- a budget over time, so
+    no worker count can respect it on its own: a burst well under any
+    concurrency ceiling still drains the hour and gets everything afterwards
+    refused. This gate paces all workers against one shared interval, which
+    defaults to the documented 3.6s and only ever grows -- doubling on each
+    429/403 and decaying back toward `floor` on sustained success.
+
+    The floor is therefore the real throttle, not `workers`. Threads only
+    overlap the ~200ms of latency inside each 3.6s slot; they do not and must
+    not raise the request rate.
     """
 
-    def __init__(self, floor: float = 0.02, ceiling: float = 2.0):
+    def __init__(self, floor: float = SAFE_REQUEST_INTERVAL, ceiling: float = 60.0):
         self._floor = floor
         self._ceiling = ceiling
         self._interval = floor
@@ -199,30 +213,33 @@ class DSLDClient:
     def fetch_concurrent(
         self,
         dsld_ids: Iterable[int | str],
-        workers: int = 8,
+        workers: int = 4,
         skip_missing: bool = True,
         on_failure: "list | None" = None,
     ) -> Iterator[Label]:
-        """Yield parsed labels for many IDs, fetched in parallel.
+        """Yield parsed labels for many IDs, paced to DSLD's hourly budget.
 
-        `label/{id}` *is* rate limited, despite advertising no limit. Measured
-        2026-09-05: 8 workers hold ~34 req/s with flat latency; 16 still
-        returns 200s but p95 latency triples (232ms -> 758ms), which is the
-        server straining; 24 starts returning 429 and 32 is refused outright.
-        Worse, the limit is a budget over time rather than a concurrency
-        ceiling -- a burst that trips it leaves even a single-threaded caller
-        getting 429, escalating to a load-balancer 403 that took minutes to
-        decay. Hence the conservative default; raising it risks blocking the
-        whole project's access, not just one sweep.
+        **The API guide documents 1,000 requests/hour/IP** -- 0.28 req/s, one
+        request every 3.6s. That, not concurrency, is the binding constraint,
+        and `_RateGate` enforces it: `workers` only overlaps the ~200ms of
+        latency within each slot, so raising it does not raise throughput.
 
-        So `workers` sets the ceiling, but `_RateGate` sets the actual pace:
-        every 429 backs the shared rate off and every success slowly restores
-        it, which keeps a long sweep under the limit instead of hammering it.
+        Measured behaviour matches the documented budget. Stepping 1 -> 64
+        workers (2026-09-05) looked clean up to 8 workers at ~34 req/s -- 122x
+        the limit -- purely because a short burst spends the hour rather than
+        being refused up front. Past that the endpoint returned 429 at *every*
+        concurrency including 1, then escalated to a bare 403 from the load
+        balancer that took minutes to decay. So a benchmark that "passes"
+        proves nothing here; it is just spending the budget faster.
+
+        At the documented rate a full per-ID sweep is days, not hours: ~58h
+        for the 57,837 labels new since iDISK. Prefer `dsld_bulk.harvest()`
+        (~371 requests) for anything the summary documents can answer, and
+        reserve this for fields only `label/{id}` carries -- chiefly the
+        statement text purpose/risk extraction needs.
 
         IDs that exhaust their retries are appended to `on_failure` (when
-        given) rather than aborting the run -- across ~58k requests some
-        failures are near-certain, and losing a 30-minute sweep to one blip
-        is worse than a second pass over the stragglers.
+        given) rather than aborting a run that may already be hours old.
 
         Results arrive out of order, and are yielded as they complete so a
         long sweep can be checkpointed rather than held in memory.
