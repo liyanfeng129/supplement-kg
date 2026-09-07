@@ -307,34 +307,29 @@ a time, so the corpus can be paged instead of fetched one ID at a time.
 
 ### The official full download supersedes both
 
-ODS does publish a whole-database export after all (dated `2025-09-25` in the
-files' own `src` field). Verified against the live API for label 542: the
-downloaded record has **exactly the same key set** as `label/{id}` -- including
-`statements`, `ingredientRows`, `servingSizes`, `contacts` and
-`otheringredients`, the fields `search-filter` omits -- and, after one repair
-below, identical values.
+ODS does publish a whole-database export after all. The copy in
+`datasets/DSLD-full-database-JSON/` holds **214,780 JSON files** -- one per
+label, bucketed 1,000 to a directory -- which matches the API's own count
+exactly. Its `ReadMe.csv` dates the download to **2026-01-10**; the older
+`2025-09-25` path inside each file's `src` field is ODS's internal build
+stamp, not the download date.
 
-**The dump is mojibaked.** Text was decoded as cp1252 and re-encoded as UTF-8,
-so `®` reads as `Â®` and `©` as `Â©`. It is fully reversible, and repairing it
-made the file byte-identical to the API response:
+Each file is the **full** label document: the same key set as `label/{id}`,
+including the `statements`, `ingredientRows`, `servingSizes`, `contacts` and
+`otheringredients` that `search-filter` omits. Verified by fetching 8 random
+labels spanning entry years 2012-2023 and comparing to the live API -- all 8
+identical, field for field.
 
-```python
-def unmojibake(o):
-    if isinstance(o, str):
-        try:
-            return o.encode("cp1252").decode("utf-8")
-        except (UnicodeEncodeError, UnicodeDecodeError):
-            return o   # already clean; leave it alone
-    ...
-```
+The encoding is clean UTF-8 (`\xc2\xae` for `®`). An earlier note here
+claimed the dump was mojibaked; that was wrong. The corruption was introduced
+by pasting a file's contents through a lossy channel, and a scan of all
+214,780 files found **zero** affected -- 78.6% contain non-ASCII text, none of
+it damaged. No repair pass is needed, and adding one would corrupt genuinely
+clean text.
 
-Left unrepaired this would corrupt any string field feeding extraction or
-entity matching, so it must be fixed at load time -- ideally with a check that
-the repair actually round-trips rather than assuming every string is affected.
-
-This removes the rate limit from the critical path entirely: no per-ID sweep is
-needed for statement text, so the ~58h estimate below is moot as long as the
-2025-09-25 snapshot is recent enough for the question being asked.
+This removes the rate limit from the critical path entirely: with the export
+in hand no per-ID sweep is needed for statement text. The API is now only for
+refreshing individual labels or picking up entries added since 2026-01-10.
 
 So the census is not merely the faster option, it is the only per-label
 route that fits the budget: `iter_all()` covers all 214,780 labels in ~371
