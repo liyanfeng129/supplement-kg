@@ -537,6 +537,64 @@ def parse_label(doc: dict) -> Label:
     )
 
 
+# --- Local full-database dump -------------------------------------------------
+#
+# ODS publishes no bulk export from the API, but does offer a full-database
+# JSON download. Each file holds exactly the document `label/{id}` returns
+# (verified in commit 4ffb985), so `parse_label` reads both without a second
+# code path -- the dump is just a different transport for the same shape.
+#
+# Reading it avoids re-sweeping labels already on disk: at the documented
+# 1,000 requests/hour the 156,548 IDs behind iDISK's DSLD-only rows would take
+# roughly nine days.
+
+# Files are bucketed a thousand IDs to a directory, `000000-000999/548.json`.
+# Verified exact across all 214,780 files in the 2025-09-25 snapshot.
+DUMP_BUCKET_SIZE = 1000
+
+
+def dump_path(dsld_id: int | str, root: str | Path) -> Path:
+    """Where `dsld_id` lives in a full-database dump. No existence check."""
+    i = int(dsld_id)
+    lo = (i // DUMP_BUCKET_SIZE) * DUMP_BUCKET_SIZE
+    bucket = f"{lo:06d}-{lo + DUMP_BUCKET_SIZE - 1:06d}"
+    return Path(root) / bucket / f"{i}.json"
+
+
+def load_label(dsld_id: int | str, root: str | Path, idisk_id: str | None = None) -> Label:
+    """Read one label from a local dump.
+
+    Raises `DSLDNotFound` for an absent file, matching what `DSLDClient.fetch`
+    raises for an ID the API does not know, so a caller can swap transports
+    without changing its error handling.
+    """
+    path = dump_path(dsld_id, root)
+    try:
+        doc = json.loads(path.read_text())
+    except FileNotFoundError as exc:
+        raise DSLDNotFound(f"{dsld_id} is not in the dump at {root}") from exc
+
+    label = parse_label(doc)
+    label.idisk_id = idisk_id
+    return label
+
+
+def dump_ids(root: str | Path) -> set[str]:
+    """Every DSLD ID present in a dump.
+
+    Lets a caller size the coverage shortfall against its own frame before a
+    run, rather than discovering the misses one `DSLDNotFound` at a time.
+    """
+    out: set[str] = set()
+    for bucket in Path(root).iterdir():
+        if not bucket.is_dir():
+            continue
+        for f in bucket.iterdir():
+            if f.suffix == ".json":
+                out.add(f.stem)
+    return out
+
+
 def fetch_products(
     rows: Iterable[tuple[str, object]],
     client: DSLDClient | None = None,
