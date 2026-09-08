@@ -392,3 +392,85 @@ Client: [`engine/services/sources/dsld.py`](../engine/services/sources/dsld.py) 
   mechanics and whether to split purpose/risk into separate calls.
 - **Merge policy.** Confirmed: DSLD-derived values need their own provenance and
   must not be merged into LNHPD's columns. Column naming still undecided.
+
+---
+
+## 10. Pilot implementation
+
+Built 2026-09-08. The pipeline below runs end to end except the gold set,
+which is blocked on a credential (see *Blocked* at the end).
+
+### What each piece does
+
+| Module | Role |
+|---|---|
+| [`sources/dsld.py`](../engine/services/sources/dsld.py) `load_label` | Reads one label from the local dump into the same `Label` the API client returns |
+| [`extraction/pilot_sample.py`](../engine/services/extraction/pilot_sample.py) | Draws the DSLD-only frame at ID grain; `build_pilot` writes the flattened passages |
+| [`extraction/label_purpose_risk.py`](../engine/services/extraction/label_purpose_risk.py) | Renders the passage, calls the model, grounds and scores the result |
+| [`extraction/gold_set.py`](../engine/services/extraction/gold_set.py) | Runs the frontier model over 100 pilot labels into a committed reference set |
+
+### Section 5's filter bug is fixed
+
+`label_text` had two filters: `SKIP_TYPES` and an undocumented
+`INFORMATIVE_PREFIXES` allow-list. Both excluded `Brand IP` and
+`Seals/Symbols`, so labels `38206` and `176329` reached the model with their
+only benefit claim already removed and could only come back empty. Now only
+the three verified-safe types are dropped, and the whitespace collapse and
+statement dedupe this section specified are implemented.
+
+### Frame and coverage — section 5's open risk, measured
+
+The concern was that iDISK might reference IDs the dump lacks, in numbers that
+would change what extending to the whole corpus means. It does not:
+
+| | |
+|---|---|
+| DSLD-only DSP rows | 92,442 |
+| unique DSLD IDs behind them | 156,548 |
+| present in the 2025-09-25 dump | 156,534 |
+| **missing** | **14** (listed in the manifest) |
+
+Row counts reproduce section 1's table exactly. The 208 `both` rows are
+excluded from the frame and held back as the independent validation stage.
+
+Passage sizes come out at 1,648 chars median and 8,960 max — near this
+document's ~342 and ~2,200 token estimates, confirming no chunking is needed.
+
+### Grounding is now enforced, not just recorded
+
+Section 6.3 called the evidence span a free fabrication check; it is now wired
+in. Every entry records whether its evidence occurs in the passage, compared
+whitespace-insensitively so a span quoted across a line break is not failed for
+formatting.
+
+That check **caps the confidence score**. The model rates its own certainty,
+which a confident hallucination scores as highly as a correct reading; the
+substring check cannot be talked up, so it bounds the score it cannot set. An
+empty list scores 0 regardless. The ungrounded count is reported in every
+manifest.
+
+**The known weakness, restated:** for purpose, `text` and `evidence` are
+near-identical and the check is strong. For risk, DSLD packs several cautions
+into one `notes` block with no substring isolating one, so `evidence` is the
+whole block. The check then proves *the block is genuine*, not *the claim drawn
+from it is right*. It catches wholesale fabrication, not misreading. Bounded
+and accepted, not solved.
+
+### Closes one open question from section 9
+
+**Merge policy — column naming.** DSLD-derived values are written as
+`Purpose_dsld` / `Risk_dsld` with a `dsld-label-llm` source marker, never into
+the `Purpose` / `Risk` columns holding LNHPD's regulator-approved indications.
+
+Boilerplate suppression remains open. The per-entry `text` field is where such
+a pass would act, but the pass itself is still undesigned — which is why the
+list shape matters: collapsing entries into one string later is trivial,
+splitting a joined string back apart means re-running.
+
+### Blocked
+
+The gold set needs `ANTHROPIC_API_KEY`, which is **not** in `.env` — that file
+currently holds only NCBI credentials. `gold_set.build` is written and verified
+against a stubbed client; it needs the key and a run. Until it exists, there is
+nothing to score a local model against, so the choice of local model and quant
+stays deferred as section 9 has it.
