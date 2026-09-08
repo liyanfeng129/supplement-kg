@@ -24,26 +24,21 @@ from engine.services.sources.dsld import Label
 
 MODEL = "claude-opus-5"
 
-# Statement types worth sending to the model. DSLD's `type` vocabulary is
-# coarse -- purpose routinely hides in the generic "General Statements" bucket
-# -- so this filter is deliberately loose; it drops only the types that never
-# carry purpose or risk (lot codes, brand trademark notices, seals).
-INFORMATIVE_PREFIXES = (
-    "General Statements",
-    "Precautions",
-    "Suggested",
-    "Formula",
-    "Formulation",
-    "Storage",
-    "FDA Statement of Identity",
-    "Warnings",
-)
-
+# Statement types dropped before the label is sent to a model. Only these
+# three are verified safe across all 300 sampled labels: they are fixed
+# boilerplate (the DSHEA disclaimer, "Dietary Supplement", lot codes) and
+# carried zero benefit or risk language.
+#
+# Nothing else is dropped. An earlier version also dropped `Brand IP
+# Statement(s) re: (c), (TM), (SM)` and `Seals/Symbols`, plus allow-listed a
+# set of INFORMATIVE_PREFIXES. Both filters were wrong: Brand IP carries real
+# benefit claims in 21 of 300 sampled statements and is the *only* purpose
+# text on labels 1597, 38206 and 176329. DSLD's `type` vocabulary is too
+# coarse to filter on -- see docs/dsld-purpose-risk-findings.md section 5.
 SKIP_TYPES = {
-    "General: Product/Version Code",
-    "Brand IP Statement(s) re: (c), (TM), (SM)",
-    "Seals/Symbols",
+    "FDA Statement of Identity",
     "FDA Disclaimer Statement",
+    "General: Product/Version Code",
 }
 
 SYSTEM = """You extract structured attributes from US dietary supplement label text.
@@ -139,12 +134,19 @@ def label_text(label: Label) -> str:
         lines.append(f"INGREDIENTS: {', '.join(ings)}")
 
     lines.append("\nLABEL STATEMENTS:")
+    # The `[type]` prefix is kept: it is unreliable as a filter but useful as a
+    # hint to a small model that a line came from `Precautions` rather than
+    # `General Statements`.
+    seen: set[str] = set()
     for s in label.statements:
-        stype, notes = (s.get("type") or ""), (s.get("notes") or "").strip()
+        stype, notes = (s.get("type") or ""), (s.get("notes") or "")
+        notes = " ".join(notes.split())
         if not notes or stype in SKIP_TYPES:
             continue
-        if not stype.startswith(INFORMATIVE_PREFIXES):
+        # DSLD files the same text under several types on 2.4% of the corpus.
+        if notes in seen:
             continue
+        seen.add(notes)
         lines.append(f"[{stype}] {notes}")
 
     return "\n".join(lines)
