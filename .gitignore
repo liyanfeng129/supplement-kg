@@ -24,3 +24,13 @@ data/pubmed/runs/*/raw/
 !data/dsld/runs/*/
 data/dsld/runs/*/raw/
 !data/dsld/runs/*/manifests/
+
+# The gold set is committed. `datasets/` is excluded wholesale because it holds
+# the 2.4 GB DSLD dump and the iDISK release -- both re-downloadable. The gold
+# set is neither: it is hand-labelled reference data that every future scoring
+# run compares against, so it must survive a clear of the ignored trees. Git
+# never descends into an excluded directory, so the path is re-included first.
+!datasets/
+datasets/*
+!datasets/pilot/
+!datasets/pilot/**
