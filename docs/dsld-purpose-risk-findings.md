@@ -397,8 +397,7 @@ Client: [`engine/services/sources/dsld.py`](../engine/services/sources/dsld.py) 
 
 ## 10. Pilot implementation
 
-Built 2026-09-08. The pipeline below runs end to end except the gold set,
-which is blocked on a credential (see *Blocked* at the end).
+Built 2026-09-08. The pipeline below runs end to end, gold set included.
 
 ### What each piece does
 
@@ -467,10 +466,31 @@ a pass would act, but the pass itself is still undesigned — which is why the
 list shape matters: collapsing entries into one string later is trivial,
 splitting a joined string back apart means re-running.
 
-### Blocked
+### The gold set exists
 
-The gold set needs `ANTHROPIC_API_KEY`, which is **not** in `.env` — that file
-currently holds only NCBI credentials. `gold_set.build` is written and verified
-against a stubbed client; it needs the key and a run. Until it exists, there is
-nothing to score a local model against, so the choice of local model and quant
-stays deferred as section 9 has it.
+`datasets/pilot/gold-100.jsonl`, 100 labels, **hand-labelled by reading each
+rendered passage** rather than by a scripted API sweep. 146 purpose entries and
+190 risk entries; all 336 evidence spans occur verbatim in their passage.
+
+The grounding check proved itself during the labelling: it caught a dropped
+word in a transcribed allergen list on `18162` — the exact class of error it
+exists to find, made by hand rather than by a model.
+
+**28 of 100 labels state no purpose**, against the ~12% estimated in section 2.
+That gap matters for what the set is good for. The empty ones are the products
+where supplying outside knowledge is most tempting — white willow bark, ginkgo,
+dong quai, boswellia, DHEA — and none of their labels make a claim. `13504`
+says only that Dong Quai is "highly treasured"; `5174` (Policosanol) states
+nothing at all, while `7991`, also a policosanol product, does claim
+cholesterol support. The split is label-driven, not ingredient-driven, so a
+local model that pattern-matches on ingredient name will fail these 28 visibly.
+That makes the set a harder target than the estimate implied, and a better one.
+
+`gold_set.build` remains the scripted path for regenerating or extending the
+set through the API. It is verified against a stubbed client but has never been
+run for real: `.env` holds only NCBI credentials, and there is no
+`ANTHROPIC_API_KEY` on this machine.
+
+Still deferred, and still for the reason section 9 gives: which local model and
+quant. That now waits on downloading weights, not on having something to score
+against.
