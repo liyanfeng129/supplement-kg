@@ -64,34 +64,99 @@ Rules:
   is not a purpose. Directions/dosage alone are not a purpose.
 - "KEEP OUT OF REACH OF CHILDREN" alone is boilerplate, not a risk; include it
   only if no other risk text exists.
-- Set a field to null when the label genuinely does not state it. Empty is a
-  valid and common answer -- prefer it over a guess."""
+- Return an empty list when the label genuinely does not state a field. Empty
+  is a valid and common answer -- prefer it over a guess.
+
+Output shape:
+- purpose and risk are LISTS, one entry per distinct claim. A label stating
+  "Promotes Energy Metabolism*" and "Supports Heart Health*" yields two
+  purpose entries, not one joined string.
+- Each entry has `evidence` -- characters copied from the label text above,
+  unchanged, so the claim can be checked against the label -- and `text`, the
+  same claim normalised: lowercased, trailing claim asterisk removed. Never
+  write anything into `evidence` that is not in the text above.
+- Where several distinct cautions share one block of label text and no
+  substring isolates one of them, cite the block as `evidence` for each and
+  put the individual caution in `text`.
+- purpose_confidence and risk_confidence score 0-5 how clearly THE LABEL
+  states that field -- 0 not at all, 5 explicitly and unambiguously. They
+  score the clarity of the extraction, not how risky or effective the product
+  is. Never judge a product\'s safety."""
 
 # Structured output schema. `strict` validation guarantees the response parses,
 # so downstream code never has to defend against malformed JSON.
+#
+# Purpose and risk are lists, one entry per distinct claim, not single
+# strings. A label routinely states several benefits, and DSLD packs real
+# cautions into one `notes` block together with boilerplate ("keep out of
+# reach of children", "store in a cool, dry place"). A scalar field would
+# land that whole block in `Risk` verbatim -- the dilution problem in section
+# 9 of the findings doc, and unfixable afterwards. Per-entry rows give a
+# boilerplate-suppression pass somewhere to act. Collapsing a list into one
+# string later is trivial; splitting a joined string back apart is not.
+_ENTRY = {
+    "type": "object",
+    "properties": {
+        "text": {
+            "type": "string",
+            "description": "The single claim, normalised: lowercased, trailing claim asterisk removed.",
+        },
+        "evidence": {
+            "type": "string",
+            "description": "Characters copied from the label text above, unchanged, that this claim came from.",
+        },
+    },
+    "required": ["text", "evidence"],
+    "additionalProperties": False,
+}
+
 SCHEMA = {
     "type": "object",
     "properties": {
         "purpose": {
-            "type": ["string", "null"],
-            "description": "Claimed benefit or intended use, in the label's own wording. Null if not stated.",
+            "type": "array",
+            "items": _ENTRY,
+            "description": "One entry per distinct benefit or intended-use claim. Empty if the label states none.",
         },
         "risk": {
-            "type": ["string", "null"],
-            "description": "Cautions, warnings, contraindications, interactions. Null if not stated.",
+            "type": "array",
+            "items": _ENTRY,
+            "description": "One entry per distinct caution, contraindication or interaction. Empty if the label states none.",
         },
-        "purpose_evidence": {
-            "type": ["string", "null"],
-            "description": "Verbatim label text the purpose was taken from. Null if purpose is null.",
+        "purpose_confidence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "How clearly the label states its purpose: 0 not at all, 5 explicitly.",
         },
-        "risk_evidence": {
-            "type": ["string", "null"],
-            "description": "Verbatim label text the risk was taken from. Null if risk is null.",
+        "risk_confidence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "How clearly the label states its risks: 0 not at all, 5 explicitly.",
         },
     },
-    "required": ["purpose", "risk", "purpose_evidence", "risk_evidence"],
+    "required": ["purpose", "risk", "purpose_confidence", "risk_confidence"],
     "additionalProperties": False,
 }
+
+# Ceiling applied to a self-reported confidence when an entry's evidence is
+# not found in the passage. The model scores its own certainty, which a
+# confident hallucination scores just as highly as a correct reading; the
+# substring check cannot be talked up, so it bounds the score it cannot set.
+UNGROUNDED_CONFIDENCE_CAP = 1
+
+
+@dataclass
+class Entry:
+    """One extracted claim and the label text it came from."""
+
+    text: str
+    evidence: str
+    # Whether `evidence` occurs verbatim in the passage. False means the model
+    # produced text the label does not contain -- a fabrication, caught for
+    # free without a second model or a human read.
+    grounded: bool = True
 
 
 @dataclass
@@ -101,15 +166,50 @@ class Extraction:
     dsld_id: int
     idisk_id: str | None = None
     name: str | None = None
-    purpose: str | None = None
-    risk: str | None = None
-    # Verbatim label text each field came from. Keeping it makes a wrong
-    # extraction auditable without re-querying the API -- and makes an
-    # ungrounded answer (evidence absent from the label) detectable.
-    purpose_evidence: str | None = None
-    risk_evidence: str | None = None
+    purpose: list[Entry] = field(default_factory=list)
+    risk: list[Entry] = field(default_factory=list)
+    # Scored per field, not per row: labels very often state a purpose
+    # clearly and no risk at all, so one number would describe neither.
+    purpose_confidence: int = 0
+    risk_confidence: int = 0
     model: str = MODEL
     extracted_at: str | None = None
+
+
+def _normalise(text: str) -> str:
+    """Whitespace-insensitive form, for comparing evidence against a passage.
+
+    A model reproducing a span across a line break in the passage is quoting
+    faithfully; failing it for the whitespace would make the grounding check
+    fire on formatting rather than on fabrication.
+    """
+    return " ".join(text.split()).lower()
+
+
+def _entries(items: list[dict], passage: str) -> list[Entry]:
+    """Build entries, marking each by whether its evidence is in the passage."""
+    hay = _normalise(passage)
+    out = []
+    for it in items or []:
+        ev = (it.get("evidence") or "").strip()
+        out.append(
+            Entry(
+                text=(it.get("text") or "").strip(),
+                evidence=ev,
+                grounded=bool(ev) and _normalise(ev) in hay,
+            )
+        )
+    return out
+
+
+def _capped(confidence: int, entries: list[Entry]) -> int:
+    """Bound a self-reported score by the mechanical grounding check."""
+    if entries and not all(e.grounded for e in entries):
+        return min(confidence, UNGROUNDED_CONFIDENCE_CAP)
+    # Nothing extracted cannot be a confident answer, whatever was claimed.
+    if not entries:
+        return 0
+    return confidence
 
 
 def label_text(label: Label) -> str:
@@ -169,6 +269,7 @@ def extract(
 ) -> Extraction:
     """Recover purpose and risk for one label."""
     client = client or _client()
+    passage = label_text(label)
 
     response = client.messages.create(
         model=model,
@@ -180,20 +281,23 @@ def extract(
             "effort": "low",
             "format": {"type": "json_schema", "schema": SCHEMA},
         },
-        messages=[{"role": "user", "content": label_text(label)}],
+        messages=[{"role": "user", "content": passage}],
     )
 
     text = next((b.text for b in response.content if b.type == "text"), "{}")
     data = json.loads(text)
 
+    purpose = _entries(data.get("purpose"), passage)
+    risk = _entries(data.get("risk"), passage)
+
     return Extraction(
         dsld_id=label.dsld_id,
         idisk_id=label.idisk_id,
         name=label.full_name,
-        purpose=data.get("purpose"),
-        risk=data.get("risk"),
-        purpose_evidence=data.get("purpose_evidence"),
-        risk_evidence=data.get("risk_evidence"),
+        purpose=purpose,
+        risk=risk,
+        purpose_confidence=_capped(data.get("purpose_confidence") or 0, purpose),
+        risk_confidence=_capped(data.get("risk_confidence") or 0, risk),
         model=model,
         extracted_at=datetime.now(timezone.utc).isoformat(),
     )
@@ -227,6 +331,17 @@ def extract_many(
         "n_extracted": len(out),
         "n_with_purpose": sum(1 for e in out if e.purpose),
         "n_with_risk": sum(1 for e in out if e.risk),
+        "n_purpose_entries": sum(len(e.purpose) for e in out),
+        "n_risk_entries": sum(len(e.risk) for e in out),
+        # Ungrounded entries are the fabrication rate: evidence the model
+        # produced that the label does not contain. Surfaced in the manifest
+        # because it is the number that says whether a run is trustworthy.
+        "n_ungrounded_entries": sum(
+            1 for e in out for x in (*e.purpose, *e.risk) if not x.grounded
+        ),
+        "n_rows_with_ungrounded": sum(
+            1 for e in out if any(not x.grounded for x in (*e.purpose, *e.risk))
+        ),
         "errors": errors,
     }
     return out, manifest
