@@ -106,6 +106,22 @@ def _progress_line(
     )
 
 
+def _model_name(model_id: str) -> str:
+    """A readable model name from a path.
+
+    Weights resolved out of the HuggingFace cache live at `.../blobs/<sha256>`,
+    so the basename is a 64-char hash that identifies nothing to a reader. The
+    repo directory two levels up carries the actual name, so it is preferred
+    whenever the basename is a bare hash.
+    """
+    p = Path(model_id)
+    if p.parent.name == "blobs" and len(p.name) == 64:
+        for part in p.parts:
+            if part.startswith("models--"):
+                return part.replace("models--", "").replace("--", "/") + f" ({p.name[:8]})"
+    return p.name
+
+
 def _record_line(row: dict, done: int, total: int) -> str:
     """One completed record, for `--verbose`.
 
@@ -153,7 +169,7 @@ def _header(config: Config, d: Path, n_records: int, n_workers: int, records_pat
         f"run dir     {d}",
         f"records     {records_path} ({n_records} to do, {n_workers} worker(s))",
         f"prompt      {config.prompt_path}  sha={config.prompt_sha[:12]}",
-        f"model       {config.model_id}",
+        f"model       {_model_name(config.model_id)}",
         f"decode      temp={dec.temperature} top_p={dec.top_p} top_k={dec.top_k} "
         f"max_tokens={dec.max_tokens} n_ctx={dec.n_ctx} seed={dec.seed} "
         f"thinking={dec.enable_thinking}",
@@ -171,6 +187,7 @@ def smoke(
     min_grounding: float = MIN_GROUNDING_RATE,
     extractor: LocalExtractor | None = None,
     verbose: bool = False,
+    standalone: bool = True,
 ) -> dict:
     """Put real gold labels through the real model, prompt and grammar.
 
@@ -183,7 +200,21 @@ def smoke(
     Raises RuntimeError if the grounding rate falls below `min_grounding`.
     """
     config = config or Config()
+
+    # Each phase announces itself before it blocks, not after. Loading the
+    # weights is ~40s of silence and the grammar check loads a vocab handle of
+    # its own; without a line first, the only difference between "working" and
+    # "hung" is the caller's patience. `standalone` is False when `run` calls
+    # this, which prints its own header.
+    if standalone:
+        print(
+            f"smoke: {n} gold labels through {Path(config.prompt_path).name} "
+            f"(sha={config.prompt_sha[:12]}) on {_model_name(config.model_id)}",
+            flush=True,
+        )
+    print("smoke: checking GPU offload...", flush=True)
     check_gpu_offload()
+    print("smoke: checking schema/grammar fixtures...", flush=True)
     check_grammar()
 
     gold_ids = [int(json.loads(l)["dsld_id"]) for l in Path(gold_path).read_text().splitlines() if l.strip()][:n]
@@ -199,6 +230,10 @@ def smoke(
         )
 
     ex = extractor or LocalExtractor(config)
+    if ex._llm is None:
+        print("smoke: loading weights (~16 GiB, first call only)...", flush=True)
+    print(f"smoke: running {len(records)} labels...", flush=True)
+
     rows = []
     for i, rec in enumerate(records, 1):
         raw, latency, usage = ex.extract(rec["passage"])
@@ -297,7 +332,7 @@ def run(
     smoke_result = None
     if not skip_smoke:
         print("smoke: putting gold labels through the real model...", flush=True)
-        smoke_result = smoke(config, extractor=extractor, verbose=verbose)
+        smoke_result = smoke(config, extractor=extractor, verbose=verbose, standalone=False)
         print(
             f"smoke: passed, grounding {smoke_result['grounding_rate']:.1%} "
             f"over {smoke_result['n_entries']} entries "

@@ -244,3 +244,14 @@ def test_an_ungrounded_entry_is_called_out_in_the_record_line():
         latency_ms=1000,
     )
     assert "UNGROUNDED=1" in run_mod._record_line(row, 1, 1)
+
+
+def test_a_cached_model_path_is_named_not_hashed():
+    """A 64-char blob sha identifies nothing to the person reading the header."""
+    cached = (
+        "/var/tmp/hf_cache/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/"
+        + "3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e"
+    )
+    assert run_mod._model_name(cached) == "unsloth/Qwen3.8-27B-GGUF (3f227079)"
+    # A plain path is already readable and is left alone.
+    assert run_mod._model_name("/models/qwen3-27b-q4.gguf") == "qwen3-27b-q4.gguf"
