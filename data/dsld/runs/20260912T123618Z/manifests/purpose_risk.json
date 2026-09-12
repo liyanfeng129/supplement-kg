@@ -1,0 +1,121 @@
+{
+  "task": "dsld_purpose_risk",
+  "run_id": "20260912T123618Z",
+  "started_at": "2026-09-12T12:36:18.398163+00:00",
+  "starts": [
+    "2026-09-12T12:36:18.398163+00:00"
+  ],
+  "git_commit": "87e7ee388f01c7e6526ed45f28c988d1aa8663a6",
+  "records_path": "data/dsld/runs/20260908T125504Z/raw/pilot-1000.jsonl",
+  "n_input": 100,
+  "n_already_done": 0,
+  "n_to_do": 100,
+  "n_workers": 1,
+  "smoke": {
+    "n_labels": 5,
+    "n_entries": 11,
+    "n_grounded": 11,
+    "grounding_rate": 1.0,
+    "statuses": {
+      "ok": 3,
+      "empty": 2
+    },
+    "median_latency_ms": 6382,
+    "config_hash": "f65a23d3bebd86a28e12db57dfdd5975d8c22c591c23930cafe32e85e9f9c77a",
+    "passed": true
+  },
+  "config_hash": "f65a23d3bebd86a28e12db57dfdd5975d8c22c591c23930cafe32e85e9f9c77a",
+  "prompt_id": "purpose_risk",
+  "prompt_sha": "67ebc1cd7b241582b99022bd8592eb1dff1ddebcff9d4e083c4f21f4b8a33a28",
+  "model_id": "/var/tmp/ge74wan/hf_cache/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e",
+  "decode": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "top_k": 0,
+    "max_tokens": 2000,
+    "seed": 0,
+    "n_ctx": 8192,
+    "enable_thinking": false
+  },
+  "schema_sha": "12d659387c060d699d74109a45e0ef2d6b178fbab19c42da100a0ea42a4ec03d",
+  "renderer_version": 1,
+  "prompt": "You extract structured attributes from US dietary supplement label text.\n\nYou are given the text printed on one product's label. Recover two fields:\n\n- purpose: what the product is claimed to do for the person taking it -- the\n  benefit or intended use (\"supports restful sleep\", \"helps maintain healthy\n  joints\"). This is the product's structure/function claim.\n- risk: cautions, warnings, contraindications, and interactions -- who should\n  not take it and what to watch for.\n\nRules:\n- Use ONLY what the label says. Never add pharmacological knowledge of your\n  own: if a label for a melatonin product never states a purpose, the purpose\n  is null, even though you know what melatonin is for. This corpus is used to\n  build a knowledge base, so an inferred claim is worse than a missing one.\n- Quote or lightly normalise the label's own wording; do not embellish.\n- Purpose statements are often buried in generic \"General Statements\" blocks\n  alongside boilerplate (\"Made in the USA\", \"ACTUAL SIZE\"). Ignore the\n  boilerplate and pick out the benefit claim.\n- The FDA disclaimer (\"This statement has not been evaluated by the FDA...\")\n  is not a purpose. Directions/dosage alone are not a purpose.\n- \"KEEP OUT OF REACH OF CHILDREN\" alone is boilerplate, not a risk; include it\n  only if no other risk text exists.\n- Return an empty list when the label genuinely does not state a field. Empty\n  is a valid and common answer -- prefer it over a guess.\n\nOutput shape:\n- purpose and risk are LISTS, one entry per distinct claim. A label stating\n  \"Promotes Energy Metabolism*\" and \"Supports Heart Health*\" yields two\n  purpose entries, not one joined string.\n- Each entry has `evidence` -- characters copied from the label text above,\n  unchanged, so the claim can be checked against the label -- and `text`, the\n  same claim normalised: lowercased, trailing claim asterisk removed. Never\n  write anything into `evidence` that is not in the text above.\n- Where several distinct cautions share one block of label text and no\n  substring isolates one of them, cite the block as `evidence` for each and\n  put the individual caution in `text`.\n- purpose_confidence and risk_confidence score 0-5 how clearly THE LABEL\n  states that field -- 0 not at all, 5 explicitly and unambiguously. They\n  score the clarity of the extraction, not how risky or effective the product\n  is. Never judge a product's safety.\n",
+  "prompt_path": "/var/tmp/ge74wan/repos/supplement-kg/prompts/purpose_risk.md",
+  "provenance": "local",
+  "note": "throughput + gold-100 baseline, single stream",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "purpose": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "The single claim, normalised: lowercased, trailing claim asterisk removed."
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Characters copied from the label text above, unchanged, that this claim came from."
+            }
+          },
+          "required": [
+            "text",
+            "evidence"
+          ],
+          "additionalProperties": false
+        },
+        "description": "One entry per distinct benefit or intended-use claim. Empty if the label states none."
+      },
+      "risk": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "The single claim, normalised: lowercased, trailing claim asterisk removed."
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Characters copied from the label text above, unchanged, that this claim came from."
+            }
+          },
+          "required": [
+            "text",
+            "evidence"
+          ],
+          "additionalProperties": false
+        },
+        "description": "One entry per distinct caution, contraindication or interaction. Empty if the label states none."
+      },
+      "purpose_confidence": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 5,
+        "description": "How clearly the label states its purpose: 0 not at all, 5 explicitly."
+      },
+      "risk_confidence": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 5,
+        "description": "How clearly the label states its risks: 0 not at all, 5 explicitly."
+      }
+    },
+    "required": [
+      "purpose",
+      "risk",
+      "purpose_confidence",
+      "risk_confidence"
+    ],
+    "additionalProperties": false
+  },
+  "finished_at": "2026-09-12T12:57:06.096216+00:00",
+  "n_written": 100,
+  "statuses": {
+    "ok": 81,
+    "empty": 19
+  },
+  "grounding_rate": 1.0
+}

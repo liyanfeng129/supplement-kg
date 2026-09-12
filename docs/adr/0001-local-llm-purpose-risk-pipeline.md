@@ -382,3 +382,54 @@ produces plausible output, nothing errors — but a different cause, and
 grounding does not detect it: a CPU run is perfectly grounded, merely
 impossibly slow. Hence a separate assertion rather than a tighter grounding
 threshold.
+
+### A4. Concurrency: measured, and the answer is one stream (§9)
+
+§9 left "whether batching 4–8 streams gives 3–5×" open as a measurement. It is
+now closed, and the answer is no — for a reason that needs no benchmark.
+
+`llama_cpp.Llama` wraps one context and does no locking of its own (there is no
+lock anywhere in the module), so N threads calling `create_completion` on one
+instance interleave decode state and corrupt each other's output. The fix is a
+lock around the call, which serialises inference and makes `n_workers` overlap
+only rendering and IO with it — worth little at ~12s/label.
+
+The alternative, one `Llama` per worker, does not fit: the weights are 16.4 GiB
+and the card is 24 GiB, so a second instance cannot load. This was observed
+directly — a smoke run attempted while a batch held 17.3 GiB failed with
+`Failed to load model from file`.
+
+Real batching would need llama.cpp's own batched decode across sequences, which
+this wrapper does not expose. `n_workers` stays a parameter, its default is 1,
+and the honest summary is that in-process threads cannot give 3–5× here.
+
+Measured single-stream throughput over the full 100-label gold batch: **100
+records in 20m06s — ~5.0 labels/minute, median 9.86s per label**, a little
+faster than §9's 12–16s estimate. That puts the 92,442-record corpus at
+**roughly 12–13 days** of continuous GPU time.
+
+### A5. First gold-100 baseline (§11)
+
+Run `20260912T123618Z`, config `f65a23d3`, the prompt exactly as the gold set
+was built with:
+
+| | |
+|---|---|
+| status | 81 `ok`, 19 `empty`, **0 failures** |
+| grounding | **359/359 entries verbatim (100%)** |
+| presence accuracy | 0.750 over 200 cells (114 TP, 36 TN, 21 FP, 29 FN) |
+| hallucination rate | 0.105 of all cells; **0.368 of the 57 empty-gold cells** |
+| evidence precision / recall | 0.777 / 0.667 over 359 predicted vs 336 gold claims |
+| shared-evidence gold claims | 63 (the documented ceiling, not model error) |
+
+Read against §11's own caveats: the gold set is one frontier model's reading,
+100 labels is ±10pp, and 63 gold claims sit under the span-matching ceiling.
+So this is a **screen**, not a ranking — its job is to catch breakage and large
+wins, and it establishes the baseline any prompt change must beat.
+
+The number worth watching is the conditional hallucination rate: the model
+asserts a field on 37% of the cells where the reference says the label states
+none. Recall (0.667) and false negatives (29) say it also misses real claims.
+Both are prompt-iteration targets, which is downstream work — the pipeline
+exists to make that loop cheap, and a 100-label scored run now costs 20
+minutes.
