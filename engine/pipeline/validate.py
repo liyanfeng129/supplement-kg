@@ -80,6 +80,7 @@ def validate(
     config_hash: str | None = None,
     provenance: str = "local",
     latency_ms: int | None = None,
+    usage: dict | None = None,
     error: str | None = None,
     status: str | None = None,
 ) -> dict:
@@ -88,6 +89,11 @@ def validate(
     `raw` is the model's text, or the dict it parsed to. `latency_ms` stays
     None for the agent driver, whose wall-clock is not comparable to inference
     latency. Pass `status="error"` with `error` set when the call itself failed.
+
+    `usage` is the driver's own token counts when it has them. Stored on the
+    row rather than aggregated away, so throughput stays attributable to the
+    label that produced it -- a slow record and a long record look identical
+    in a per-label rate, and only tokens separate them.
     """
     raw_text = raw if isinstance(raw, str) else json.dumps(raw, ensure_ascii=False)
 
@@ -102,6 +108,8 @@ def validate(
         "error": error,
         "raw": raw_text,
         "latency_ms": latency_ms,
+        "prompt_tokens": (usage or {}).get("prompt_tokens"),
+        "completion_tokens": (usage or {}).get("completion_tokens"),
         "provenance": provenance,
         "config_hash": config_hash,
         "extracted_at": datetime.now(timezone.utc).isoformat(),

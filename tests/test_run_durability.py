@@ -16,6 +16,7 @@ import pytest
 from engine.pipeline import run as run_mod
 from engine.pipeline import store
 from engine.pipeline.config import Config
+from engine.pipeline.validate import validate
 
 
 class _FakeExtractor:
@@ -41,6 +42,7 @@ class _FakeExtractor:
                 }
             ),
             1234,
+            {"prompt_tokens": 800, "completion_tokens": 40},
         )
 
 
@@ -165,3 +167,80 @@ def test_a_retry_lands_in_its_own_run_directory(tmp_path, records, monkeypatch):
     assert rows[0]["status"] == "ok"
     # The original run keeps its failure, so its failure rate stays readable.
     assert {r["dsld_id"]: r["status"] for r in store.read_rows(d)}[2] == "poison"
+
+
+def test_a_row_records_the_token_counts_the_driver_reported(tmp_path, records, monkeypatch):
+    """Throughput must stay attributable to the label that produced it.
+
+    A per-label rate cannot distinguish a slow record from a long one, and
+    those mean different things: the first is a problem, the second is a label.
+    Only tokens separate them, so they are stored per row rather than summed
+    away into a run-level average.
+    """
+    d, _ = _run(records, tmp_path, monkeypatch)
+    row = store.read_rows(d)[0]
+    assert row["prompt_tokens"] == 800
+    assert row["completion_tokens"] == 40
+
+
+def test_verbose_names_every_record_and_quiet_names_none(tmp_path, records, monkeypatch, capsys):
+    """The default stays quiet: a corpus run is ~90k labels.
+
+    One line per record would bury the timer lines a multi-day job is steered
+    by. At `--limit 20` the reverse is true -- a 60s timer reads as a hang --
+    so the choice is the caller's, and both halves are pinned here.
+    """
+    path, p2i = records
+    monkeypatch.setattr(
+        run_mod, "LocalExtractor", lambda cfg: _FakeExtractor(cfg, passage_to_id=p2i)
+    )
+
+    run_mod.run(path, runs_root=tmp_path / "runs", skip_smoke=True, verbose=True,
+                progress_interval=10_000)
+    loud = capsys.readouterr().out
+    assert "dsld=1" in loud
+    assert "tok/s" in loud
+
+    run_mod.run(path, runs_root=tmp_path / "runs2", skip_smoke=True,
+                progress_interval=10_000)
+    quiet = capsys.readouterr().out
+    assert "dsld=1" not in quiet
+
+
+def test_the_header_names_the_prompt_and_config_before_work_starts(
+    tmp_path, records, monkeypatch, capsys
+):
+    """A wrong prompt or a stale model path should cost seconds, not an hour.
+
+    The manifest already records all of this, but only after the fact and only
+    on disk -- which is too late to stop a run you did not mean to start.
+    """
+    path, p2i = records
+    monkeypatch.setattr(
+        run_mod, "LocalExtractor", lambda cfg: _FakeExtractor(cfg, passage_to_id=p2i)
+    )
+    cfg = Config(note="a stated intent")
+    run_mod.run(path, config=cfg, runs_root=tmp_path / "runs", skip_smoke=True,
+                progress_interval=10_000)
+
+    out = capsys.readouterr().out
+    assert cfg.prompt_sha[:12] in out
+    assert cfg.config_hash in out
+    assert "a stated intent" in out
+    assert "n_ctx=8192" in out
+
+
+def test_an_ungrounded_entry_is_called_out_in_the_record_line():
+    """The fabrication signal is the one thing worth interrupting a scroll for."""
+    row = validate(
+        json.dumps({
+            "purpose": [{"text": "cures cancer", "evidence": "not in the label"}],
+            "risk": [],
+            "purpose_confidence": 5,
+            "risk_confidence": 0,
+        }),
+        "Supports Sleep.",
+        dsld_id=709,
+        latency_ms=1000,
+    )
+    assert "UNGROUNDED=1" in run_mod._record_line(row, 1, 1)

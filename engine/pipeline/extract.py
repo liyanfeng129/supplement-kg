@@ -393,12 +393,18 @@ class LocalExtractor:
         )
         return header + ("<think>\n" if self.config.decode.enable_thinking else "<think>\n\n</think>\n\n")
 
-    def extract(self, passage: str) -> tuple[str, int]:
-        """Run one passage. Returns (raw text, latency_ms).
+    def extract(self, passage: str) -> tuple[str, int, dict]:
+        """Run one passage. Returns (raw text, latency_ms, usage).
 
         No inline retry: a retry hides the failure rate, which is the primary
         early signal that a prompt or grammar is wrong, and it corrupts latency
         stats. A retry pass is an explicit second run over non-`ok` IDs.
+
+        `usage` carries llama.cpp's own token counts -- `prompt_tokens` and
+        `completion_tokens`. They come back from every call for free, and
+        without them throughput can only be reported per *label*, which hides
+        the thing that actually varies: a long label and a short one differ by
+        an order of magnitude in work while looking identical at 1/label.
         """
         d = self.config.decode
         started = time.monotonic()
@@ -413,7 +419,8 @@ class LocalExtractor:
                 stop=["<|im_end|>"],
             )
         latency_ms = int((time.monotonic() - started) * 1000)
-        return out["choices"][0]["text"] or "", latency_ms
+        usage = dict(out.get("usage") or {})
+        return out["choices"][0]["text"] or "", latency_ms, usage
 
     def close(self) -> None:
         self._llm = None

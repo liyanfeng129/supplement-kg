@@ -5,6 +5,7 @@ so behaviour cannot diverge between the two callers.
 
     python -m engine.pipeline.cli smoke  --records data/.../pilot-1000.jsonl
     python -m engine.pipeline.cli run    --records ... --limit 20 --note "..."
+    python -m engine.pipeline.cli run    --limit 20 -v      # a line per record
     python -m engine.pipeline.cli retry  --run data/dsld/runs/<id> --records ...
     python -m engine.pipeline.cli score  --run data/dsld/runs/<id>
     python -m engine.pipeline.cli stats  --run data/dsld/runs/<id>
@@ -58,6 +59,12 @@ def main(argv: list[str] | None = None) -> int:
         sp.add_argument("--max-tokens", type=int, dest="max_tokens")
         sp.add_argument("--n-ctx", type=int, dest="n_ctx")
         sp.add_argument("--temperature", type=float)
+        sp.add_argument(
+            "-v",
+            "--verbose",
+            action="store_true",
+            help="print a line per record (id, status, latency, tok/s)",
+        )
 
     sp = sub.add_parser("smoke", help="real gold labels through the real model")
     common(sp)
@@ -103,6 +110,7 @@ def main(argv: list[str] | None = None) -> int:
                 gold_path=args.gold,
                 n=args.n,
                 min_grounding=args.min_grounding,
+                verbose=args.verbose,
             ),
             indent=2,
         ))
@@ -117,6 +125,7 @@ def main(argv: list[str] | None = None) -> int:
             resume=args.resume,
             skip_smoke=args.skip_smoke,
             note=args.note,
+            verbose=args.verbose,
         )
     elif args.cmd == "retry":
         run_mod.retry(
@@ -126,6 +135,7 @@ def main(argv: list[str] | None = None) -> int:
             n_workers=args.workers,
             skip_smoke=args.skip_smoke,
             note=args.note,
+            verbose=args.verbose,
         )
     elif args.cmd == "score":
         print(json.dumps(score(store.read_rows(args.run), _gold(args.gold)), indent=2))

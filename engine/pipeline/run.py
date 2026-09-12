@@ -85,6 +85,7 @@ def _progress_line(
     statuses: Counter,
     grounded: int,
     entries: int,
+    tokens: int = 0,
 ) -> str:
     elapsed = time.monotonic() - started
     remaining = total - done
@@ -94,10 +95,71 @@ def _progress_line(
         eta = (datetime.now(timezone.utc) + timedelta(seconds=remaining / rate)).strftime("%Y-%m-%d %H:%M UTC")
     gr = f"{grounded / entries:.1%}" if entries else "n/a"
     breakdown = " ".join(f"{k}={v}" for k, v in sorted(statuses.items()))
+    # Generation throughput over the whole run, not the trailing window: the
+    # window tracks records/min, which is what the ETA is built from, while
+    # tok/s is here to answer "is the GPU performing as it did last time" --
+    # a question about the run, not about the last fifty records.
+    tps = f" {tokens / elapsed:.0f}tok/s" if tokens and elapsed > 0 else ""
     return (
         f"[{timedelta(seconds=int(elapsed))}] done={done}/{total} remaining={remaining} "
-        f"rate={rate * 60:.1f}/min eta={eta} grounding={gr} {breakdown}"
+        f"rate={rate * 60:.1f}/min{tps} eta={eta} grounding={gr} {breakdown}"
     )
+
+
+def _record_line(row: dict, done: int, total: int) -> str:
+    """One completed record, for `--verbose`.
+
+    Off by default on purpose: a corpus run is ~90k labels, and one line each
+    would bury the timer lines that a multi-day job is actually steered by.
+    At `--limit 20` the opposite is true -- a timer line every 60s reads as a
+    hang -- so the choice is the caller's rather than a fixed policy.
+    """
+    n_entries = len(row["purpose"]) + len(row["risk"])
+    ungrounded = sum(
+        1 for e in (*row["purpose"], *row["risk"]) if not e["grounded"]
+    )
+    # Columns are padded to fixed widths so a scroll of these reads as a table:
+    # the eye catches a status change or a latency outlier in the column, not
+    # in the prose. Widths fit the longest status and a 7-digit DSLD ID.
+    bits = [
+        f"[{done:>4}/{total}]",
+        f"dsld={row['dsld_id']:<8}",
+        f"{row['status']:<11}",
+        f"{n_entries:>2}e",
+    ]
+    if ungrounded:
+        # Never silent: an ungrounded entry is the fabrication signal, and it
+        # is the one thing worth interrupting a scroll for.
+        bits.append(f"UNGROUNDED={ungrounded}")
+    if row.get("latency_ms") is not None:
+        bits.append(f"{row['latency_ms'] / 1000:.1f}s")
+    ct, lat = row.get("completion_tokens"), row.get("latency_ms")
+    if ct and lat:
+        bits.append(f"{ct / (lat / 1000):.0f}tok/s")
+    if row.get("name"):
+        bits.append(f" {row['name'][:48]}")
+    return " ".join(bits)
+
+
+def _header(config: Config, d: Path, n_records: int, n_workers: int, records_path) -> str:
+    """What is about to run, before any of it runs.
+
+    The manifest records all of this, but only after the fact and only on
+    disk. Printing it first is what makes a wrong prompt or a stale model path
+    a five-second discovery instead of an hour-long one.
+    """
+    dec = config.decode
+    return "\n".join([
+        f"run dir     {d}",
+        f"records     {records_path} ({n_records} to do, {n_workers} worker(s))",
+        f"prompt      {config.prompt_path}  sha={config.prompt_sha[:12]}",
+        f"model       {config.model_id}",
+        f"decode      temp={dec.temperature} top_p={dec.top_p} top_k={dec.top_k} "
+        f"max_tokens={dec.max_tokens} n_ctx={dec.n_ctx} seed={dec.seed} "
+        f"thinking={dec.enable_thinking}",
+        f"config_hash {config.config_hash}",
+        f"note        {config.note or '(none)'}",
+    ])
 
 
 def smoke(
@@ -108,6 +170,7 @@ def smoke(
     n: int = SMOKE_LABELS,
     min_grounding: float = MIN_GROUNDING_RATE,
     extractor: LocalExtractor | None = None,
+    verbose: bool = False,
 ) -> dict:
     """Put real gold labels through the real model, prompt and grammar.
 
@@ -137,23 +200,31 @@ def smoke(
 
     ex = extractor or LocalExtractor(config)
     rows = []
-    for rec in records:
-        raw, latency = ex.extract(rec["passage"])
-        rows.append(
-            validate(
-                raw,
-                rec["passage"],
-                dsld_id=rec["dsld_id"],
-                name=rec.get("name"),
-                config_hash=config.config_hash,
-                provenance=config.provenance,
-                latency_ms=latency,
-            )
+    for i, rec in enumerate(records, 1):
+        raw, latency, usage = ex.extract(rec["passage"])
+        row = validate(
+            raw,
+            rec["passage"],
+            dsld_id=rec["dsld_id"],
+            name=rec.get("name"),
+            config_hash=config.config_hash,
+            provenance=config.provenance,
+            latency_ms=latency,
+            usage=usage,
         )
+        rows.append(row)
+        if verbose:
+            print("  " + _record_line(row, i, len(records)), flush=True)
 
     entries = [e for r in rows for e in (*r["purpose"], *r["risk"])]
     n_grounded = sum(1 for e in entries if e["grounded"])
     rate = n_grounded / len(entries) if entries else 0.0
+    # Throughput belongs in the smoke result because smoke is the only place
+    # it is measured on known inputs: the same five labels every time, so a
+    # figure here is comparable run to run in a way a corpus average is not.
+    tok = sum(r.get("completion_tokens") or 0 for r in rows)
+    secs = sum(r["latency_ms"] for r in rows) / 1000
+    tps = round(tok / secs, 1) if tok and secs else None
 
     result = {
         "n_labels": len(rows),
@@ -162,6 +233,8 @@ def smoke(
         "grounding_rate": rate,
         "statuses": dict(Counter(r["status"] for r in rows)),
         "median_latency_ms": sorted(r["latency_ms"] for r in rows)[len(rows) // 2],
+        "completion_tokens": tok,
+        "tokens_per_second": tps,
         "config_hash": config.config_hash,
         "passed": bool(entries) and rate >= min_grounding,
     }
@@ -186,6 +259,7 @@ def run(
     skip_smoke: bool = False,
     progress_interval: int = PROGRESS_INTERVAL_S,
     note: str = "",
+    verbose: bool = False,
 ) -> Path:
     """Extract over records, writing one row per attempt. Returns the run dir.
 
@@ -214,14 +288,23 @@ def run(
     # Smoke runs before every batch: a ggml upgrade that silently corrupts the
     # DeltaNet path must not be allowed to poison a multi-day run.
     extractor = LocalExtractor(config)
+
+    print(_header(config, d, len(records), n_workers, records_path), flush=True)
+    if already:
+        print(f"resuming    {len(already)} rows already done", flush=True)
+    print("", flush=True)
+
     smoke_result = None
     if not skip_smoke:
         print("smoke: putting gold labels through the real model...", flush=True)
-        smoke_result = smoke(config, extractor=extractor)
+        smoke_result = smoke(config, extractor=extractor, verbose=verbose)
         print(
             f"smoke: passed, grounding {smoke_result['grounding_rate']:.1%} "
             f"over {smoke_result['n_entries']} entries "
-            f"(median {smoke_result['median_latency_ms']}ms/label)",
+            f"(median {smoke_result['median_latency_ms']}ms/label"
+            + (f", {smoke_result['tokens_per_second']:.0f}tok/s"
+               if smoke_result.get("tokens_per_second") else "")
+            + ")",
             flush=True,
         )
 
@@ -317,7 +400,7 @@ def run(
             if rec is None:
                 return
             try:
-                raw, latency = extractor.extract(rec["passage"])
+                raw, latency, usage = extractor.extract(rec["passage"])
                 row = validate(
                     raw,
                     rec["passage"],
@@ -326,6 +409,7 @@ def run(
                     config_hash=config.config_hash,
                     provenance=config.provenance,
                     latency_ms=latency,
+                    usage=usage,
                 )
             except Exception as exc:  # noqa: BLE001 - one bad label must not sink a run
                 # No inline retry of the *call*: the failure rate must stay
@@ -350,6 +434,7 @@ def run(
     statuses: Counter = Counter()
     recent: deque = deque(maxlen=RATE_WINDOW)
     grounded = entries = done = 0
+    tokens = 0
     run_started = time.monotonic()
     last_report = run_started
 
@@ -373,14 +458,23 @@ def run(
             done += 1
             statuses[row["status"]] += 1
             recent.append(time.monotonic())
+            tokens += row.get("completion_tokens") or 0
             for e in (*row["purpose"], *row["risk"]):
                 entries += 1
                 grounded += bool(e["grounded"])
 
+            if verbose:
+                print(_record_line(row, done, total), flush=True)
+
             now = time.monotonic()
+            # The timer line still prints under --verbose: it is the only place
+            # the ETA, the trailing rate and the running grounding rate appear,
+            # and those are what a long run is steered by.
             if now - last_report >= progress_interval or done == total:
                 print(
-                    _progress_line(run_started, done, total, recent, statuses, grounded, entries),
+                    _progress_line(
+                        run_started, done, total, recent, statuses, grounded, entries, tokens
+                    ),
                     flush=True,
                 )
                 last_report = now
@@ -389,6 +483,7 @@ def run(
     manifest["n_written"] = done
     manifest["statuses"] = dict(statuses)
     manifest["grounding_rate"] = (grounded / entries) if entries else None
+    manifest["completion_tokens"] = tokens
     store.write_manifest(d, manifest)
 
     print(f"run complete: {d}", flush=True)
