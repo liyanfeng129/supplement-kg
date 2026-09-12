@@ -373,9 +373,32 @@ first smoke attempt burned 100+ minutes of CPU at 20 GB RSS while the GPU sat
 at 1 MiB, producing no error at any layer.
 
 `GGML_CUDA_NO_PINNED=1` is now set at module scope in `engine/pipeline/extract.py`
-(it must precede the first `llama_cpp` import), and `check_gpu_offload()` runs
-inside `smoke()` so a CPU fallback fails the batch instead of quietly costing
-days.
+(it must precede the first `llama_cpp` import). That flag makes CUDA init
+*succeed*; it is not a fallback.
+
+**The pipeline is GPU-only, and refuses to run without one.** There is no CPU
+path. `check_gpu_offload()` is called from `LocalExtractor.llm` — the single
+point every driver and entry point passes through, including
+`run(skip_smoke=True)` — and raises `GPUUnavailable` on either of two
+conditions: llama.cpp reporting no offload support, or less free VRAM than the
+weights need. CPU execution is never an acceptable degraded mode here: at ~100x
+slower a corpus run goes from days to years, and llama.cpp degrades *silently*,
+so the run would look healthy the whole time.
+
+Because the overwhelmingly common cause is **a previous run that was never
+killed**, the refusal names it. `gpu_holders()` reads `nvidia-smi` and the
+error lists each PID, process and its VRAM, followed by a ready-to-paste
+`kill`. Verified against a real occupied GPU:
+
+```
+GPUUnavailable: Refusing to run: only 6690 MiB of VRAM free, and the model
+needs about 18000 MiB.
+...
+The GPU is currently held by:
+  PID 3220802  .venv/bin/python  (17148 MiB)
+This is usually a previous run that was never killed. Stop it and
+retry:  kill 3220802
+```
 
 This is the same failure *shape* §7 was written about — loads normally,
 produces plausible output, nothing errors — but a different cause, and

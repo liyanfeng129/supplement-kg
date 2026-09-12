@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import threading
 import time
 from typing import Any
@@ -33,16 +34,26 @@ from engine.services.extraction.label_purpose_risk import SCHEMA
 # ggml's CUDA backend allocates pinned host memory (`cudaHostAlloc`) during
 # init. That call is refused in this environment, and ggml treats the failure
 # as fatal for the whole backend: it prints `ggml_cuda_init: failed to
-# initialize CUDA: initialization error`, reports
-# `llama_supports_gpu_offload() == False`, and then **silently ignores
-# `n_gpu_layers` and runs on CPU** -- measured here at ~100x slower, which
-# turns a 14-day corpus run into an impossible one while looking like it works.
+# initialize CUDA: initialization error` and reports
+# `llama_supports_gpu_offload() == False`.
 #
-# Setting this before the library loads makes ggml skip pinned allocation and
-# initialise normally (verified: offload True, 24 GiB visible). It must be set
-# before the first llama_cpp import, so it lives at module scope rather than in
-# a shell profile where it would be one forgotten export away from a CPU run.
+# This flag is what makes CUDA init *succeed* -- it is not a CPU fallback, and
+# there is no CPU fallback anywhere in this module. Setting it makes ggml skip
+# pinned allocation and initialise normally (verified: offload True, 24 GiB
+# visible). It must be set before the first llama_cpp import, so it lives at
+# module scope rather than in a shell profile, where one forgotten export would
+# turn every run into a refusal.
+#
+# When the GPU genuinely is unusable, `check_gpu_offload()` stops the run --
+# see `GPUUnavailable`. Running on CPU is never the answer: it is ~100x slower
+# and llama.cpp does it silently, so a corpus run would look healthy for
+# years.
 os.environ.setdefault("GGML_CUDA_NO_PINNED", "1")
+
+# Free VRAM the model needs before it is worth starting: 16.4 GiB of weights
+# plus room for the KV cache and compute buffers. Below this, llama.cpp would
+# fall back to CPU rather than fail.
+MIN_VRAM_MIB = 18_000
 
 # Fixtures the schema->grammar conversion must judge correctly. A converter
 # that accepts everything would pass a parseability check while letting
@@ -81,24 +92,126 @@ GRAMMAR_FIXTURES = [
 ]
 
 
-def check_gpu_offload() -> None:
-    """Assert the CUDA backend came up, before a batch silently runs on CPU.
+class GPUUnavailable(RuntimeError):
+    """No usable GPU, so the run must stop rather than quietly use the CPU."""
 
-    ggml does not fail loudly when its CUDA backend cannot initialise: it
-    ignores `n_gpu_layers` and runs on CPU, roughly 100x slower. Nothing in the
-    output distinguishes that from a correct run -- the rows are fine, the
-    grounding rate is fine, and only the clock says anything is wrong -- so it
-    is checked rather than assumed, the same way grounding is.
+
+def gpu_holders() -> list[dict]:
+    """Processes currently holding GPU memory, via nvidia-smi.
+
+    Used only to explain a failure. The overwhelmingly common cause of "the GPU
+    is unavailable" here is a previous run that was never killed and still has
+    the weights resident, and naming that process is the difference between a
+    one-command fix and a debugging session.
+    """
+    try:
+        out = subprocess.run(
+            [
+                "nvidia-smi",
+                "--query-compute-apps=pid,process_name,used_gpu_memory",
+                "--format=csv,noheader,nounits",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return []
+    if out.returncode != 0:
+        return []
+
+    holders = []
+    for line in out.stdout.strip().splitlines():
+        parts = [f.strip() for f in line.split(",")]
+        if len(parts) >= 3 and parts[0]:
+            holders.append({"pid": parts[0], "name": parts[1], "used_mib": parts[2]})
+    return holders
+
+
+def free_vram_mib() -> int | None:
+    """Free VRAM on device 0, or None when it cannot be read."""
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    first = out.stdout.strip().splitlines()[:1]
+    return int(first[0].strip()) if first and first[0].strip().isdigit() else None
+
+
+def _gpu_unavailable_message(reason: str) -> str:
+    """Explain why the GPU is unusable, and name whatever is holding it."""
+    lines = [
+        f"Refusing to run: {reason}",
+        "",
+        "This pipeline is GPU-only by design. Falling back to CPU is not an",
+        "option here -- it is ~100x slower, so a corpus run would take years",
+        "rather than days, and llama.cpp does it silently: no error, correct",
+        "rows, a perfect grounding rate, and only the clock to tell you.",
+    ]
+
+    holders = gpu_holders()
+    if holders:
+        lines += ["", "The GPU is currently held by:"]
+        lines += [
+            f"  PID {h['pid']}  {h['name']}  ({h['used_mib']} MiB)" for h in holders
+        ]
+        lines += [
+            "",
+            "This is usually a previous run that was never killed. Stop it and",
+            f"retry:  kill {' '.join(h['pid'] for h in holders)}",
+        ]
+    else:
+        lines += [
+            "",
+            "No process is holding the GPU, so this is not a leftover run.",
+            "Check that GGML_CUDA_NO_PINNED=1 is set before llama_cpp is first",
+            "imported (ggml's CUDA init fails on pinned-memory allocation on",
+            "this machine), and that libggml-cuda.so loads -- `python -c \"from",
+            "llama_cpp import llama_cpp as C; print(C.llama_supports_gpu_offload())\"`",
+            "should print True.",
+        ]
+    return "\n".join(lines)
+
+
+def check_gpu_offload(need_mib: int | None = None) -> None:
+    """Refuse to run unless the model can actually be offloaded to the GPU.
+
+    Two distinct failures, both of which end in a silent CPU run:
+
+    - **The CUDA backend did not initialise.** ggml treats this as fatal for
+      the backend but not for the process: `n_gpu_layers` is ignored and the
+      model loads on CPU.
+    - **The GPU is occupied.** Usually a previous run that was never killed.
+      The weights then cannot fit, and llama.cpp again falls back rather than
+      failing.
+
+    Neither is detectable from the output -- the rows are fine and the
+    grounding rate is perfect -- so both are asserted here, before the weights
+    are loaded, and reported with the process holding the GPU when there is one.
     """
     from llama_cpp import llama_cpp as C
 
     if not C.llama_supports_gpu_offload():
-        raise RuntimeError(
-            "llama.cpp reports no GPU offload support, so a run would fall "
-            "back to CPU (~100x slower) without erroring. Check "
-            "GGML_CUDA_NO_PINNED=1 is set before llama_cpp is imported, and "
-            "that libggml-cuda.so can initialise on this machine."
+        raise GPUUnavailable(
+            _gpu_unavailable_message("llama.cpp reports no GPU offload support.")
         )
+
+    if need_mib:
+        free = free_vram_mib()
+        if free is not None and free < need_mib:
+            raise GPUUnavailable(
+                _gpu_unavailable_message(
+                    f"only {free} MiB of VRAM free, and the model needs about "
+                    f"{need_mib} MiB."
+                )
+            )
 
 
 def build_grammar():
@@ -193,7 +306,12 @@ class LocalExtractor:
     would dominate the run.
     """
 
-    def __init__(self, config: Config | None = None, verbose: bool = False):
+    def __init__(
+        self,
+        config: Config | None = None,
+        verbose: bool = False,
+        min_vram_mib: int = MIN_VRAM_MIB,
+    ):
         self.config = config or Config()
         self.verbose = verbose
         self._llm = None
@@ -212,21 +330,39 @@ class LocalExtractor:
         # overlaps only render and IO with inference, which is worth little at
         # ~12s/label -- measured, not assumed.
         self._call_lock = threading.Lock()
+        # Free VRAM required before loading. The weights are 16.4 GiB; the
+        # margin covers the KV cache and compute buffers. Set to 0 to skip the
+        # headroom check (the offload assertion always runs).
+        self.min_vram_mib = min_vram_mib
 
     @property
     def llm(self):
         if self._llm is None:
+            # Checked here rather than only in `smoke`, because this property is
+            # the single point every driver and every entry point passes
+            # through -- including `run(skip_smoke=True)` and any direct use.
+            # A guard the caller can skip is not a guard against a failure whose
+            # only symptom is the clock.
+            check_gpu_offload(need_mib=self.min_vram_mib)
+
             from llama_cpp import Llama
 
             d = self.config.decode
-            self._llm = Llama(
-                model_path=self.config.model_id,
-                # Fully offloaded: 16.4 GiB of weights on a 24 GiB card.
-                n_gpu_layers=-1,
-                n_ctx=d.n_ctx,
-                seed=d.seed,
-                verbose=self.verbose,
-            )
+            try:
+                self._llm = Llama(
+                    model_path=self.config.model_id,
+                    # Fully offloaded: 16.4 GiB of weights on a 24 GiB card.
+                    n_gpu_layers=-1,
+                    n_ctx=d.n_ctx,
+                    seed=d.seed,
+                    verbose=self.verbose,
+                )
+            except Exception as exc:
+                # The usual cause is a GPU that filled up between the check
+                # above and the load -- another run starting alongside this one.
+                raise GPUUnavailable(
+                    _gpu_unavailable_message(f"the model failed to load ({exc}).")
+                ) from exc
         return self._llm
 
     @property
