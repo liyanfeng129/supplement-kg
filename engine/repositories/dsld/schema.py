@@ -49,3 +49,82 @@ class Label:
 
     def to_dict(self) -> dict:
         return {"dsld_id": self.dsld_id, "name": self.name, "passage": self.passage}
+
+
+@dataclass(frozen=True)
+class Claim:
+    """One extracted purpose or risk, with the span it was read from.
+
+    `evidence` is what makes a gold row auditable: the gold set is one model's
+    reading of a label, not a human adjudication, so a claim that cannot be
+    pointed back at the passage cannot be checked. `grounded` records whether
+    that span was found in the passage verbatim at write time.
+    """
+
+    text: str
+    evidence: str = ""
+    grounded: bool | None = None
+
+    @classmethod
+    def from_dict(cls, record: dict) -> "Claim":
+        try:
+            return cls(
+                text=str(record["text"]),
+                evidence=str(record.get("evidence") or ""),
+                grounded=record.get("grounded"),
+            )
+        except (KeyError, TypeError) as exc:
+            raise ValueError(f"not a usable claim: {record!r}") from exc
+
+    def to_dict(self) -> dict:
+        return {"text": self.text, "evidence": self.evidence, "grounded": self.grounded}
+
+
+@dataclass(frozen=True)
+class GoldLabel:
+    """The reference reading of one label: its purposes and its risks.
+
+    A *reference*, not ground truth -- see `services/extraction/gold_set.py`.
+    It carries `model` so a later comparison can say which reading it scored
+    against, and the 100 rows are committed outside the gitignored `data/`
+    tree because regenerating them costs money.
+    """
+
+    dsld_id: int
+    name: str = ""
+    purpose: list[Claim] = None  # type: ignore[assignment]
+    risk: list[Claim] = None  # type: ignore[assignment]
+    model: str = ""
+    extracted_at: str = ""
+
+    def __post_init__(self) -> None:
+        # Frozen, so the empty-list defaults are filled through object.__setattr__
+        # rather than a mutable default shared by every instance.
+        if self.purpose is None:
+            object.__setattr__(self, "purpose", [])
+        if self.risk is None:
+            object.__setattr__(self, "risk", [])
+
+    @classmethod
+    def from_dict(cls, record: dict) -> "GoldLabel":
+        try:
+            return cls(
+                dsld_id=int(record["dsld_id"]),
+                name=str(record.get("name") or ""),
+                purpose=[Claim.from_dict(c) for c in record.get("purpose") or []],
+                risk=[Claim.from_dict(c) for c in record.get("risk") or []],
+                model=str(record.get("model") or ""),
+                extracted_at=str(record.get("extracted_at") or ""),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"not a usable gold record: {record!r}") from exc
+
+    def to_dict(self) -> dict:
+        return {
+            "dsld_id": self.dsld_id,
+            "name": self.name,
+            "purpose": [c.to_dict() for c in self.purpose],
+            "risk": [c.to_dict() for c in self.risk],
+            "model": self.model,
+            "extracted_at": self.extracted_at,
+        }
