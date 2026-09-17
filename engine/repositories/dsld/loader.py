@@ -28,29 +28,37 @@ They are deliberately not one function with a `kind` argument: they return
 different shapes (`dict`, `Label`, `GoldLabel`), take different arguments, and
 fail for different reasons.
 
-**One, many, in order, or at random.** Every entry answers all four. On the
-raw side the *argument* says which -- an id returns a `dict`, an iterable of
-ids returns a `list[dict]` -- rather than a second function whose only
-difference is how many ids you have. `dump_ids()` is there so that "a random
-sample of the dump" is expressible at all: there is no file listing the dump,
-so without it a caller cannot even name the population to sample from.
+**One, many, N, in order, or at random.** Every entry answers all of these.
+On the raw side the *argument* says which: an id returns a `dict`, an iterable
+of ids returns a `list[dict]`, and naming no ids at all draws from the dump.
 
     load_raw(709)                                   # one   -> dict
     load_raw([889, 709])                            # many  -> list[dict]
-    load_raw(dump_ids(), skip_missing=True)         # all of it
-    load_flattened(order="sorted")                  # all, by id
-    load_flattened(order="random", seed=42)         # all, shuffled
-    load(limit=50, order="random", seed=42)         # a random 50
+    load_raw(n=50)                                  # the first 50 by id
+    load_raw(n=50, order="random", seed=42)         # a random 50
+    load_raw([889, 709], order="given")             # keep caller order
+    load_flattened(order="random", seed=42)         # the corpus, shuffled
+    load(limit=50, order="random", seed=42)         # a random 50 passages
 
-Note `load_raw("709")` is one product, not three characters: `str` is
-iterable, so the singular/plural test excludes it explicitly.
+`n=` exists because the population has to be listed before it can be sampled,
+and only this layer knows how -- there is no file listing the dump's contents,
+so a caller cannot otherwise name what it would be drawing from. `dump_ids()`
+exposes the same listing for a caller that wants the ids themselves.
+
+**Ids come back sorted unless you say otherwise.** A list of ids is a *set*:
+it arrives from a CSV column, a comma-separated flag or a set difference,
+where the order is incidental, so two callers asking for the same ids should
+get the same answer. `order="given"` keeps caller order for the rarer case
+where the list really is a ranking. Reading a whole file still defaults to
+"file" order, because the pilot file is itself a randomised draw and a prefix
+of it is already a random subset.
 
 **A random draw requires a seed.** `order="random"` without one raises rather
 than defaulting, because the failure is otherwise silent: an unseeded draw
 makes every rerun score a different subset of labels while looking exactly
 like the run before it. This follows the rule `pilot_sample.sample` already
-set. `ids=` is itself an order, so combining it with `order=` also raises
-instead of quietly discarding one of the two.
+set. Selecting ids and ordering them are separate questions, so `ids=` and
+`order=` compose rather than conflicting.
 
 **One loader instance.** The three sources are read repeatedly -- a scoring
 pass wants the gold set, then the passages that produced it, then a run's rows
@@ -106,13 +114,20 @@ DUMP_BUCKET_SIZE = 1000
 
 # How a caller may ask for records to come back.
 #
-# "file"   -- source order, untouched. The default everywhere, because the
-#             pilot file is already a randomised draw written in a fixed
-#             order, so a prefix of it is itself a random subset.
-# "sorted" -- ascending by id. For a stable order across sources that were
-#             written in different orders.
+# "sorted" -- ascending by id. The default when the caller names ids: a list
+#             of ids is a *set*, and the order it was typed in is almost
+#             always incidental -- a CSV column, a comma-separated flag, a
+#             set difference. Sorting makes two callers asking for the same
+#             ids get the same answer.
+# "file"   -- source order, untouched. The default when reading a whole file,
+#             because the pilot file is already a randomised draw written in
+#             a fixed order, so a prefix of it is itself a random subset.
+#             Meaningless for an id list -- there is no file to be in the
+#             order of -- where "given" says the same thing honestly.
+# "given"  -- caller order, for the rarer case where the list really is a
+#             ranking and must survive.
 # "random" -- a seeded shuffle. Never unseeded; see `_ordered`.
-ORDERS = ("file", "sorted", "random")
+ORDERS = ("sorted", "file", "given", "random")
 
 
 def _is_one_id(x) -> bool:
@@ -144,7 +159,7 @@ def _ordered(items: list, order: str, seed: int | None, key) -> list:
     """
     if order not in ORDERS:
         raise ValueError(f"order must be one of {ORDERS}, not {order!r}")
-    if order == "file":
+    if order in ("file", "given"):
         if seed is not None:
             raise ValueError("seed only means something with order='random'")
         return items
@@ -263,55 +278,81 @@ class DsldLoader:
     def load_raw(self, dsld_id: int | str, root=..., **kw) -> dict: ...
 
     @overload
-    def load_raw(self, dsld_id: Iterable[int | str], root=..., **kw) -> list[dict]: ...
+    def load_raw(self, dsld_id: Iterable[int | str] | None = ..., root=..., **kw) -> list[dict]: ...
 
     def load_raw(
         self,
-        dsld_id,
+        dsld_id=None,
         root: str | Path | None = None,
-        order: str = "file",
+        n: int | None = None,
+        order: str | None = None,
         seed: int | None = None,
         skip_missing: bool = False,
     ):
-        """One product's full DSLD record, or several.
+        """One product's full DSLD record, several, or a draw of N.
 
-        The argument decides: an id returns a `dict`, an iterable of ids
-        returns a `list[dict]`. There is no separate `load_raw_many` because
-        the two differ only in how many ids you have, which the ids already
-        say -- and a caller building a list of length one should not have to
-        switch functions to read it.
+        The argument decides the shape: an id returns a `dict`, an iterable of
+        ids returns a `list[dict]`. There is no separate `load_raw_many`,
+        because the two would differ only in how many ids you have -- which
+        the ids already say -- and a caller whose list happens to hold one
+        entry should not have to switch functions to read it.
 
         A `str` id is deliberately *not* treated as an iterable of characters,
         which is the trap in dispatching on type: `load_raw("709")` reads
         product 709, as it always has.
+
+        **Naming no ids draws from the dump.** `n=50` takes fifty of the
+        ~215k ids the dump holds; with `order="random"` that is a sample, and
+        with `order="sorted"` it is the first fifty by id. This is the entry
+        for "some records" when the caller has no id list to start from --
+        the population has to be listed to sample it, and only this layer
+        knows how.
+
+        **Ids come back sorted unless you say otherwise.** A list of ids is a
+        *set*: it usually arrives from a CSV column, a comma-separated flag or
+        a set difference, where the order is incidental. Sorting means two
+        callers asking for the same ids get the same answer. `order="given"`
+        keeps caller order for the rarer case where the list is a real
+        ranking.
 
         Returned as parsed documents rather than a dataclass on purpose: the
         raw record is the *source*, and a shape defined here would quietly
         drop every field this repo does not yet consume -- which is most of
         them, and which is the reason to keep a dump at all.
 
-        `order` and `seed` apply to the plural form only; "file" order means
-        caller order, since there is no file to be in the order of and an
-        explicit id list is usually a priority order.
-
         Raises `DSLDNotFound` for an id the dump does not hold, matching the
         API client, so a caller can swap transports without changing its
         error handling. In the plural form every missing id is named at once:
         a hole in a dump is usually a stale or partial download, and hearing
         about all of it beats one `DSLDNotFound` per rerun. `skip_missing`
-        reads the rest instead.
+        reads the rest instead. A draw by `n=` never reports missing ids --
+        it drew them from what the dump actually holds.
 
         Returned as a list rather than a generator because the caller asked
         for a known set of ids, and a half-consumed generator that raises on
         the 40th is harder to reason about than one that fails up front. For a
         sweep over the whole dump, iterate `dump_ids()` and call this per id.
         """
+        if dsld_id is None:
+            if n is None:
+                raise ValueError(
+                    "load_raw needs an id, some ids, or n= to draw from the dump"
+                )
+            # The draw is over the ids the dump actually holds, so nothing it
+            # returns can be missing -- and `n` means n records, not n
+            # attempts of which some fail.
+            drawn = _ordered(self.dump_ids(root), order or "sorted", seed, key=int)[:n]
+            return [self._load_one_raw(i, root) for i in drawn]
+
+        if n is not None:
+            raise ValueError("n= draws from the dump; drop it, or drop the ids")
+
         if _is_one_id(dsld_id):
-            if order != "file" or seed is not None:
+            if order is not None or seed is not None:
                 raise ValueError("order= and seed= need more than one id")
             return self._load_one_raw(dsld_id, root)
 
-        wanted = _ordered([int(i) for i in dsld_id], order, seed, key=int)
+        wanted = _ordered([int(i) for i in dsld_id], order or "sorted", seed, key=int)
         out, missing = [], []
         for i in wanted:
             try:
@@ -360,7 +401,7 @@ class DsldLoader:
     def load_flattened(
         self,
         path: str | Path | None = None,
-        order: str = "file",
+        order: str | None = None,
         seed: int | None = None,
     ) -> list[Label]:
         """Every frozen pilot passage, in file order unless asked otherwise.
@@ -388,14 +429,14 @@ class DsldLoader:
         # draw cannot change what the next caller sees. The copy also means a
         # caller that sorts in place damages nothing -- `Label` is frozen, so
         # the elements themselves need no copying.
-        return _ordered(list(cached), order, seed, key=lambda lab: lab.dsld_id)
+        return _ordered(list(cached), order or "file", seed, key=lambda lab: lab.dsld_id)
 
     # --- gold ---------------------------------------------------------------
 
     def load_gold(
         self,
         path: str | Path | None = None,
-        order: str = "file",
+        order: str | None = None,
         seed: int | None = None,
     ) -> list[GoldLabel]:
         """The reference purpose/risk reading, in file order unless asked otherwise.
@@ -414,7 +455,7 @@ class DsldLoader:
                 )
             cached = [GoldLabel.from_dict(r) for r in _read_jsonl(src)]
             self._gold[src] = cached
-        return _ordered(list(cached), order, seed, key=lambda g: g.dsld_id)
+        return _ordered(list(cached), order or "file", seed, key=lambda g: g.dsld_id)
 
     def gold_by_id(self, path: str | Path | None = None) -> dict[int, GoldLabel]:
         """The gold set keyed by id -- what scoring joins a run's rows against."""
@@ -428,7 +469,7 @@ class DsldLoader:
         ids: list[int] | None = None,
         limit: int | None = None,
         resume_from: str | Path | None = None,
-        order: str = "file",
+        order: str | None = None,
         seed: int | None = None,
     ) -> Selection:
         """Flattened labels to process, with an account of what was left out.
@@ -452,24 +493,26 @@ class DsldLoader:
         labels = self.load_flattened(src)
         n_available = len(labels)
 
-        # Ordering happens before id selection so that an explicit id list
-        # still wins: `ids` is a priority order, and shuffling after it would
-        # throw that away. With `ids`, this orders nothing the caller sees.
-        if ids is None:
-            labels = _ordered(labels, order, seed, key=lambda lab: lab.dsld_id)
-        elif order != "file" or seed is not None:
-            raise ValueError(
-                "ids= already states an order; drop order=/seed= or drop ids="
-            )
-
         missing: list[int] = []
-        if ids is not None:
+        if ids is None:
+            # No ids named: order the whole corpus. "file" is the default
+            # here because the pilot file is itself a randomised draw, so a
+            # prefix of it is already a random subset.
+            labels = _ordered(labels, order or "file", seed, key=lambda lab: lab.dsld_id)
+        else:
             wanted = [int(i) for i in ids]
             by_id = {lab.dsld_id: lab for lab in labels}
             missing = [i for i in wanted if i not in by_id]
-            # Caller order, not file order: an explicit id list is usually a
-            # priority order, and silently re-sorting it hides that it was ignored.
-            labels = [by_id[i] for i in wanted if i in by_id]
+            # Ordered after selection, not before: an id list is a *set*, so
+            # it is the selected labels that get ordered, and "sorted" is the
+            # default for the same reason as in `load_raw` -- the order a list
+            # of ids was typed in is almost always incidental.
+            labels = _ordered(
+                [by_id[i] for i in wanted if i in by_id],
+                order or "sorted",
+                seed,
+                key=lambda lab: lab.dsld_id,
+            )
 
         n_done = 0
         if resume_from is not None:
@@ -520,15 +563,16 @@ def loader() -> DsldLoader:
 
 
 def load_raw(
-    dsld_id,
+    dsld_id=None,
     root: str | Path | None = None,
-    order: str = "file",
+    n: int | None = None,
+    order: str | None = None,
     seed: int | None = None,
     skip_missing: bool = False,
 ):
-    """One product's full record, or several. See `DsldLoader.load_raw`."""
+    """One record, several, or a draw of N. See `DsldLoader.load_raw`."""
     return loader().load_raw(
-        dsld_id, root, order=order, seed=seed, skip_missing=skip_missing
+        dsld_id, root, n=n, order=order, seed=seed, skip_missing=skip_missing
     )
 
 
@@ -543,14 +587,14 @@ def dump_ids(root: str | Path | None = None) -> list[int]:
 
 
 def load_flattened(
-    path: str | Path | None = None, order: str = "file", seed: int | None = None
+    path: str | Path | None = None, order: str | None = None, seed: int | None = None
 ) -> list[Label]:
     """The frozen pilot passages. See `DsldLoader.load_flattened`."""
     return loader().load_flattened(path, order=order, seed=seed)
 
 
 def load_gold(
-    path: str | Path | None = None, order: str = "file", seed: int | None = None
+    path: str | Path | None = None, order: str | None = None, seed: int | None = None
 ) -> list[GoldLabel]:
     """The reference purpose/risk reading. See `DsldLoader.load_gold`."""
     return loader().load_gold(path, order=order, seed=seed)
@@ -566,7 +610,7 @@ def load(
     ids: list[int] | None = None,
     limit: int | None = None,
     resume_from: str | Path | None = None,
-    order: str = "file",
+    order: str | None = None,
     seed: int | None = None,
 ) -> Selection:
     """Labels to process, with an account of what was left out. See `DsldLoader.load`."""

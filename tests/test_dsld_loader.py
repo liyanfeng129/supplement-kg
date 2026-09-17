@@ -100,10 +100,22 @@ def test_selection_is_iterable_and_carries_its_ids(records):
     assert [lab.dsld_id for lab in sel] == sel.ids == [709, 885, 889]
 
 
-def test_ids_select_and_preserve_caller_order(records):
-    """An explicit id list is usually a priority order; re-sorting hides that
-    it was ignored."""
-    assert loader.load(records, ids=[889, 709]).ids == [889, 709]
+def test_ids_come_back_sorted_by_default(records):
+    """An id list is a set, not a ranking -- it usually arrives from a CSV
+    column or a comma-separated flag, where the order is incidental."""
+    assert loader.load(records, ids=[889, 709]).ids == [709, 889]
+
+
+def test_ids_keep_caller_order_when_asked(records):
+    assert loader.load(records, ids=[889, 709], order="given").ids == [889, 709]
+
+
+def test_ids_can_be_drawn_at_random(records):
+    """Selecting a set of ids and shuffling them are separate questions, so
+    asking both at once is allowed."""
+    sel = loader.load(records, ids=[889, 709, 885], order="random", seed=4)
+    assert sorted(sel.ids) == [709, 885, 889]
+    assert sel.ids == loader.load(records, ids=[889, 709, 885], order="random", seed=4).ids
 
 
 def test_unknown_ids_are_reported_not_silently_dropped(records):
@@ -394,10 +406,10 @@ def test_a_random_limit_is_a_random_sample(records):
     assert sel.ids == loader.load(records, limit=2, order="random", seed=42).ids
 
 
-def test_ids_and_order_together_are_refused(records):
-    """`ids` is already a priority order; honouring both would discard one."""
-    with pytest.raises(ValueError, match="already states an order"):
-        loader.load(records, ids=[709], order="random", seed=1)
+def test_an_unseeded_random_id_draw_is_still_refused(records):
+    """Combining ids= and order= is fine, but the seed rule still holds."""
+    with pytest.raises(ValueError, match="explicit seed"):
+        loader.load(records, ids=[709, 885], order="random")
 
 
 def test_gold_takes_an_order_too(gold):
@@ -407,11 +419,21 @@ def test_gold_takes_an_order_too(gold):
 # --- raw: many, ordered -----------------------------------------------------
 
 
-def test_load_raw_many_keeps_caller_order(tmp_path):
+def test_load_raw_sorts_ids_by_default(tmp_path):
+    """An id list is a set, not a ranking: two callers asking for the same ids
+    should get the same answer."""
     root = tmp_path / "dump"
     for i in (709, 885, 889):
         _dump_with(root, i, {"id": i})
-    assert [d["id"] for d in loader.load_raw([889, 709], root)] == [889, 709]
+    assert [d["id"] for d in loader.load_raw([889, 709], root)] == [709, 889]
+
+
+def test_load_raw_keeps_caller_order_when_asked(tmp_path):
+    """For the rarer case where the list really is a ranking."""
+    root = tmp_path / "dump"
+    for i in (709, 885, 889):
+        _dump_with(root, i, {"id": i})
+    assert [d["id"] for d in loader.load_raw([889, 709], root, order="given")] == [889, 709]
 
 
 def test_load_raw_many_can_be_sorted_or_drawn(tmp_path):
@@ -466,7 +488,7 @@ def test_an_id_returns_one_record(dump):
 
 
 def test_ids_return_a_list_of_records(dump):
-    assert [d["id"] for d in loader.load_raw([889, 709], dump)] == [889, 709]
+    assert [d["id"] for d in loader.load_raw([889, 709], dump)] == [709, 889]
 
 
 def test_a_string_id_is_one_record_not_three_characters(dump):
@@ -479,8 +501,8 @@ def test_a_string_id_is_one_record_not_three_characters(dump):
 def test_any_iterable_of_ids_works(dump):
     """A caller holding a tuple or a generator should not have to build a
     list first."""
-    assert [d["id"] for d in loader.load_raw((889, 709), dump)] == [889, 709]
-    assert [d["id"] for d in loader.load_raw((i for i in [709, 885]), dump)] == [709, 885]
+    assert [d["id"] for d in loader.load_raw((889, 709), dump)] == [709, 889]
+    assert [d["id"] for d in loader.load_raw((i for i in [885, 709]), dump)] == [709, 885]
 
 
 def test_a_one_element_list_still_returns_a_list(dump):
@@ -494,3 +516,47 @@ def test_ordering_one_id_is_refused(dump):
     """It would do nothing; the caller believes they asked for something."""
     with pytest.raises(ValueError, match="more than one id"):
         loader.load_raw(709, dump, order="sorted")
+
+
+# --- n=: a draw from the dump, without naming ids ---------------------------
+
+
+def test_n_draws_that_many_records(dump):
+    assert len(loader.load_raw(n=2, root=dump)) == 2
+
+
+def test_n_sorted_takes_the_lowest_ids(dump):
+    assert [d["id"] for d in loader.load_raw(n=2, root=dump, order="sorted")] == [709, 885]
+
+
+def test_n_random_is_reproducible_and_a_real_subset(dump):
+    a = [d["id"] for d in loader.load_raw(n=2, root=dump, order="random", seed=9)]
+    b = [d["id"] for d in loader.load_raw(n=2, root=dump, order="random", seed=9)]
+    assert a == b
+    assert len(a) == 2 and set(a) <= {709, 885, 889}
+
+
+def test_an_unseeded_random_draw_is_refused(dump):
+    with pytest.raises(ValueError, match="explicit seed"):
+        loader.load_raw(n=2, root=dump, order="random")
+
+
+def test_n_never_reports_missing_ids(dump):
+    """It drew from what the dump holds, so `n` means n records -- not n
+    attempts of which some fail."""
+    assert len(loader.load_raw(n=3, root=dump)) == 3
+
+
+def test_n_larger_than_the_dump_returns_what_exists(dump):
+    assert len(loader.load_raw(n=99, root=dump)) == 3
+
+
+def test_n_together_with_ids_is_refused(dump):
+    """Two different ways of saying which records; honouring both is undefined."""
+    with pytest.raises(ValueError, match="n= draws from the dump"):
+        loader.load_raw([709], dump, n=2)
+
+
+def test_load_raw_with_neither_ids_nor_n_is_refused(dump):
+    with pytest.raises(ValueError, match="needs an id"):
+        loader.load_raw(root=dump)
