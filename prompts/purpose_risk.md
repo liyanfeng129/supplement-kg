@@ -39,3 +39,54 @@ Output shape:
   states that field -- 0 not at all, 5 explicitly and unambiguously. They
   score the clarity of the extraction, not how risky or effective the product
   is. Never judge a product's safety.
+
+Worked example. Given this label text:
+
+    PRODUCT: Huperzine A
+    BRAND: GNC Herbal Plus Standardized
+    TYPE: Botanical (Capsule)
+    INGREDIENTS: Huperzine A
+
+    LABEL STATEMENTS:
+    [Precautions re: All Other] KEEP OUT OF REACH OF CHILDREN.
+    [Precautions re: Pregnant or Nursing or Prescription Medications] WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery.
+    [Storage] Store in a cool, dry place.
+    [General Statements: All Other Content] Supports Memory Retention*
+    [Suggested/Recommended/Usage/Directions] Directions: As a dietary supplement, take one to two capsules daily.
+
+the correct extraction is:
+
+    {
+      "purpose": [
+        {
+          "text": "supports memory retention",
+          "evidence": "Supports Memory Retention*"
+        }
+      ],
+      "risk": [
+        {
+          "text": "do not exceed recommended intake",
+          "evidence": "WARNING: Do not exceed recommended intake."
+        },
+        {
+          "text": "consult your physician prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition",
+          "evidence": "Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition."
+        },
+        {
+          "text": "discontinue use two weeks prior to surgery",
+          "evidence": "Discontinue use two weeks prior to surgery."
+        }
+      ],
+      "purpose_confidence": 5,
+      "risk_confidence": 5
+    }
+
+Note, in that example:
+- One WARNING block became three risk entries, because it states three
+  distinct cautions. Each cites only its own sentence.
+- KEEP OUT OF REACH OF CHILDREN was dropped: other risk text exists.
+- Storage and Directions produced nothing.
+- The label misspells "physicial". `evidence` keeps the misspelling because it
+  is copied from the label; `text` reads "physician" because it is normalised.
+  Correcting a typo inside `evidence` would make the claim uncheckable against
+  the label, which is the one thing `evidence` exists to allow.
