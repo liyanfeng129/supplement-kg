@@ -11,7 +11,7 @@ given an entry at all:
 
 - `load_raw(dsld_id) -> dict` -- **one product**, its full record from the
   full-database dump, every field DSLD publishes. What a passage is built
-  *from*.
+  *from*. Hand it several ids and it returns several records.
 - `load_flattened() -> list[Label]` -- **the whole corpus** of frozen pilot
   passages: id, name, one rendered string each. What an extractor is run
   *over*.
@@ -28,16 +28,22 @@ They are deliberately not one function with a `kind` argument: they return
 different shapes (`dict`, `Label`, `GoldLabel`), take different arguments, and
 fail for different reasons.
 
-**One, many, in order, or at random.** Every entry answers all four, and the
-raw side has `load_raw_many()` and `dump_ids()` so that "a random sample of
-the dump" is expressible at all -- there is no file listing the dump, so
-without the latter a caller cannot even name the population to sample from.
+**One, many, in order, or at random.** Every entry answers all four. On the
+raw side the *argument* says which -- an id returns a `dict`, an iterable of
+ids returns a `list[dict]` -- rather than a second function whose only
+difference is how many ids you have. `dump_ids()` is there so that "a random
+sample of the dump" is expressible at all: there is no file listing the dump,
+so without it a caller cannot even name the population to sample from.
 
-    load_raw(709)                                   # one
-    load_raw_many([889, 709])                       # many, caller order
+    load_raw(709)                                   # one   -> dict
+    load_raw([889, 709])                            # many  -> list[dict]
+    load_raw(dump_ids(), skip_missing=True)         # all of it
     load_flattened(order="sorted")                  # all, by id
     load_flattened(order="random", seed=42)         # all, shuffled
     load(limit=50, order="random", seed=42)         # a random 50
+
+Note `load_raw("709")` is one product, not three characters: `str` is
+iterable, so the singular/plural test excludes it explicitly.
 
 **A random draw requires a seed.** `order="random"` without one raises rather
 than defaulting, because the failure is otherwise silent: an unseeded draw
@@ -73,6 +79,7 @@ import random
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Iterable, overload
 
 from engine.repositories.dsld import store
 from engine.repositories.dsld.schema import GoldLabel, Label
@@ -106,6 +113,18 @@ DUMP_BUCKET_SIZE = 1000
 #             written in different orders.
 # "random" -- a seeded shuffle. Never unseeded; see `_ordered`.
 ORDERS = ("file", "sorted", "random")
+
+
+def _is_one_id(x) -> bool:
+    """Is this a single id, or a collection of them?
+
+    `str` and `bytes` are the whole reason this is a function: both are
+    iterable, so a plain "is it iterable" test would read `load_raw("709")` as
+    three ids -- '7', '0', '9' -- and hand back three wrong records rather
+    than failing. Ids arrive as strings from CLI flags and CSV cells often
+    enough that this is a certainty, not a corner case.
+    """
+    return isinstance(x, (int, str, bytes)) or not isinstance(x, Iterable)
 
 
 def _ordered(items: list, order: str, seed: int | None, key) -> list:
@@ -240,56 +259,63 @@ class DsldLoader:
         bucket = f"{lo:06d}-{lo + DUMP_BUCKET_SIZE - 1:06d}"
         return Path(root or DEFAULT_DUMP_ROOT) / bucket / f"{i}.json"
 
-    def load_raw(self, dsld_id: int | str, root: str | Path | None = None) -> dict:
-        """One product's full DSLD record, exactly as published.
+    @overload
+    def load_raw(self, dsld_id: int | str, root=..., **kw) -> dict: ...
 
-        Returned as the parsed document rather than a dataclass on purpose:
-        the raw record is the *source*, and a shape defined here would quietly
-        drop every field this repo does not yet consume -- which is most of
-        them, and which is the reason to keep a dump at all.
+    @overload
+    def load_raw(self, dsld_id: Iterable[int | str], root=..., **kw) -> list[dict]: ...
 
-        Raises `DSLDNotFound` for an id the dump does not hold, matching the
-        API client, so a caller can swap transports without changing its
-        error handling.
-        """
-        path = self.dump_path(dsld_id, root)
-        try:
-            return json.loads(path.read_text())
-        except FileNotFoundError as exc:
-            raise DSLDNotFound(
-                f"{dsld_id} is not in the dump at {Path(root or DEFAULT_DUMP_ROOT)}"
-            ) from exc
-        except json.JSONDecodeError as exc:
-            raise ValueError(f"{path}: {exc}") from exc
-
-    def load_raw_many(
+    def load_raw(
         self,
-        ids,
+        dsld_id,
         root: str | Path | None = None,
         order: str = "file",
         seed: int | None = None,
         skip_missing: bool = False,
-    ) -> list[dict]:
-        """Several products' full records.
+    ):
+        """One product's full DSLD record, or several.
 
-        `order="file"` means caller order here -- there is no file to be in
-        the order of, and an explicit id list is usually a priority order.
+        The argument decides: an id returns a `dict`, an iterable of ids
+        returns a `list[dict]`. There is no separate `load_raw_many` because
+        the two differ only in how many ids you have, which the ids already
+        say -- and a caller building a list of length one should not have to
+        switch functions to read it.
+
+        A `str` id is deliberately *not* treated as an iterable of characters,
+        which is the trap in dispatching on type: `load_raw("709")` reads
+        product 709, as it always has.
+
+        Returned as parsed documents rather than a dataclass on purpose: the
+        raw record is the *source*, and a shape defined here would quietly
+        drop every field this repo does not yet consume -- which is most of
+        them, and which is the reason to keep a dump at all.
+
+        `order` and `seed` apply to the plural form only; "file" order means
+        caller order, since there is no file to be in the order of and an
+        explicit id list is usually a priority order.
+
+        Raises `DSLDNotFound` for an id the dump does not hold, matching the
+        API client, so a caller can swap transports without changing its
+        error handling. In the plural form every missing id is named at once:
+        a hole in a dump is usually a stale or partial download, and hearing
+        about all of it beats one `DSLDNotFound` per rerun. `skip_missing`
+        reads the rest instead.
 
         Returned as a list rather than a generator because the caller asked
-        for a known set of ids and a half-consumed generator that raises on
-        the 40th id is harder to reason about than one that fails up front.
-        For a sweep over the whole dump, iterate `dump_ids()` and call
-        `load_raw` per id instead -- that is the case a list would blow up on.
-
-        `skip_missing` is off by default: a dump with a hole in it is usually
-        a stale or partial download, and discovering that at the end of a
-        batch beats discovering it in the output.
+        for a known set of ids, and a half-consumed generator that raises on
+        the 40th is harder to reason about than one that fails up front. For a
+        sweep over the whole dump, iterate `dump_ids()` and call this per id.
         """
-        wanted = _ordered([int(i) for i in ids], order, seed, key=int)
+        if _is_one_id(dsld_id):
+            if order != "file" or seed is not None:
+                raise ValueError("order= and seed= need more than one id")
+            return self._load_one_raw(dsld_id, root)
+
+        wanted = _ordered([int(i) for i in dsld_id], order, seed, key=int)
         out, missing = [], []
         for i in wanted:
             try:
-                out.append(self.load_raw(i, root))
+                out.append(self._load_one_raw(i, root))
             except DSLDNotFound:
                 missing.append(i)
         if missing and not skip_missing:
@@ -301,6 +327,17 @@ class DsldLoader:
                 f"Pass skip_missing=True to read the rest."
             )
         return out
+
+    def _load_one_raw(self, dsld_id: int | str, root: str | Path | None) -> dict:
+        path = self.dump_path(dsld_id, root)
+        try:
+            return json.loads(path.read_text())
+        except FileNotFoundError as exc:
+            raise DSLDNotFound(
+                f"{dsld_id} is not in the dump at {Path(root or DEFAULT_DUMP_ROOT)}"
+            ) from exc
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{path}: {exc}") from exc
 
     def dump_ids(self, root: str | Path | None = None) -> list[int]:
         """Every id the dump holds, ascending.
@@ -482,27 +519,22 @@ def loader() -> DsldLoader:
 # and that it is backed by a shared instance is this file's business.
 
 
-def load_raw(dsld_id: int | str, root: str | Path | None = None) -> dict:
-    """One product's full DSLD record. See `DsldLoader.load_raw`."""
-    return loader().load_raw(dsld_id, root)
+def load_raw(
+    dsld_id,
+    root: str | Path | None = None,
+    order: str = "file",
+    seed: int | None = None,
+    skip_missing: bool = False,
+):
+    """One product's full record, or several. See `DsldLoader.load_raw`."""
+    return loader().load_raw(
+        dsld_id, root, order=order, seed=seed, skip_missing=skip_missing
+    )
 
 
 def dump_path(dsld_id: int | str, root: str | Path | None = None) -> Path:
     """Where `dsld_id` lives in a dump, without reading it. See `DsldLoader.dump_path`."""
     return loader().dump_path(dsld_id, root)
-
-
-def load_raw_many(
-    ids,
-    root: str | Path | None = None,
-    order: str = "file",
-    seed: int | None = None,
-    skip_missing: bool = False,
-) -> list[dict]:
-    """Several products' full records. See `DsldLoader.load_raw_many`."""
-    return loader().load_raw_many(
-        ids, root, order=order, seed=seed, skip_missing=skip_missing
-    )
 
 
 def dump_ids(root: str | Path | None = None) -> list[int]:

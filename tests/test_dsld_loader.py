@@ -411,20 +411,20 @@ def test_load_raw_many_keeps_caller_order(tmp_path):
     root = tmp_path / "dump"
     for i in (709, 885, 889):
         _dump_with(root, i, {"id": i})
-    assert [d["id"] for d in loader.load_raw_many([889, 709], root)] == [889, 709]
+    assert [d["id"] for d in loader.load_raw([889, 709], root)] == [889, 709]
 
 
 def test_load_raw_many_can_be_sorted_or_drawn(tmp_path):
     root = tmp_path / "dump"
     for i in (709, 885, 889):
         _dump_with(root, i, {"id": i})
-    assert [d["id"] for d in loader.load_raw_many([889, 709, 885], root, order="sorted")] == [
+    assert [d["id"] for d in loader.load_raw([889, 709, 885], root, order="sorted")] == [
         709,
         885,
         889,
     ]
-    a = [d["id"] for d in loader.load_raw_many([889, 709, 885], root, order="random", seed=5)]
-    b = [d["id"] for d in loader.load_raw_many([889, 709, 885], root, order="random", seed=5)]
+    a = [d["id"] for d in loader.load_raw([889, 709, 885], root, order="random", seed=5)]
+    b = [d["id"] for d in loader.load_raw([889, 709, 885], root, order="random", seed=5)]
     assert a == b and sorted(a) == [709, 885, 889]
 
 
@@ -433,12 +433,12 @@ def test_load_raw_many_names_every_missing_id(tmp_path):
     of a batch beats finding out in the output."""
     root = _dump_with(tmp_path / "dump", 709, {"id": 709})
     with pytest.raises(loader.DSLDNotFound, match="1 of 2"):
-        loader.load_raw_many([709, 99999], root)
+        loader.load_raw([709, 99999], root)
 
 
 def test_load_raw_many_can_skip_missing_ids(tmp_path):
     root = _dump_with(tmp_path / "dump", 709, {"id": 709})
-    assert [d["id"] for d in loader.load_raw_many([709, 99999], root, skip_missing=True)] == [709]
+    assert [d["id"] for d in loader.load_raw([709, 99999], root, skip_missing=True)] == [709]
 
 
 def test_dump_ids_lists_the_population_to_sample_from(tmp_path):
@@ -448,3 +448,49 @@ def test_dump_ids_lists_the_population_to_sample_from(tmp_path):
     for i in (889, 709, 18162):
         _dump_with(root, i, {"id": i})
     assert loader.dump_ids(root) == [709, 889, 18162]
+
+
+# --- load_raw dispatches on the argument ------------------------------------
+
+
+@pytest.fixture
+def dump(tmp_path):
+    root = tmp_path / "dump"
+    for i in (709, 885, 889):
+        _dump_with(root, i, {"id": i})
+    return root
+
+
+def test_an_id_returns_one_record(dump):
+    assert loader.load_raw(709, dump)["id"] == 709
+
+
+def test_ids_return_a_list_of_records(dump):
+    assert [d["id"] for d in loader.load_raw([889, 709], dump)] == [889, 709]
+
+
+def test_a_string_id_is_one_record_not_three_characters(dump):
+    """The trap in dispatching on type: `str` is iterable, so a naive check
+    would read "709" as ids '7', '0', '9'. Ids arrive as strings from CLI
+    flags and CSV cells, so this is a certainty rather than a corner case."""
+    assert loader.load_raw("709", dump)["id"] == 709
+
+
+def test_any_iterable_of_ids_works(dump):
+    """A caller holding a tuple or a generator should not have to build a
+    list first."""
+    assert [d["id"] for d in loader.load_raw((889, 709), dump)] == [889, 709]
+    assert [d["id"] for d in loader.load_raw((i for i in [709, 885]), dump)] == [709, 885]
+
+
+def test_a_one_element_list_still_returns_a_list(dump):
+    """The argument decides the shape, not the count: a caller looping over a
+    list of length one must not get a bare dict back."""
+    got = loader.load_raw([709], dump)
+    assert isinstance(got, list) and len(got) == 1
+
+
+def test_ordering_one_id_is_refused(dump):
+    """It would do nothing; the caller believes they asked for something."""
+    with pytest.raises(ValueError, match="more than one id"):
+        loader.load_raw(709, dump, order="sorted")
