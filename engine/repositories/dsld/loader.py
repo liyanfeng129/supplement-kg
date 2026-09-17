@@ -9,12 +9,20 @@ detail behind it, and moving them changes this file and nothing above it.
 forms, and a caller that has to remember which file holds which is not being
 given an entry at all:
 
-- `load_raw()` -- one product's full record from the full-database dump, every
-  field DSLD publishes. What a passage is built *from*.
-- `load_flattened()` -- the frozen pilot passages: id, name, one rendered
-  string. What an extractor is actually run *over*.
-- `load_gold()` -- the reference purpose/risk reading of 100 of those labels.
-  What a run is scored *against*.
+- `load_raw(dsld_id) -> dict` -- **one product**, its full record from the
+  full-database dump, every field DSLD publishes. What a passage is built
+  *from*.
+- `load_flattened() -> list[Label]` -- **the whole corpus** of frozen pilot
+  passages: id, name, one rendered string each. What an extractor is run
+  *over*.
+- `load_gold() -> list[GoldLabel]` -- **the whole reference set**, the
+  purpose/risk reading of 100 of those labels. What a run is scored *against*.
+
+Note the first is singular and the other two are plural, which is a fact about
+the sources rather than an inconsistency: the dump is ~92k separate JSON files
+and a caller reads a handful, so there is no whole to load. The pilot and the
+gold set are one file each, of 1000 and 100 lines -- small enough to read once
+and hold. That is also why only the latter two are cached.
 
 They are deliberately not one function with a `kind` argument: they return
 different shapes (`dict`, `Label`, `GoldLabel`), take different arguments, and
@@ -24,7 +32,7 @@ fail for different reasons.
 pass wants the gold set, then the passages that produced it, then a run's rows
 -- and re-reading a 1000-line JSONL per call is both slow and a source of
 disagreement if the file changes underneath a session. `DsldLoader` enforces a
-single instance so the parsed corpus is read once and shared; `reset()` exists
+single instance so each parsed file is read once and shared; `reset()` exists
 for tests and for a caller that has genuinely rewritten a source.
 
 **Resume lives here**, because resume is a question about what is left to read:
