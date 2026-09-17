@@ -19,7 +19,7 @@ given an entry at all:
   purpose/risk reading of 100 of those labels. What a run is scored *against*.
 
 Note the first is singular and the other two are plural, which is a fact about
-the sources rather than an inconsistency: the dump is ~92k separate JSON files
+the sources rather than an inconsistency: the dump is ~215k separate JSON files
 and a caller reads a handful, so there is no whole to load. The pilot and the
 gold set are one file each, of 1000 and 100 lines -- small enough to read once
 and hold. That is also why only the latter two are cached.
@@ -27,6 +27,24 @@ and hold. That is also why only the latter two are cached.
 They are deliberately not one function with a `kind` argument: they return
 different shapes (`dict`, `Label`, `GoldLabel`), take different arguments, and
 fail for different reasons.
+
+**One, many, in order, or at random.** Every entry answers all four, and the
+raw side has `load_raw_many()` and `dump_ids()` so that "a random sample of
+the dump" is expressible at all -- there is no file listing the dump, so
+without the latter a caller cannot even name the population to sample from.
+
+    load_raw(709)                                   # one
+    load_raw_many([889, 709])                       # many, caller order
+    load_flattened(order="sorted")                  # all, by id
+    load_flattened(order="random", seed=42)         # all, shuffled
+    load(limit=50, order="random", seed=42)         # a random 50
+
+**A random draw requires a seed.** `order="random"` without one raises rather
+than defaulting, because the failure is otherwise silent: an unseeded draw
+makes every rerun score a different subset of labels while looking exactly
+like the run before it. This follows the rule `pilot_sample.sample` already
+set. `ids=` is itself an order, so combining it with `order=` also raises
+instead of quietly discarding one of the two.
 
 **One loader instance.** The three sources are read repeatedly -- a scoring
 pass wants the gold set, then the passages that produced it, then a run's rows
@@ -51,6 +69,7 @@ knows.
 from __future__ import annotations
 
 import json
+import random
 import threading
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -77,6 +96,52 @@ DEFAULT_GOLD = REPO_ROOT / "datasets" / "pilot" / "gold-100.jsonl"
 
 # Dump files are bucketed a thousand ids to a directory.
 DUMP_BUCKET_SIZE = 1000
+
+# How a caller may ask for records to come back.
+#
+# "file"   -- source order, untouched. The default everywhere, because the
+#             pilot file is already a randomised draw written in a fixed
+#             order, so a prefix of it is itself a random subset.
+# "sorted" -- ascending by id. For a stable order across sources that were
+#             written in different orders.
+# "random" -- a seeded shuffle. Never unseeded; see `_ordered`.
+ORDERS = ("file", "sorted", "random")
+
+
+def _ordered(items: list, order: str, seed: int | None, key) -> list:
+    """Apply an ordering, refusing a random draw that could not be redrawn.
+
+    The seed is required rather than defaulted. `pilot_sample.sample` sets the
+    rule this follows -- sorted input plus an explicit seed, so the same
+    (source, seed, n) redraws the same set -- and the reason is that the
+    alternative is silent: an unseeded draw makes every rerun score a
+    different subset of labels while looking exactly like the run before it.
+    Defaulting the seed would hide *which* seed produced a result, which is
+    the same problem one step later, when a manifest has to record it.
+
+    The shuffle is applied to a sorted copy, not to file order, so the draw
+    depends only on the seed and the set of ids -- not on how the file
+    happened to be written.
+    """
+    if order not in ORDERS:
+        raise ValueError(f"order must be one of {ORDERS}, not {order!r}")
+    if order == "file":
+        if seed is not None:
+            raise ValueError("seed only means something with order='random'")
+        return items
+    if order == "sorted":
+        if seed is not None:
+            raise ValueError("seed only means something with order='random'")
+        return sorted(items, key=key)
+    if seed is None:
+        raise ValueError(
+            "a random draw needs an explicit seed, or it cannot be redrawn: "
+            "pass seed=... (any int). An unseeded draw would make every rerun "
+            "score a different subset while looking identical."
+        )
+    out = sorted(items, key=key)
+    random.Random(seed).shuffle(out)
+    return out
 
 
 class DSLDNotFound(LookupError):
@@ -197,10 +262,71 @@ class DsldLoader:
         except json.JSONDecodeError as exc:
             raise ValueError(f"{path}: {exc}") from exc
 
+    def load_raw_many(
+        self,
+        ids,
+        root: str | Path | None = None,
+        order: str = "file",
+        seed: int | None = None,
+        skip_missing: bool = False,
+    ) -> list[dict]:
+        """Several products' full records.
+
+        `order="file"` means caller order here -- there is no file to be in
+        the order of, and an explicit id list is usually a priority order.
+
+        Returned as a list rather than a generator because the caller asked
+        for a known set of ids and a half-consumed generator that raises on
+        the 40th id is harder to reason about than one that fails up front.
+        For a sweep over the whole dump, iterate `dump_ids()` and call
+        `load_raw` per id instead -- that is the case a list would blow up on.
+
+        `skip_missing` is off by default: a dump with a hole in it is usually
+        a stale or partial download, and discovering that at the end of a
+        batch beats discovering it in the output.
+        """
+        wanted = _ordered([int(i) for i in ids], order, seed, key=int)
+        out, missing = [], []
+        for i in wanted:
+            try:
+                out.append(self.load_raw(i, root))
+            except DSLDNotFound:
+                missing.append(i)
+        if missing and not skip_missing:
+            shown = ", ".join(str(i) for i in missing[:5])
+            more = f" (+{len(missing) - 5})" if len(missing) > 5 else ""
+            raise DSLDNotFound(
+                f"{len(missing)} of {len(wanted)} id(s) are not in the dump at "
+                f"{Path(root or DEFAULT_DUMP_ROOT)}: {shown}{more}. "
+                f"Pass skip_missing=True to read the rest."
+            )
+        return out
+
+    def dump_ids(self, root: str | Path | None = None) -> list[int]:
+        """Every id the dump holds, ascending.
+
+        The entry for "many, in some order, randomly" over the *raw* side:
+        there is no file listing the dump's contents, so without this a
+        caller cannot ask for a sample of it at all.
+        """
+        out: list[int] = []
+        for bucket in Path(root or DEFAULT_DUMP_ROOT).iterdir():
+            if not bucket.is_dir():
+                continue
+            for f in bucket.iterdir():
+                if f.suffix == ".json" and f.stem.isdigit():
+                    out.append(int(f.stem))
+        return sorted(out)
+
     # --- flattened ----------------------------------------------------------
 
-    def load_flattened(self, path: str | Path | None = None) -> list[Label]:
-        """Every frozen pilot passage, in file order.
+    def load_flattened(
+        self,
+        path: str | Path | None = None,
+        order: str = "file",
+        seed: int | None = None,
+    ) -> list[Label]:
+        """Every frozen pilot passage, in file order unless asked otherwise.
 
         These are read as data and never re-rendered: the gold set was
         labelled against these exact strings, so a run that rebuilds a passage
@@ -212,41 +338,46 @@ class DsldLoader:
         """
         src = Path(path or DEFAULT_RECORDS).resolve()
         cached = self._flattened.get(src)
-        if cached is not None:
-            # A copy: the list is shared, and a caller that sorts or filters
-            # in place would otherwise reorder the corpus for everyone after
-            # it. `Label` itself is frozen, so the elements need no copying.
-            return list(cached)
-        if not src.exists():
-            raise FileNotFoundError(
-                f"no label records at {src}. The pilot passages are gitignored "
-                f"(raw/ is not committed); re-run the pilot or point --records elsewhere."
-            )
-        labels = [Label.from_dict(r) for r in _read_jsonl(src)]
-        self._flattened[src] = labels
-        return list(labels)
+        if cached is None:
+            if not src.exists():
+                raise FileNotFoundError(
+                    f"no label records at {src}. The pilot passages are gitignored "
+                    f"(raw/ is not committed); re-run the pilot or point --records elsewhere."
+                )
+            cached = [Label.from_dict(r) for r in _read_jsonl(src)]
+            self._flattened[src] = cached
+        # Ordering is applied to a copy on the way out, never to the cache:
+        # the cache stays in canonical file order, so one caller's random
+        # draw cannot change what the next caller sees. The copy also means a
+        # caller that sorts in place damages nothing -- `Label` is frozen, so
+        # the elements themselves need no copying.
+        return _ordered(list(cached), order, seed, key=lambda lab: lab.dsld_id)
 
     # --- gold ---------------------------------------------------------------
 
-    def load_gold(self, path: str | Path | None = None) -> list[GoldLabel]:
-        """The reference purpose/risk reading, in file order.
+    def load_gold(
+        self,
+        path: str | Path | None = None,
+        order: str = "file",
+        seed: int | None = None,
+    ) -> list[GoldLabel]:
+        """The reference purpose/risk reading, in file order unless asked otherwise.
 
         A reference, not ground truth: one model's reading of each passage,
         auditable because every claim keeps the evidence span it came from.
         """
         src = Path(path or DEFAULT_GOLD).resolve()
         cached = self._gold.get(src)
-        if cached is not None:
-            return list(cached)
-        if not src.exists():
-            raise FileNotFoundError(
-                f"no gold set at {src}. It is committed under datasets/ rather "
-                f"than data/; if it is absent, rebuild it with "
-                f"services/extraction/gold_set.py -- it calls the frontier model."
-            )
-        gold = [GoldLabel.from_dict(r) for r in _read_jsonl(src)]
-        self._gold[src] = gold
-        return list(gold)
+        if cached is None:
+            if not src.exists():
+                raise FileNotFoundError(
+                    f"no gold set at {src}. It is committed under datasets/ rather "
+                    f"than data/; if it is absent, rebuild it with "
+                    f"services/extraction/gold_set.py -- it calls the frontier model."
+                )
+            cached = [GoldLabel.from_dict(r) for r in _read_jsonl(src)]
+            self._gold[src] = cached
+        return _ordered(list(cached), order, seed, key=lambda g: g.dsld_id)
 
     def gold_by_id(self, path: str | Path | None = None) -> dict[int, GoldLabel]:
         """The gold set keyed by id -- what scoring joins a run's rows against."""
@@ -260,6 +391,8 @@ class DsldLoader:
         ids: list[int] | None = None,
         limit: int | None = None,
         resume_from: str | Path | None = None,
+        order: str = "file",
+        seed: int | None = None,
     ) -> Selection:
         """Flattened labels to process, with an account of what was left out.
 
@@ -281,6 +414,16 @@ class DsldLoader:
         src = Path(path or DEFAULT_RECORDS)
         labels = self.load_flattened(src)
         n_available = len(labels)
+
+        # Ordering happens before id selection so that an explicit id list
+        # still wins: `ids` is a priority order, and shuffling after it would
+        # throw that away. With `ids`, this orders nothing the caller sees.
+        if ids is None:
+            labels = _ordered(labels, order, seed, key=lambda lab: lab.dsld_id)
+        elif order != "file" or seed is not None:
+            raise ValueError(
+                "ids= already states an order; drop order=/seed= or drop ids="
+            )
 
         missing: list[int] = []
         if ids is not None:
@@ -349,14 +492,36 @@ def dump_path(dsld_id: int | str, root: str | Path | None = None) -> Path:
     return loader().dump_path(dsld_id, root)
 
 
-def load_flattened(path: str | Path | None = None) -> list[Label]:
+def load_raw_many(
+    ids,
+    root: str | Path | None = None,
+    order: str = "file",
+    seed: int | None = None,
+    skip_missing: bool = False,
+) -> list[dict]:
+    """Several products' full records. See `DsldLoader.load_raw_many`."""
+    return loader().load_raw_many(
+        ids, root, order=order, seed=seed, skip_missing=skip_missing
+    )
+
+
+def dump_ids(root: str | Path | None = None) -> list[int]:
+    """Every id the dump holds, ascending. See `DsldLoader.dump_ids`."""
+    return loader().dump_ids(root)
+
+
+def load_flattened(
+    path: str | Path | None = None, order: str = "file", seed: int | None = None
+) -> list[Label]:
     """The frozen pilot passages. See `DsldLoader.load_flattened`."""
-    return loader().load_flattened(path)
+    return loader().load_flattened(path, order=order, seed=seed)
 
 
-def load_gold(path: str | Path | None = None) -> list[GoldLabel]:
+def load_gold(
+    path: str | Path | None = None, order: str = "file", seed: int | None = None
+) -> list[GoldLabel]:
     """The reference purpose/risk reading. See `DsldLoader.load_gold`."""
-    return loader().load_gold(path)
+    return loader().load_gold(path, order=order, seed=seed)
 
 
 def gold_by_id(path: str | Path | None = None) -> dict[int, GoldLabel]:
@@ -369,9 +534,13 @@ def load(
     ids: list[int] | None = None,
     limit: int | None = None,
     resume_from: str | Path | None = None,
+    order: str = "file",
+    seed: int | None = None,
 ) -> Selection:
     """Labels to process, with an account of what was left out. See `DsldLoader.load`."""
-    return loader().load(path, ids=ids, limit=limit, resume_from=resume_from)
+    return loader().load(
+        path, ids=ids, limit=limit, resume_from=resume_from, order=order, seed=seed
+    )
 
 
 def read_all(path: str | Path | None = None) -> list[Label]:

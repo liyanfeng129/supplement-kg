@@ -323,3 +323,128 @@ def test_a_malformed_gold_line_names_its_line_number(tmp_path):
     p.write_text(json.dumps(GOLD[0]) + "\nnot json\n")
     with pytest.raises(ValueError, match=":2:"):
         loader.load_gold(p)
+
+
+# --- one, many, in order, at random -----------------------------------------
+
+
+def test_sorted_order_is_by_id(tmp_path):
+    p = tmp_path / "unsorted.jsonl"
+    p.write_text("".join(json.dumps(r) + "\n" for r in reversed(RECORDS)))
+    assert [lab.dsld_id for lab in loader.load_flattened(p, order="sorted")] == [709, 885, 889]
+
+
+def test_file_order_is_the_default(records):
+    assert [lab.dsld_id for lab in loader.load_flattened(records)] == [709, 885, 889]
+
+
+def test_the_same_seed_redraws_the_same_order(records):
+    """The whole point of requiring a seed: a rerun scores the same subset."""
+    a = [lab.dsld_id for lab in loader.load_flattened(records, order="random", seed=42)]
+    b = [lab.dsld_id for lab in loader.load_flattened(records, order="random", seed=42)]
+    assert a == b
+
+
+def test_a_different_seed_draws_a_different_order(records):
+    seen = {
+        tuple(lab.dsld_id for lab in loader.load_flattened(records, order="random", seed=s))
+        for s in range(12)
+    }
+    assert len(seen) > 1
+
+
+def test_a_random_draw_without_a_seed_is_refused(records):
+    """An unseeded draw looks identical to a seeded one and is not redrawable."""
+    with pytest.raises(ValueError, match="explicit seed"):
+        loader.load_flattened(records, order="random")
+
+
+def test_a_seed_without_a_random_order_is_refused(records):
+    """It would do nothing, which is worse than failing -- the caller believes
+    they asked for something."""
+    with pytest.raises(ValueError, match="seed only means"):
+        loader.load_flattened(records, order="sorted", seed=1)
+
+
+def test_an_unknown_order_is_refused(records):
+    with pytest.raises(ValueError, match="order must be one of"):
+        loader.load_flattened(records, order="backwards")
+
+
+def test_the_draw_does_not_depend_on_file_order(tmp_path):
+    """Shuffling a sorted copy means the same ids and seed give the same draw
+    however the file happened to be written."""
+    a, b = tmp_path / "a.jsonl", tmp_path / "b.jsonl"
+    a.write_text("".join(json.dumps(r) + "\n" for r in RECORDS))
+    b.write_text("".join(json.dumps(r) + "\n" for r in reversed(RECORDS)))
+    draw = lambda p: [lab.dsld_id for lab in loader.load_flattened(p, order="random", seed=3)]
+    assert draw(a) == draw(b)
+
+
+def test_ordering_does_not_corrupt_the_shared_cache(records):
+    """One caller's random draw must not change what the next caller sees."""
+    loader.load_flattened(records, order="random", seed=42)
+    assert [lab.dsld_id for lab in loader.load_flattened(records)] == [709, 885, 889]
+
+
+def test_a_random_limit_is_a_random_sample(records):
+    """`limit` after a shuffle is how you ask for a random N."""
+    sel = loader.load(records, limit=2, order="random", seed=42)
+    assert len(sel) == 2
+    assert sel.ids == loader.load(records, limit=2, order="random", seed=42).ids
+
+
+def test_ids_and_order_together_are_refused(records):
+    """`ids` is already a priority order; honouring both would discard one."""
+    with pytest.raises(ValueError, match="already states an order"):
+        loader.load(records, ids=[709], order="random", seed=1)
+
+
+def test_gold_takes_an_order_too(gold):
+    assert [g.dsld_id for g in loader.load_gold(gold, order="sorted")] == [709, 885]
+
+
+# --- raw: many, ordered -----------------------------------------------------
+
+
+def test_load_raw_many_keeps_caller_order(tmp_path):
+    root = tmp_path / "dump"
+    for i in (709, 885, 889):
+        _dump_with(root, i, {"id": i})
+    assert [d["id"] for d in loader.load_raw_many([889, 709], root)] == [889, 709]
+
+
+def test_load_raw_many_can_be_sorted_or_drawn(tmp_path):
+    root = tmp_path / "dump"
+    for i in (709, 885, 889):
+        _dump_with(root, i, {"id": i})
+    assert [d["id"] for d in loader.load_raw_many([889, 709, 885], root, order="sorted")] == [
+        709,
+        885,
+        889,
+    ]
+    a = [d["id"] for d in loader.load_raw_many([889, 709, 885], root, order="random", seed=5)]
+    b = [d["id"] for d in loader.load_raw_many([889, 709, 885], root, order="random", seed=5)]
+    assert a == b and sorted(a) == [709, 885, 889]
+
+
+def test_load_raw_many_names_every_missing_id(tmp_path):
+    """A hole in the dump is usually a partial download; finding out at the end
+    of a batch beats finding out in the output."""
+    root = _dump_with(tmp_path / "dump", 709, {"id": 709})
+    with pytest.raises(loader.DSLDNotFound, match="1 of 2"):
+        loader.load_raw_many([709, 99999], root)
+
+
+def test_load_raw_many_can_skip_missing_ids(tmp_path):
+    root = _dump_with(tmp_path / "dump", 709, {"id": 709})
+    assert [d["id"] for d in loader.load_raw_many([709, 99999], root, skip_missing=True)] == [709]
+
+
+def test_dump_ids_lists_the_population_to_sample_from(tmp_path):
+    """Without this there is no way to name the dump's contents, so 'a random
+    sample of the dump' cannot be expressed."""
+    root = tmp_path / "dump"
+    for i in (889, 709, 18162):
+        _dump_with(root, i, {"id": i})
+    assert loader.dump_ids(root) == [709, 889, 18162]
