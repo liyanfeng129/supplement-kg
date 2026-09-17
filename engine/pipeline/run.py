@@ -214,8 +214,14 @@ def smoke(
         )
     print("smoke: checking GPU offload...", flush=True)
     check_gpu_offload()
-    print("smoke: checking schema/grammar fixtures...", flush=True)
-    check_grammar()
+    if config.fmt == "lines":
+        # Nothing to check: there is no grammar. What guards this format is the
+        # prompt's copy rule, and the only honest test of that is the grounding
+        # rate measured below -- which is exactly what smoke already asserts.
+        print("smoke: format=lines, no grammar to check", flush=True)
+    else:
+        print("smoke: checking schema/grammar fixtures...", flush=True)
+        check_grammar()
 
     gold_ids = [int(json.loads(l)["dsld_id"]) for l in Path(gold_path).read_text().splitlines() if l.strip()][:n]
 
@@ -246,6 +252,7 @@ def smoke(
             provenance=config.provenance,
             latency_ms=latency,
             usage=usage,
+            fmt=config.fmt,
         )
         rows.append(row)
         if verbose:
@@ -266,6 +273,11 @@ def smoke(
         "n_entries": len(entries),
         "n_grounded": n_grounded,
         "grounding_rate": rate,
+        # Zero under `json`, where nothing can be dropped. Under `lines` a
+        # non-zero here on five known-good gold labels means the format drifted
+        # and claims are being silently discarded -- worth seeing before a
+        # batch, beside the grounding rate.
+        "stray": sum(r.get("stray") or 0 for r in rows),
         "statuses": dict(Counter(r["status"] for r in rows)),
         "median_latency_ms": sorted(r["latency_ms"] for r in rows)[len(rows) // 2],
         "completion_tokens": tok,
@@ -445,6 +457,7 @@ def run(
                     provenance=config.provenance,
                     latency_ms=latency,
                     usage=usage,
+                    fmt=config.fmt,
                 )
             except Exception as exc:  # noqa: BLE001 - one bad label must not sink a run
                 # No inline retry of the *call*: the failure rate must stay

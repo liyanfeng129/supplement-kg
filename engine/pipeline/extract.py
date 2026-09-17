@@ -8,15 +8,25 @@ two disagreeing ggml copies. Five gold labels through the real prompt and
 grammar returned 43/43 entries verbatim-grounded with the GPU verified
 exclusive, so the in-process path is sound. `llama-server` is not used.
 
-**Structured output is a GBNF grammar generated from the one JSON schema**, via
-`LlamaGrammar.from_json_schema`. Hand-writing a grammar is rejected: a second
-source of truth whose desync produces plausible, parseable, wrong-shaped output
--- the worst failure mode, because nothing errors. `check_grammar()` asserts
-fixture strings are accepted and rejected as expected, guarding against a
-silently permissive converter.
+**Two output formats, chosen by `Config.fmt`.**
 
-A grammar guarantees *shape*, never *truthfulness*, so `validate()` runs on top
-of it regardless.
+`json` constrains every token with a GBNF grammar generated from the one JSON
+schema, via `LlamaGrammar.from_json_schema`. Hand-writing a grammar is
+rejected: a second source of truth whose desync produces plausible, parseable,
+wrong-shaped output -- the worst failure mode, because nothing errors.
+`check_grammar()` asserts fixture strings are accepted and rejected as
+expected, guarding against a silently permissive converter.
+
+`lines` runs the sampler unconstrained and parses `P: claim | 4` per claim.
+It exists because the grammar costs 4.2x in decode speed (8.3 vs 34.6 tok/s on
+identical prompt and output shape) and `evidence` roughly triples output tokens
+to restate text the passage already contains. Measured over five gold labels:
+same 28 entries, same 1.0 grounding, 14987ms -> 3487ms median. See
+`engine/pipeline/lines.py` for what replaces the grammar's guarantees -- a
+prompt rule, a stop sentinel and a stray-line count.
+
+Neither format guarantees *truthfulness*, only shape, so `validate()` runs on
+top of both regardless.
 """
 
 from __future__ import annotations
@@ -29,6 +39,8 @@ import time
 from typing import Any
 
 from engine.pipeline.config import Config
+from engine.pipeline.lines import MAX_TOKENS as LINE_MAX_TOKENS
+from engine.pipeline.lines import STOP as LINE_STOP
 from engine.services.extraction.label_purpose_risk import SCHEMA
 
 # ggml's CUDA backend allocates pinned host memory (`cudaHostAlloc`) during
@@ -407,16 +419,28 @@ class LocalExtractor:
         an order of magnitude in work while looking identical at 1/label.
         """
         d = self.config.decode
+        lines_fmt = self.config.fmt == "lines"
+        kwargs: dict[str, Any] = {}
+        if lines_fmt:
+            # No grammar: it is the 4.2x, and `lines` output is not JSON. The
+            # `END` stop replaces the closing brace that used to end decoding
+            # -- without it a generation runs to `max_tokens`. The cap is
+            # tightened for the same reason: one runaway should cost seconds.
+            kwargs["stop"] = [*LINE_STOP]
+            kwargs["max_tokens"] = min(d.max_tokens, LINE_MAX_TOKENS)
+        else:
+            kwargs["grammar"] = self.grammar
+            kwargs["stop"] = ["<|im_end|>"]
+            kwargs["max_tokens"] = d.max_tokens
+
         started = time.monotonic()
         with self._call_lock:
             out: Any = self.llm.create_completion(
                 self.prompt_for(passage),
-                grammar=self.grammar,
                 temperature=d.temperature,
                 top_p=d.top_p,
                 top_k=d.top_k,
-                max_tokens=d.max_tokens,
-                stop=["<|im_end|>"],
+                **kwargs,
             )
         latency_ms = int((time.monotonic() - started) * 1000)
         usage = dict(out.get("usage") or {})

@@ -19,6 +19,14 @@ merely documented. Three things happen, in this order:
 A GBNF grammar guarantees *shape*; this guarantees nothing about truthfulness
 either, but it measures it. Both are kept. Raw text is retained on every row
 whatever the status, so an unparseable result stays diagnosable.
+
+Two output formats arrive here and leave identical. Under `json` the model
+writes an `evidence` span per claim; under `lines` it is told to copy the
+label's wording and the claim *is* its own evidence, so the grounding check
+below is unchanged and means the same thing -- with the prompt's copy rule
+holding up the end the grammar used to hold. `lines` adds one column,
+`stray`: lines the parser rejected, which is the only way a dropped claim can
+be told apart from a label that genuinely said nothing.
 """
 
 from __future__ import annotations
@@ -27,6 +35,7 @@ import json
 from datetime import datetime, timezone
 from typing import Any
 
+from engine.pipeline import lines
 from engine.services.extraction.label_purpose_risk import (
     UNGROUNDED_CONFIDENCE_CAP,
     _normalise,
@@ -83,6 +92,7 @@ def validate(
     usage: dict | None = None,
     error: str | None = None,
     status: str | None = None,
+    fmt: str = "json",
 ) -> dict:
     """Turn one model result into one row, grounded, capped and statused.
 
@@ -106,6 +116,12 @@ def validate(
         "risk_confidence": 0,
         "status": status or "ok",
         "error": error,
+        # Lines the parser rejected. Always present so the column is uniform
+        # across formats and a glob over rows needs no per-format branch; only
+        # `lines` can make it non-zero. A silent drop is indistinguishable from
+        # a label that said nothing, so this is the number that makes format
+        # drift visible.
+        "stray": 0,
         "raw": raw_text,
         "latency_ms": latency_ms,
         "prompt_tokens": (usage or {}).get("prompt_tokens"),
@@ -119,7 +135,23 @@ def validate(
         return row
 
     data: Any = raw
-    if isinstance(raw, str):
+    if fmt == "lines":
+        # A line format cannot be "unparseable" the way JSON can -- there is no
+        # syntax to violate, only lines that do or do not match. So the failure
+        # it must surface instead is the *dropped* line: `stray` rides on the
+        # row, and a generation that produced nothing but stray lines is
+        # unparseable in the only sense that matters here.
+        if isinstance(raw, str):
+            # The passage goes in so each claim's `evidence` comes back as the
+            # label sentence it was found in, rather than a copy of the claim.
+            data = lines.parse(raw, passage)
+        row["stray"] = int((data or {}).get("stray") or 0)
+        if (data or {}).get("stray_lines"):
+            row["stray_lines"] = data["stray_lines"]
+        if row["stray"] and not (data.get("purpose") or data.get("risk")):
+            row["status"] = "unparseable"
+            return row
+    elif isinstance(raw, str):
         try:
             data = json.loads(raw)
         except (json.JSONDecodeError, ValueError):

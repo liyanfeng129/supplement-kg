@@ -1,0 +1,58 @@
+{
+  "task": "dsld_purpose_risk",
+  "run_id": "20260915T172757Z",
+  "started_at": "2026-09-15T17:27:57.627771+00:00",
+  "starts": [
+    "2026-09-15T17:27:57.627771+00:00"
+  ],
+  "git_commit": "c32da70ed686f2fcdf8972006085a87c96cc6386",
+  "records_path": "data/dsld/runs/20260908T125504Z/raw/pilot-1000.jsonl",
+  "n_input": 100,
+  "n_already_done": 0,
+  "n_to_do": 100,
+  "n_workers": 1,
+  "smoke": {
+    "n_labels": 5,
+    "n_entries": 25,
+    "n_grounded": 25,
+    "grounding_rate": 1.0,
+    "stray": 0,
+    "statuses": {
+      "ok": 5
+    },
+    "median_latency_ms": 3817,
+    "completion_tokens": 428,
+    "tokens_per_second": 19.8,
+    "config_hash": "1752fb37d750d7aeffe816f5376b439119f97d65dbb75a3d07bb937901ef2691",
+    "passed": true
+  },
+  "config_hash": "1752fb37d750d7aeffe816f5376b439119f97d65dbb75a3d07bb937901ef2691",
+  "prompt_id": "purpose_risk",
+  "prompt_sha": "18933f7c3371410ad4620ebc259a4b273287caa32c611420d77809786c3593cb",
+  "model_id": "/var/tmp/ge74wan/hf_cache/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e",
+  "decode": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "top_k": 0,
+    "max_tokens": 2000,
+    "seed": 0,
+    "n_ctx": 8192,
+    "enable_thinking": false
+  },
+  "schema_sha": "8efd1e83c2f91d8d373e224c2eb55818e603b792f383a696cd6377d8266e8316",
+  "renderer_version": 1,
+  "fmt": "lines",
+  "prompt": "You extract structured attributes from US dietary supplement label text.\n\nYou are given the text printed on one product's label. Recover two fields:\n\n- purpose: what the product is claimed to do for the person taking it -- the\n  benefit or intended use (\"supports restful sleep\", \"helps maintain healthy\n  joints\"). This is the product's structure/function claim.\n- risk: cautions, warnings, contraindications, and interactions -- who should\n  not take it and what to watch for.\n\nRules:\n- Use ONLY what the label says. Never add pharmacological knowledge of your\n  own: if a label for a melatonin product never states a purpose, emit no\n  purpose line, even though you know what melatonin is for. This corpus is\n  used to build a knowledge base, so an inferred claim is worse than a\n  missing one.\n- COPY THE LABEL'S OWN WORDING for each claim, changing only this: lowercase\n  it, and drop a trailing claim asterisk. Do not paraphrase, summarise, or\n  merge two claims into one line. The claim must appear in the label above\n  word for word, so it can be checked against the label.\n- Purpose statements are often buried in generic \"General Statements\" blocks\n  alongside boilerplate (\"Made in the USA\", \"ACTUAL SIZE\"). Ignore the\n  boilerplate and pick out the benefit claim.\n- The FDA disclaimer (\"This statement has not been evaluated by the FDA...\")\n  is not a purpose. Directions/dosage alone are not a purpose.\n- A risk is a caution about TAKING THE SUPPLEMENT: who should not take it,\n  what to watch for, what it interacts with. Handling and packaging text is\n  not a risk, however sternly it is worded and whatever block it sits in.\n  Never emit any of these:\n  - child access: \"KEEP OUT OF REACH OF CHILDREN\", \"keep out of the reach of\n    children\". This is on most labels and is never a risk, not even when it\n    is the only warning the label carries.\n  - package integrity: \"do not use if seal is broken\", \"do not use if inner\n    seal is missing\", \"tamper resistant package\", \"tamper evident\".\n  - freshness packets and desiccant: \"do not eat freshness packet\", \"discard\n    the inedible freshness packet enclosed\".\n  - storage and provenance: \"store in a cool, dry place\", \"made in the USA\".\n- That exclusion is about the SUBJECT of the sentence, not about where it\n  appears. The `[Precautions ...]` blocks are mostly real cautions and must\n  still be read: \"consult your physician prior to use if you are pregnant\",\n  \"discontinue use and consult a doctor if you experience rapid heartbeat\",\n  \"not intended for use by persons under 18\", \"for adults only\" and\n  \"discontinue use two weeks prior to surgery\" are all genuine risks. Do not\n  skip a precautions block because it also contains boilerplate -- pick the\n  real cautions out of it and leave the boilerplate behind.\n- One line per distinct claim. A label stating \"Promotes Energy Metabolism*\"\n  and \"Supports Heart Health*\" yields two purpose lines, not one joined line.\n- Where several distinct cautions share one block of label text, give each its\n  own line, copying the words of that caution alone.\n- Emit no line at all for a field the label does not state. Emitting nothing\n  for a field is a valid and common answer -- prefer it over a guess.\n\nOutput format. Output nothing but these lines, then END. No JSON, no preamble,\nno commentary, no blank lines. Use P for purpose and R for risk:\n\n    P: <claim> | <0-5>\n    R: <caution> | <0-5>\n    END\n\nThe number is 0-5: how clearly THE LABEL states that claim -- 0 not at all, 5\nexplicitly and unambiguously. It scores the clarity of the extraction, not how\nrisky or effective the product is. Never judge a product's safety.\n\nWorked example. Given this label text:\n\n    PRODUCT: Huperzine A\n    BRAND: GNC Herbal Plus Standardized\n    TYPE: Botanical (Capsule)\n    INGREDIENTS: Huperzine A\n\n    LABEL STATEMENTS:\n    [Precautions re: All Other] KEEP OUT OF REACH OF CHILDREN. Do not use if seal under cap is broken or missing.\n    [Precautions re: Pregnant or Nursing or Prescription Medications] WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery.\n    [Storage] Store in a cool, dry place.\n    [General Statements: All Other Content] Supports Memory Retention*\n    [Suggested/Recommended/Usage/Directions] Directions: As a dietary supplement, take one to two capsules daily.\n\nthe correct output is:\n\n    P: supports memory retention | 5\n    R: do not exceed recommended intake | 5\n    R: consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition | 5\n    R: discontinue use two weeks prior to surgery | 5\n    END\n\nNote, in that example:\n- One WARNING block became three risk lines, because it states three distinct\n  cautions. Each line copies the words of its own caution.\n- The first precautions block produced NOTHING, even though it is a\n  precautions block: child access and a broken seal are both excluded. The\n  block was still read -- it just had no real caution in it.\n- Storage and Directions produced nothing.\n- The label misspells \"physicial\". The line keeps the misspelling, because the\n  claim is copied from the label. Correcting a typo would make the claim\n  uncheckable against the label, which is the one thing copying exists to\n  allow.\n\nSecond worked example, where the only warnings are excluded ones. Given:\n\n    PRODUCT: Vitamin C 500 mg\n    BRAND: Nature's Own\n    TYPE: Vitamin (Tablet or Pill)\n    INGREDIENTS: Ascorbic Acid\n\n    LABEL STATEMENTS:\n    [Precautions re: Children] KEEP OUT OF REACH OF CHILDREN.\n    [Precautions re: All Other] Do not use if safety seal is broken. Do not eat freshness packet. Discard it.\n    [Storage] Store in a cool, dry place. Made in the USA.\n    [General Statements: All Other Content] Supports Immune Health*\n\nthe correct output is:\n\n    P: supports immune health | 5\n    END\n\nThere is no R line at all. The label carries warnings, but every one of them\nis about child access, the seal, the freshness packet or storage, and none is\na caution about taking the supplement. A label with no real risk is common --\nemit no R line rather than promoting boilerplate to fill the gap.\n",
+  "prompt_path": "/var/tmp/ge74wan/repos/supplement-kg/prompts/purpose_risk_lines.md",
+  "provenance": "local",
+  "note": "gold-100, lines v3: boilerplate rules in prompt + evidence via span recovery",
+  "schema": null,
+  "finished_at": "2026-09-15T17:34:01.499892+00:00",
+  "n_written": 100,
+  "statuses": {
+    "ok": 86,
+    "empty": 14
+  },
+  "grounding_rate": 0.9662650602409638,
+  "completion_tokens": 8169
+}

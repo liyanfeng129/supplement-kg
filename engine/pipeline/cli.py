@@ -21,7 +21,7 @@ from pathlib import Path
 from engine.pipeline import run as run_mod
 from engine.pipeline import store
 from engine.pipeline.compare import compare
-from engine.pipeline.config import Config, Decode
+from engine.pipeline.config import FORMATS, Config, Decode
 from engine.pipeline.score import score
 
 DEFAULT_RECORDS = "data/dsld/runs/20260908T125504Z/raw/pilot-1000.jsonl"
@@ -36,7 +36,13 @@ def _config(args) -> Config:
         decode.n_ctx = args.n_ctx
     if getattr(args, "temperature", None) is not None:
         decode.temperature = args.temperature
-    cfg = Config(decode=decode, note=getattr(args, "note", "") or "")
+    # `fmt` goes in at construction: it selects the matching prompt file, and
+    # setting it afterwards would leave a `lines` run sending the JSON prompt.
+    cfg = Config(
+        decode=decode,
+        note=getattr(args, "note", "") or "",
+        fmt=getattr(args, "fmt", None) or "json",
+    )
     if getattr(args, "prompt", None):
         cfg.prompt_path = args.prompt
     if getattr(args, "model", None):
@@ -59,6 +65,12 @@ def main(argv: list[str] | None = None) -> int:
         sp.add_argument("--max-tokens", type=int, dest="max_tokens")
         sp.add_argument("--n-ctx", type=int, dest="n_ctx")
         sp.add_argument("--temperature", type=float)
+        sp.add_argument(
+            "--fmt",
+            choices=FORMATS,
+            default="json",
+            help="output format: json (GBNF grammar) or lines (P: claim | 4, ~8x faster)",
+        )
         sp.add_argument(
             "-v",
             "--verbose",

@@ -28,6 +28,7 @@ import subprocess
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
+from engine.pipeline.lines import LINES_VERSION
 from engine.pipeline.render import RENDERER_VERSION
 from engine.services.extraction.label_purpose_risk import SCHEMA
 
@@ -38,6 +39,22 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 # dead copies and orphan every past run's prompt_sha once deleted. Each
 # manifest embeds the prompt text verbatim instead.
 DEFAULT_PROMPT = REPO_ROOT / "prompts" / "purpose_risk.md"
+
+# The `lines` format's prompt. A separate file rather than a branch inside one:
+# the two ask for different output shapes, and a prompt that described both
+# would be worse at each.
+LINES_PROMPT = REPO_ROOT / "prompts" / "purpose_risk_lines.md"
+
+# How the model is made to produce structured output.
+#
+# - `json`: a GBNF grammar generated from SCHEMA constrains every token.
+# - `lines`: `P: claim | 4` per claim, parsed by `engine.pipeline.lines`.
+#
+# `lines` exists because the grammar sampler costs 4.2x in decode speed and
+# `evidence` roughly triples output tokens to restate text the passage already
+# contains -- 233s vs 28s over ten labels. See `engine/pipeline/lines.py` for
+# the measurement and for what replaces the grammar's guarantees.
+FORMATS = ("json", "lines")
 
 # The on-disk weights. An unextensioned blob in the HF cache, which is why
 # earlier `*.gguf` searches found nothing.
@@ -100,11 +117,21 @@ class Config:
     """A resolved run configuration, hashable and invertible."""
 
     prompt_id: str = "purpose_risk"
-    prompt_path: str = str(DEFAULT_PROMPT)
+    prompt_path: str | None = None
     model_id: str = DEFAULT_MODEL
     provenance: str = "local"
     decode: Decode = field(default_factory=Decode)
     note: str = ""
+    fmt: str = "json"
+
+    def __post_init__(self) -> None:
+        if self.fmt not in FORMATS:
+            raise ValueError(f"fmt must be one of {FORMATS}, got {self.fmt!r}")
+        # The prompt follows the format unless the caller names a file. Pairing
+        # them here means a `lines` run cannot silently send the JSON prompt,
+        # which would produce zero parseable lines and look like a bad model.
+        if self.prompt_path is None:
+            self.prompt_path = str(LINES_PROMPT if self.fmt == "lines" else DEFAULT_PROMPT)
 
     @property
     def prompt(self) -> str:
@@ -117,12 +144,30 @@ class Config:
 
     @property
     def schema_sha(self) -> str:
+        """The schema's sha under `json`; the parser's contract under `lines`.
+
+        `lines` output is not schema-constrained, so hashing SCHEMA there would
+        claim a guarantee that did not hold. Hashing the format name instead
+        keeps the field meaningful: it still changes whenever the thing that
+        shapes the output changes.
+        """
+        if self.fmt == "lines":
+            return _sha(f"lines:{LINES_VERSION}")
         return _sha(canonical_json(SCHEMA))
 
     @property
     def identity(self) -> dict:
-        """Exactly the fields the hash covers -- no more, no less."""
-        return {
+        """Exactly the fields the hash covers -- no more, no less.
+
+        `fmt` is present only when it is not `json`. Adding a key
+        unconditionally would have rehashed every past run: the hash is a
+        promise that two runs pool, and changing what an unchanged
+        configuration hashes to orphans the gold-100 baseline that new formats
+        are supposed to be compared against. A `lines` run still gets its own
+        hash -- via this key and via `schema_sha` -- which is the part that
+        matters.
+        """
+        ident = {
             "prompt_id": self.prompt_id,
             "prompt_sha": self.prompt_sha,
             "model_id": self.model_id,
@@ -130,6 +175,9 @@ class Config:
             "schema_sha": self.schema_sha,
             "renderer_version": RENDERER_VERSION,
         }
+        if self.fmt != "json":
+            ident["fmt"] = self.fmt
+        return ident
 
     @property
     def config_hash(self) -> str:
@@ -148,5 +196,8 @@ class Config:
             "prompt_path": self.prompt_path,
             "provenance": self.provenance,
             "note": self.note,
-            "schema": SCHEMA,
+            # Stored verbatim so the hash stays invertible. Under `lines` there
+            # is no schema; the manifest says so rather than embedding a schema
+            # the run did not enforce.
+            "schema": SCHEMA if self.fmt == "json" else None,
         }
