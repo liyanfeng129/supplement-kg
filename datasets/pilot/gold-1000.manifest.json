@@ -1,0 +1,2049 @@
+{
+  "task": "dsld_purpose_risk_gold",
+  "schema_version": 1,
+  "model": "mixed; see model_counts and per-row model",
+  "method": "Model-annotated reference with verbatim evidence, not human-adjudicated ground truth. Original 100 preserved; 810 saved Claude rows plus 75 recovered Claude draft rows plus 15 newly read and annotated Codex rows. Offline completion; no extraction API calls.",
+  "executed_at": "2026-09-18T10:48:22.452286+00:00",
+  "n_requested": 1000,
+  "n_extracted": 1000,
+  "n_unique_ids": 1000,
+  "n_with_purpose": 724,
+  "n_with_risk": 908,
+  "n_purpose_entries": 1979,
+  "n_risk_entries": 2302,
+  "n_ungrounded_entries": 0,
+  "errors": [],
+  "dsld_ids": [
+    "709",
+    "885",
+    "889",
+    "1024",
+    "1690",
+    "1736",
+    "2036",
+    "2167",
+    "2417",
+    "2454",
+    "3299",
+    "3488",
+    "3881",
+    "4900",
+    "5174",
+    "5242",
+    "5400",
+    "5777",
+    "5784",
+    "5839",
+    "6517",
+    "6616",
+    "6769",
+    "7013",
+    "7322",
+    "7388",
+    "7443",
+    "7688",
+    "7871",
+    "7914",
+    "7991",
+    "8470",
+    "9061",
+    "9232",
+    "9289",
+    "9354",
+    "9422",
+    "10214",
+    "10406",
+    "10598",
+    "10613",
+    "10809",
+    "10837",
+    "10891",
+    "10932",
+    "10975",
+    "11325",
+    "11400",
+    "11807",
+    "11945",
+    "12018",
+    "12172",
+    "12284",
+    "12513",
+    "12533",
+    "12563",
+    "12612",
+    "12620",
+    "12683",
+    "12835",
+    "12866",
+    "12911",
+    "13079",
+    "13084",
+    "13316",
+    "13504",
+    "13711",
+    "14390",
+    "14528",
+    "14539",
+    "14741",
+    "14782",
+    "15169",
+    "15260",
+    "15317",
+    "15600",
+    "15650",
+    "15726",
+    "15930",
+    "16209",
+    "16228",
+    "16729",
+    "16777",
+    "17196",
+    "17217",
+    "18040",
+    "18162",
+    "18332",
+    "18888",
+    "18982",
+    "19036",
+    "19402",
+    "19409",
+    "19412",
+    "19644",
+    "19655",
+    "19799",
+    "20061",
+    "20284",
+    "20287",
+    "20362",
+    "20434",
+    "20518",
+    "20681",
+    "20755",
+    "20777",
+    "20965",
+    "21007",
+    "21131",
+    "21205",
+    "21290",
+    "21577",
+    "22363",
+    "22379",
+    "22770",
+    "22950",
+    "22953",
+    "22976",
+    "23203",
+    "23668",
+    "23936",
+    "24271",
+    "24277",
+    "24282",
+    "24342",
+    "24393",
+    "24437",
+    "24792",
+    "24938",
+    "24948",
+    "25007",
+    "25441",
+    "25701",
+    "25741",
+    "25811",
+    "25970",
+    "25993",
+    "26044",
+    "26344",
+    "26384",
+    "26402",
+    "26550",
+    "26891",
+    "27094",
+    "27233",
+    "27378",
+    "27380",
+    "27924",
+    "27940",
+    "27987",
+    "28542",
+    "28742",
+    "29204",
+    "29228",
+    "29662",
+    "29949",
+    "30021",
+    "30154",
+    "30431",
+    "30610",
+    "30792",
+    "30836",
+    "31046",
+    "31160",
+    "31314",
+    "31571",
+    "31743",
+    "31846",
+    "31924",
+    "31939",
+    "32053",
+    "32095",
+    "32268",
+    "32342",
+    "32584",
+    "32618",
+    "32849",
+    "32915",
+    "32924",
+    "32970",
+    "33173",
+    "33306",
+    "33309",
+    "33613",
+    "33754",
+    "33813",
+    "33870",
+    "34109",
+    "34116",
+    "34237",
+    "34292",
+    "34330",
+    "34658",
+    "34671",
+    "34923",
+    "34928",
+    "34936",
+    "35036",
+    "35043",
+    "35481",
+    "35580",
+    "35612",
+    "35850",
+    "35889",
+    "36060",
+    "36085",
+    "36101",
+    "36272",
+    "36330",
+    "36493",
+    "36521",
+    "36597",
+    "37059",
+    "37386",
+    "37391",
+    "37521",
+    "37742",
+    "38083",
+    "38262",
+    "38460",
+    "39332",
+    "39389",
+    "39468",
+    "39508",
+    "39546",
+    "40237",
+    "40757",
+    "41071",
+    "41102",
+    "41151",
+    "41301",
+    "41310",
+    "42027",
+    "42133",
+    "42356",
+    "42646",
+    "43102",
+    "43286",
+    "43289",
+    "43541",
+    "43667",
+    "43781",
+    "43812",
+    "43976",
+    "44094",
+    "44151",
+    "44364",
+    "44398",
+    "44455",
+    "44755",
+    "44978",
+    "45128",
+    "45514",
+    "45520",
+    "45840",
+    "46138",
+    "46533",
+    "46540",
+    "46581",
+    "46618",
+    "46740",
+    "47075",
+    "47120",
+    "47168",
+    "47201",
+    "47232",
+    "47268",
+    "47349",
+    "47462",
+    "47475",
+    "47512",
+    "47677",
+    "47712",
+    "47766",
+    "47895",
+    "49196",
+    "49384",
+    "49496",
+    "49505",
+    "49705",
+    "50080",
+    "50243",
+    "50259",
+    "50517",
+    "50541",
+    "50960",
+    "51137",
+    "51185",
+    "51198",
+    "51315",
+    "51377",
+    "51428",
+    "51539",
+    "51644",
+    "53249",
+    "53318",
+    "53658",
+    "53881",
+    "53893",
+    "54005",
+    "54023",
+    "54162",
+    "54447",
+    "54495",
+    "54538",
+    "54917",
+    "54963",
+    "55179",
+    "55248",
+    "55303",
+    "55565",
+    "55774",
+    "55817",
+    "55828",
+    "55980",
+    "56155",
+    "56751",
+    "56754",
+    "57146",
+    "57539",
+    "57804",
+    "57946",
+    "57997",
+    "58178",
+    "58191",
+    "58552",
+    "58857",
+    "58958",
+    "59130",
+    "59222",
+    "59261",
+    "59297",
+    "59528",
+    "60421",
+    "60462",
+    "60463",
+    "60732",
+    "60803",
+    "60853",
+    "62376",
+    "62725",
+    "63241",
+    "63318",
+    "63368",
+    "63527",
+    "63560",
+    "63841",
+    "64028",
+    "64095",
+    "64131",
+    "64152",
+    "64169",
+    "64360",
+    "64437",
+    "64455",
+    "64476",
+    "64622",
+    "64675",
+    "65174",
+    "65829",
+    "66276",
+    "66462",
+    "66522",
+    "66534",
+    "66800",
+    "66876",
+    "67145",
+    "67200",
+    "67293",
+    "67336",
+    "67404",
+    "67444",
+    "67523",
+    "67600",
+    "68964",
+    "68978",
+    "69368",
+    "69375",
+    "69512",
+    "69826",
+    "69889",
+    "69976",
+    "70075",
+    "70108",
+    "70131",
+    "70133",
+    "70271",
+    "70501",
+    "70700",
+    "70711",
+    "70741",
+    "71385",
+    "71658",
+    "71760",
+    "71856",
+    "72221",
+    "72377",
+    "72517",
+    "72628",
+    "72653",
+    "72955",
+    "73049",
+    "73332",
+    "73423",
+    "73462",
+    "73509",
+    "73566",
+    "73650",
+    "73829",
+    "74117",
+    "74232",
+    "74511",
+    "74678",
+    "74734",
+    "74782",
+    "74848",
+    "74929",
+    "75195",
+    "75308",
+    "75577",
+    "75667",
+    "75771",
+    "75916",
+    "76112",
+    "76215",
+    "76396",
+    "76578",
+    "76801",
+    "76821",
+    "76871",
+    "77086",
+    "77231",
+    "77554",
+    "77744",
+    "77867",
+    "77899",
+    "77923",
+    "78021",
+    "78412",
+    "78451",
+    "78485",
+    "78492",
+    "78885",
+    "79118",
+    "79385",
+    "79681",
+    "79992",
+    "80096",
+    "80106",
+    "80305",
+    "80313",
+    "80492",
+    "80667",
+    "80933",
+    "81380",
+    "81537",
+    "81656",
+    "81783",
+    "82114",
+    "82468",
+    "82773",
+    "83115",
+    "103306",
+    "174090",
+    "174174",
+    "174316",
+    "174363",
+    "174424",
+    "174503",
+    "174529",
+    "174552",
+    "174789",
+    "174981",
+    "174991",
+    "175056",
+    "175065",
+    "175239",
+    "175278",
+    "175317",
+    "175727",
+    "175847",
+    "176074",
+    "176231",
+    "176267",
+    "176537",
+    "176590",
+    "177134",
+    "177604",
+    "177784",
+    "177929",
+    "177964",
+    "177965",
+    "177983",
+    "178052",
+    "178508",
+    "178579",
+    "178741",
+    "179203",
+    "180205",
+    "180245",
+    "180371",
+    "180434",
+    "180452",
+    "180545",
+    "180611",
+    "180738",
+    "180802",
+    "180818",
+    "180890",
+    "180928",
+    "180931",
+    "181482",
+    "181779",
+    "181852",
+    "181871",
+    "181971",
+    "182098",
+    "182203",
+    "182226",
+    "182388",
+    "182572",
+    "182776",
+    "182847",
+    "183189",
+    "183229",
+    "183271",
+    "183647",
+    "183853",
+    "183935",
+    "184171",
+    "184291",
+    "184356",
+    "184395",
+    "184580",
+    "184651",
+    "184654",
+    "184668",
+    "184772",
+    "184848",
+    "185146",
+    "185261",
+    "187468",
+    "187501",
+    "187540",
+    "187592",
+    "199525",
+    "199753",
+    "199899",
+    "200070",
+    "200172",
+    "200180",
+    "200466",
+    "200878",
+    "201108",
+    "201136",
+    "201353",
+    "201355",
+    "201440",
+    "201441",
+    "201667",
+    "201721",
+    "201833",
+    "202121",
+    "202219",
+    "202636",
+    "202647",
+    "202740",
+    "202977",
+    "203003",
+    "203005",
+    "203140",
+    "203143",
+    "203154",
+    "203179",
+    "203227",
+    "203250",
+    "203264",
+    "203580",
+    "203999",
+    "204010",
+    "204099",
+    "204151",
+    "204588",
+    "204689",
+    "204743",
+    "204760",
+    "204795",
+    "204985",
+    "205254",
+    "205553",
+    "205573",
+    "205634",
+    "205735",
+    "205867",
+    "205878",
+    "205926",
+    "206047",
+    "206054",
+    "206060",
+    "206098",
+    "206126",
+    "206509",
+    "206573",
+    "206575",
+    "206999",
+    "207133",
+    "207326",
+    "207476",
+    "207537",
+    "207589",
+    "207849",
+    "207960",
+    "207975",
+    "208036",
+    "208102",
+    "208425",
+    "208596",
+    "208655",
+    "208665",
+    "208674",
+    "208734",
+    "208920",
+    "209055",
+    "209133",
+    "209254",
+    "209777",
+    "209892",
+    "210172",
+    "210550",
+    "210981",
+    "211181",
+    "211182",
+    "211287",
+    "211308",
+    "211417",
+    "212007",
+    "212096",
+    "212125",
+    "212377",
+    "213426",
+    "213638",
+    "213677",
+    "213821",
+    "214008",
+    "214015",
+    "214081",
+    "214250",
+    "214353",
+    "214429",
+    "214647",
+    "214747",
+    "214767",
+    "214963",
+    "214969",
+    "215057",
+    "215425",
+    "215741",
+    "216098",
+    "216269",
+    "216276",
+    "216313",
+    "216722",
+    "216784",
+    "216801",
+    "216809",
+    "217381",
+    "217392",
+    "217497",
+    "217529",
+    "217668",
+    "218082",
+    "218193",
+    "218466",
+    "218879",
+    "219135",
+    "219170",
+    "219187",
+    "219263",
+    "219491",
+    "219505",
+    "219584",
+    "219841",
+    "220232",
+    "220724",
+    "220742",
+    "220778",
+    "220854",
+    "220867",
+    "220911",
+    "221009",
+    "221328",
+    "221552",
+    "223352",
+    "223495",
+    "223591",
+    "224628",
+    "227913",
+    "228033",
+    "228397",
+    "228456",
+    "228772",
+    "228788",
+    "228986",
+    "229058",
+    "229138",
+    "229143",
+    "229557",
+    "229624",
+    "229635",
+    "229878",
+    "229924",
+    "230023",
+    "230144",
+    "230159",
+    "230256",
+    "230403",
+    "230715",
+    "230930",
+    "231031",
+    "231309",
+    "231353",
+    "232099",
+    "232101",
+    "232429",
+    "232583",
+    "232605",
+    "232641",
+    "232708",
+    "232741",
+    "233106",
+    "233140",
+    "233305",
+    "233499",
+    "233534",
+    "233733",
+    "234425",
+    "234447",
+    "235139",
+    "235235",
+    "235251",
+    "235312",
+    "235632",
+    "236972",
+    "237068",
+    "237096",
+    "237195",
+    "237373",
+    "237543",
+    "237549",
+    "237600",
+    "237604",
+    "237646",
+    "237676",
+    "237840",
+    "238034",
+    "238081",
+    "238215",
+    "238266",
+    "238276",
+    "238473",
+    "238565",
+    "238737",
+    "238751",
+    "238977",
+    "239009",
+    "239039",
+    "239292",
+    "239501",
+    "239603",
+    "239978",
+    "240044",
+    "240153",
+    "240374",
+    "240701",
+    "240753",
+    "240866",
+    "240944",
+    "240994",
+    "241203",
+    "241611",
+    "241687",
+    "241702",
+    "242001",
+    "242084",
+    "242197",
+    "242485",
+    "242491",
+    "242828",
+    "242835",
+    "242873",
+    "243433",
+    "243450",
+    "243559",
+    "243694",
+    "243743",
+    "243924",
+    "244044",
+    "244183",
+    "244260",
+    "244499",
+    "244535",
+    "244630",
+    "244756",
+    "244775",
+    "245166",
+    "245532",
+    "246033",
+    "246140",
+    "246305",
+    "246785",
+    "246818",
+    "246850",
+    "246885",
+    "246974",
+    "247480",
+    "247572",
+    "248789",
+    "248795",
+    "249514",
+    "249699",
+    "249743",
+    "250213",
+    "250299",
+    "250503",
+    "250760",
+    "250986",
+    "251147",
+    "251326",
+    "251449",
+    "251610",
+    "251753",
+    "251803",
+    "252063",
+    "252608",
+    "252826",
+    "253045",
+    "253132",
+    "253203",
+    "253283",
+    "253475",
+    "253477",
+    "253552",
+    "253698",
+    "253772",
+    "253798",
+    "253996",
+    "254712",
+    "254889",
+    "254936",
+    "254937",
+    "255177",
+    "255199",
+    "255509",
+    "255523",
+    "255525",
+    "255578",
+    "255598",
+    "255611",
+    "255778",
+    "256246",
+    "256379",
+    "256442",
+    "256529",
+    "256651",
+    "256705",
+    "257032",
+    "257151",
+    "257155",
+    "257238",
+    "257271",
+    "257330",
+    "257441",
+    "257623",
+    "257678",
+    "257842",
+    "258172",
+    "258401",
+    "258516",
+    "258678",
+    "259279",
+    "259804",
+    "259865",
+    "259992",
+    "260066",
+    "260107",
+    "260191",
+    "260256",
+    "260474",
+    "260536",
+    "260680",
+    "260882",
+    "260946",
+    "261094",
+    "261143",
+    "261412",
+    "261493",
+    "261563",
+    "261760",
+    "261772",
+    "261853",
+    "262084",
+    "262721",
+    "263389",
+    "263688",
+    "263951",
+    "264120",
+    "264149",
+    "264504",
+    "264872",
+    "264905",
+    "265255",
+    "265260",
+    "265262",
+    "265333",
+    "265343",
+    "265518",
+    "265532",
+    "265652",
+    "266018",
+    "266053",
+    "266082",
+    "266115",
+    "266151",
+    "266193",
+    "266294",
+    "266554",
+    "266625",
+    "266917",
+    "266995",
+    "267219",
+    "267403",
+    "267406",
+    "267456",
+    "267468",
+    "267589",
+    "267649",
+    "267771",
+    "267874",
+    "267997",
+    "268161",
+    "268211",
+    "268564",
+    "268693",
+    "268706",
+    "268710",
+    "268884",
+    "269246",
+    "269273",
+    "269382",
+    "269448",
+    "269537",
+    "270083",
+    "270249",
+    "270293",
+    "270330",
+    "270904",
+    "271183",
+    "271296",
+    "271326",
+    "271649",
+    "271725",
+    "271793",
+    "272075",
+    "272091",
+    "272141",
+    "272323",
+    "272363",
+    "272795",
+    "272879",
+    "272895",
+    "273018",
+    "273026",
+    "273189",
+    "273770",
+    "273903",
+    "273923",
+    "274103",
+    "274116",
+    "274353",
+    "274434",
+    "274476",
+    "274555",
+    "274984",
+    "274990",
+    "275059",
+    "275339",
+    "275444",
+    "275537",
+    "275567",
+    "275758",
+    "275901",
+    "275992",
+    "276013",
+    "276024",
+    "276482",
+    "276703",
+    "276740",
+    "277101",
+    "277412",
+    "277578"
+  ],
+  "model_counts": {
+    "claude-opus-5 (interactive, human-directed)": 100,
+    "claude-opus-5-subagent": 885,
+    "codex (interactive)": 15
+  },
+  "files": {
+    "gold-1000.jsonl": {
+      "sha256": "6762ec54ee3196466f25be8871ab44c052dddf04d0b86da24c658132a8a29afd"
+    },
+    "gold-1000.sources.jsonl": {
+      "sha256": "492aa86b122d910489fa993bd8ed15f24a60b1560d8290a5b84f35b4da11b8e1"
+    },
+    "gold-1000.instructions.md": {
+      "sha256": "d2b7b604c3c8e347718e0d6f27595d350ca2032867339f739754d406a044be06"
+    },
+    "gold-100.jsonl": {
+      "sha256": "03ebcd048db1a19bca4d51b38e87dc5143c236120f2759eb20bacfc0451e2d48"
+    },
+    "gold-100.manifest.json": {
+      "sha256": "f6350ca739eea803fbe385fcd9c53f4ee455cb8f4be0ae06b25599259a80ff1f"
+    }
+  },
+  "sampling": {
+    "pilot_jsonl": "data/dsld/runs/20260908T125504Z/raw/pilot-1000.jsonl",
+    "pilot_manifest": "data/dsld/runs/20260908T125504Z/manifests/pilot-1000.json",
+    "pilot_manifest_sha256": "ab8a60c83f8e1992c143f508203ef9665a35f132d59fa51a21fec7f3700567c7",
+    "seed": 20260908,
+    "method": "Complete the original seeded random 1000-label DSLD-only pilot, stored in ascending numeric ID order. The added 900 are the remaining rows of that draw, not a fresh random draw. Original gold-100 was its lowest-ID prefix.",
+    "n_both_rows_held_back": 208,
+    "exact_pilot_id_coverage": true
+  },
+  "provenance": {
+    "claude_session_id": "4f6e6d89-3257-43d1-8fb5-f510ce15ac96",
+    "original_rows": 100,
+    "saved_claude_expansion_rows": 810,
+    "recovered_claude_draft_rows": 75,
+    "new_codex_rows": 15,
+    "recovered_claude_dsld_ids": [
+      213638,
+      213677,
+      213821,
+      214008,
+      214015,
+      214081,
+      214250,
+      214353,
+      214429,
+      214647,
+      214747,
+      214767,
+      214963,
+      214969,
+      215057,
+      215425,
+      215741,
+      216098,
+      216269,
+      216276,
+      216313,
+      216722,
+      216784,
+      216801,
+      216809,
+      217381,
+      217392,
+      217497,
+      217529,
+      217668,
+      259804,
+      259865,
+      259992,
+      260066,
+      260107,
+      260191,
+      260256,
+      260474,
+      260536,
+      260680,
+      260882,
+      260946,
+      261094,
+      261143,
+      261412,
+      268211,
+      268564,
+      268693,
+      268706,
+      268710,
+      268884,
+      269246,
+      269273,
+      269382,
+      269448,
+      269537,
+      270083,
+      270249,
+      270293,
+      270330,
+      270904,
+      271183,
+      271296,
+      271326,
+      271649,
+      271725,
+      271793,
+      272075,
+      272091,
+      272141,
+      272323,
+      272363,
+      272795,
+      272879,
+      272895
+    ],
+    "codex_dsld_ids": [
+      261493,
+      261563,
+      261760,
+      261772,
+      261853,
+      262084,
+      262721,
+      263389,
+      263688,
+      263951,
+      264120,
+      264149,
+      264504,
+      264872,
+      264905
+    ],
+    "recovery": "Recovered literal extraction data from build_19.py, build29.py and the first 15 rows in extract_a.py without executing their code. Recovered extracted_at timestamps use draft-file modification times. Existing saved timestamps preserved.",
+    "input_shards": [
+      {
+        "shard": 1,
+        "rows": 30,
+        "sha256": "4e1d9789e52380fb8bb744e725dbfdbdb5250ccdd8d127376fe99647150c10b5",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 2,
+        "rows": 30,
+        "sha256": "166a57d344a91e5da570d3210153f93dbdc1786d6d717b747bf0a84eb76cc5d6",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 3,
+        "rows": 30,
+        "sha256": "c3851c94f1c078dc9d7dd859dc17e8b2eccf0752b929390b157432c6a9c2da7d",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 4,
+        "rows": 30,
+        "sha256": "227eefa84fab08a4ac10fb931a447010ce1a3e409ce31a5ec9d7b45240f16fa4",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 5,
+        "rows": 30,
+        "sha256": "5100c155c3879e8f48dbaba915bcac52a1614dc0c7cfbf071fe3d669d36d53de",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 6,
+        "rows": 30,
+        "sha256": "ceae8e371fd80bffb9f675fb6b1dc61792eebe1dfd5f5e2e28234beeaf103fac",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 7,
+        "rows": 30,
+        "sha256": "6d79a2ca999ed16ec6879f720c579f97bffef6ba9c130eb76ac6e802f5ffd9a6",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 8,
+        "rows": 30,
+        "sha256": "c24823c6e01b8904e7e1429dc6874e24067fdc0febf0dcf19943fbcd74e25831",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 9,
+        "rows": 30,
+        "sha256": "75ffca13e0cc200b2b029c9381aa71d1ab68f2befbe7fd14f49630e47651a471",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 10,
+        "rows": 30,
+        "sha256": "70b09e6f26dc1e86f84b6cdf2176f0e1818ebb16fc971a27f611e31a8ecfe285",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 11,
+        "rows": 30,
+        "sha256": "8baa5951700abfc7298dabc9ca29d904760e1257a0222bec498d481096c4f72b",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 12,
+        "rows": 30,
+        "sha256": "36f4babc88fca3b8f1cf2c233f8692e96639a2224bc3191dffd8ae2812408c01",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 13,
+        "rows": 30,
+        "sha256": "18f09b75c0242725ef1bca904ed4a91e15b0ddf5f4f547a5c5175941808ae957",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 14,
+        "rows": 30,
+        "sha256": "d3f6c4c47c2daf73259807caaacf56907e48c32bcdff986b84be159ad9e52c20",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 15,
+        "rows": 30,
+        "sha256": "1a498362a7535bb11888a83c4b85fe23989af81c66d15bca80b53611df0c7610",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 16,
+        "rows": 30,
+        "sha256": "f1e90487593a78eef6724bdb987b6199b943ca261f6a7ed1b7865234abcae01f",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 17,
+        "rows": 30,
+        "sha256": "831b883b22a2d59d4d1df18982dc9830db96888906c03d6c103ac672903b85ae",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 18,
+        "rows": 30,
+        "sha256": "df016473a17060cff2444e1eb24425e733b71dc6902b00b0a607f138e31caeb0",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 19,
+        "rows": 30,
+        "sha256": "1e4123951dd1f4f81fa32e7fd1006e746d3bf8dc7647dd2bc3a3d45c0f03eeec",
+        "recovered_or_completed": true
+      },
+      {
+        "shard": 20,
+        "rows": 30,
+        "sha256": "54193bb203fe9151da7d15984502903498e8b77ea6d94cf224f755ef9961772b",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 21,
+        "rows": 30,
+        "sha256": "c311da697d7142a4c9bd79a37fbfdc61da12541c1cd70c3990564e2fc067ef3f",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 22,
+        "rows": 30,
+        "sha256": "5f87ce5b6c87f76a3942524ee21a132c78aec8d20f30942462d5cb1ab0ddb5fc",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 23,
+        "rows": 30,
+        "sha256": "be2ada01db27c5d54f6d4e1e8966a91fe8e826248cb136ec53e745ad4c9b3781",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 24,
+        "rows": 30,
+        "sha256": "cfca524bab33e1080a80b2b250ea5f4249c307ac202a6ac805151f6b80b7a78d",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 25,
+        "rows": 30,
+        "sha256": "215f14a61cfcb7d0f04a7e56c7a51df1eaefd8c3b777adc195a2d778e06d6692",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 26,
+        "rows": 30,
+        "sha256": "52d4b71b043291346e84d075c27fde1bc236158a6d67e0327aedf1dc7177c1f3",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 27,
+        "rows": 30,
+        "sha256": "5e0fc10465a70d8fbcc3e9c4ef53ccb0df92b9e14f6deff11c3f5d9494fd8465",
+        "recovered_or_completed": true
+      },
+      {
+        "shard": 28,
+        "rows": 30,
+        "sha256": "81578d98d2466c67bba2c65c9742150db19bbb55071d72dd9d6b788bc99db95f",
+        "recovered_or_completed": false
+      },
+      {
+        "shard": 29,
+        "rows": 30,
+        "sha256": "86529b58d5664cfaf0af00b851b34a6cdc45a9f6eeffbf252c52081b76cd8328",
+        "recovered_or_completed": true
+      },
+      {
+        "shard": 30,
+        "rows": 30,
+        "sha256": "6340865f4a70530da914463e787e31ca686caef68f7527d8800b1d509df413e4",
+        "recovered_or_completed": false
+      }
+    ],
+    "reviewer": "codex (interactive)",
+    "review_scope": "Exact source, coverage, schema, confidence, evidence grounding and header audit for all rows; targeted convention checks on the added 900. Not a complete independent semantic reannotation.",
+    "review_edits": [
+      {
+        "dsld_id": 41102,
+        "field": "purpose_confidence",
+        "before": 1,
+        "after": 0,
+        "reason": "Empty field must have confidence zero."
+      },
+      {
+        "dsld_id": 67444,
+        "field": "purpose_confidence",
+        "before": 1,
+        "after": 0,
+        "reason": "Empty field must have confidence zero."
+      },
+      {
+        "dsld_id": 45128,
+        "field": "risk",
+        "before": [
+          {
+            "text": "not a replacement for heart medications",
+            "evidence": "Not a replacement for heart medications."
+          },
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "WARNING: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "keep this product out of reach of children",
+            "evidence": "Keep this product out of reach of children."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          }
+        ],
+        "after": [
+          {
+            "text": "not a replacement for heart medications",
+            "evidence": "Not a replacement for heart medications."
+          },
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "WARNING: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          }
+        ],
+        "reason": "Drop standalone keep-out-of-reach boilerplate when substantive risk text exists, as required by the prompt."
+      },
+      {
+        "dsld_id": 45840,
+        "field": "risk",
+        "before": [
+          {
+            "text": "keep out of reach of children",
+            "evidence": "CAUTION: Keep out of reach of children."
+          },
+          {
+            "text": "made in a gmp facility that processes egg, fish, milk, shellfish, soy, tree nut and wheat products",
+            "evidence": "Made in a GMP facility that processes egg, fish, milk, shellfish, soy, tree nut and wheat products."
+          }
+        ],
+        "after": [
+          {
+            "text": "made in a gmp facility that processes egg, fish, milk, shellfish, soy, tree nut and wheat products",
+            "evidence": "Made in a GMP facility that processes egg, fish, milk, shellfish, soy, tree nut and wheat products."
+          }
+        ],
+        "reason": "Drop standalone keep-out-of-reach boilerplate when substantive risk text exists, as required by the prompt."
+      },
+      {
+        "dsld_id": 201136,
+        "field": "risk",
+        "before": [
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "keep this product out of reach of children",
+            "evidence": "Keep this product out of reach of children."
+          },
+          {
+            "text": "in case of accidental overdose, call a physician or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a physician or poison control center immediately."
+          }
+        ],
+        "after": [
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "in case of accidental overdose, call a physician or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a physician or poison control center immediately."
+          }
+        ],
+        "reason": "Drop standalone keep-out-of-reach boilerplate when substantive risk text exists, as required by the prompt."
+      },
+      {
+        "dsld_id": 202647,
+        "field": "risk",
+        "before": [
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "keep this product out of reach of children",
+            "evidence": "Keep this product out of reach of children."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          },
+          {
+            "text": "consult a healthcare professional before taking this supplement if you are pregnant, breastfeeding, or taking any medications",
+            "evidence": "Caution: Please consult a healthcare professional before taking this supplement if you are pregnant, breastfeeding, or taking any medications."
+          }
+        ],
+        "after": [
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          },
+          {
+            "text": "consult a healthcare professional before taking this supplement if you are pregnant, breastfeeding, or taking any medications",
+            "evidence": "Caution: Please consult a healthcare professional before taking this supplement if you are pregnant, breastfeeding, or taking any medications."
+          }
+        ],
+        "reason": "Drop standalone keep-out-of-reach boilerplate when substantive risk text exists, as required by the prompt."
+      },
+      {
+        "dsld_id": 251326,
+        "field": "risk",
+        "before": [
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under six",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under six."
+          },
+          {
+            "text": "keep this product out of reach of children",
+            "evidence": "Keep this product out of reach of children."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          }
+        ],
+        "after": [
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under six",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under six."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          }
+        ],
+        "reason": "Drop standalone keep-out-of-reach boilerplate when substantive risk text exists, as required by the prompt."
+      },
+      {
+        "dsld_id": 253045,
+        "field": "risk",
+        "before": [
+          {
+            "text": "as with any dietary supplement, advise your healthcare professional of the use of this product if you have a medical condition or are taking medication",
+            "evidence": "Caution: As with any dietary supplement, advise your healthcare professional of the use of this product if you have a medical condition or are taking medication."
+          },
+          {
+            "text": "if you are nursing, pregnant, or considering pregnancy, you should consult your healthcare professional prior to using this product",
+            "evidence": "If you are nursing, pregnant, or considering pregnancy, you should consult your healthcare professional prior to using this product."
+          },
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "keep this product out of reach of children",
+            "evidence": "Keep this product out of reach of children."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          },
+          {
+            "text": "contains fermented soy",
+            "evidence": "Contains: Fermented soy."
+          }
+        ],
+        "after": [
+          {
+            "text": "as with any dietary supplement, advise your healthcare professional of the use of this product if you have a medical condition or are taking medication",
+            "evidence": "Caution: As with any dietary supplement, advise your healthcare professional of the use of this product if you have a medical condition or are taking medication."
+          },
+          {
+            "text": "if you are nursing, pregnant, or considering pregnancy, you should consult your healthcare professional prior to using this product",
+            "evidence": "If you are nursing, pregnant, or considering pregnancy, you should consult your healthcare professional prior to using this product."
+          },
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          },
+          {
+            "text": "contains fermented soy",
+            "evidence": "Contains: Fermented soy."
+          }
+        ],
+        "reason": "Drop standalone keep-out-of-reach boilerplate when substantive risk text exists, as required by the prompt."
+      },
+      {
+        "dsld_id": 254937,
+        "field": "risk",
+        "before": [
+          {
+            "text": "not a replacement for cholesterol-lowering drugs",
+            "evidence": "Not a replacement for cholesterol-lowering drugs"
+          },
+          {
+            "text": "this product is not intended to provide daily intake of lutein",
+            "evidence": "This product is not intended to provide daily intake of lutein."
+          },
+          {
+            "text": "not formulated for use in children",
+            "evidence": "Not formulated for use in children."
+          },
+          {
+            "text": "do not exceed suggested use",
+            "evidence": "Do not exceed suggested use."
+          },
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "keep this product out of reach of children",
+            "evidence": "Keep this product out of reach of children."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          },
+          {
+            "text": "if taking other supplements, read label, since supplements may contain the same ingredient",
+            "evidence": "If taking other supplements, read label, since supplements may contain the same ingredient."
+          }
+        ],
+        "after": [
+          {
+            "text": "not a replacement for cholesterol-lowering drugs",
+            "evidence": "Not a replacement for cholesterol-lowering drugs"
+          },
+          {
+            "text": "this product is not intended to provide daily intake of lutein",
+            "evidence": "This product is not intended to provide daily intake of lutein."
+          },
+          {
+            "text": "not formulated for use in children",
+            "evidence": "Not formulated for use in children."
+          },
+          {
+            "text": "do not exceed suggested use",
+            "evidence": "Do not exceed suggested use."
+          },
+          {
+            "text": "accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6",
+            "evidence": "Warning: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+          },
+          {
+            "text": "in case of accidental overdose, call a doctor or poison control center immediately",
+            "evidence": "In case of accidental overdose, call a doctor or poison control center immediately."
+          },
+          {
+            "text": "if taking other supplements, read label, since supplements may contain the same ingredient",
+            "evidence": "If taking other supplements, read label, since supplements may contain the same ingredient."
+          }
+        ],
+        "reason": "Drop standalone keep-out-of-reach boilerplate when substantive risk text exists, as required by the prompt."
+      },
+      {
+        "dsld_id": 206573,
+        "field": "risk",
+        "before": [
+          {
+            "text": "if you are pregnant, breast-feeding, or taking medication, ask a health professional before use",
+            "evidence": "As with any supplement, if you are pregnant, breast-feeding, or taking medication, ask a health professional before use."
+          },
+          {
+            "text": "if you are allergic to shellfish or beef, consult your physician before taking",
+            "evidence": "Caution: If you are allergic to shellfish or beef, consult your physician before taking."
+          },
+          {
+            "text": "in case of overdose, get medical help or contact a poison control center right away",
+            "evidence": "In case of overdose, get medical help or contact a Poison Control Center right away."
+          },
+          {
+            "text": "package not child resistant",
+            "evidence": "Package not child resistant"
+          }
+        ],
+        "after": [
+          {
+            "text": "if you are pregnant, breast-feeding, or taking medication, ask a health professional before use",
+            "evidence": "As with any supplement, if you are pregnant, breast-feeding, or taking medication, ask a health professional before use."
+          },
+          {
+            "text": "if you are allergic to shellfish or beef, consult your physician before taking",
+            "evidence": "Caution: If you are allergic to shellfish or beef, consult your physician before taking."
+          },
+          {
+            "text": "in case of overdose, get medical help or contact a poison control center right away",
+            "evidence": "In case of overdose, get medical help or contact a Poison Control Center right away."
+          }
+        ],
+        "reason": "Container characteristic excluded because the label has substantive personal risk warnings."
+      },
+      {
+        "dsld_id": 181871,
+        "field": "risk",
+        "before": [
+          {
+            "text": "do not exceed recommended dose",
+            "evidence": "Do not exceed recommended dose."
+          },
+          {
+            "text": "when using nutritional supplements, consult with your physician if you are undergoing treatment for a medical condition or if you are pregnant or lactating",
+            "evidence": "When using nutritional supplements, please consult with your physician if you are undergoing treatment for a medical condition or if you are pregnant or lactating."
+          },
+          {
+            "text": "to report a serious adverse event or obtain product information, contact 1-866-280-2852",
+            "evidence": "To report a serious adverse event or obtain product information, contact 1-866-280-2852."
+          }
+        ],
+        "after": [
+          {
+            "text": "do not exceed recommended dose",
+            "evidence": "Do not exceed recommended dose."
+          },
+          {
+            "text": "when using nutritional supplements, consult with your physician if you are undergoing treatment for a medical condition or if you are pregnant or lactating",
+            "evidence": "When using nutritional supplements, please consult with your physician if you are undergoing treatment for a medical condition or if you are pregnant or lactating."
+          }
+        ],
+        "reason": "Reporting contact information alone does not state a caution, contraindication, interaction, or effect; retain the actual warnings."
+      },
+      {
+        "dsld_id": 182098,
+        "field": "risk",
+        "before": [
+          {
+            "text": "if you are taking anticoagulant or antiplatelet medications, or have a bleeding disorder, consult your healthcare provider before taking this product",
+            "evidence": "Caution: If you are taking anticoagulant or antiplatelet medications, or have a bleeding disorder, consult your healthcare provider before taking this product."
+          },
+          {
+            "text": "do not exceed recommended dose",
+            "evidence": "Do not exceed recommended dose."
+          },
+          {
+            "text": "when using nutritional supplements, consult with your physician if you are undergoing treatment for a medical condition or if you are pregnant or lactating",
+            "evidence": "When using nutritional supplements, please consult with your physician if you are undergoing treatment for a medical condition or if you are pregnant or lactating."
+          },
+          {
+            "text": "contains soybeans",
+            "evidence": "Contains soybeans."
+          },
+          {
+            "text": "to report a serious adverse event or obtain product information, contact 1-866-280-2852",
+            "evidence": "To report a serious adverse event or obtain product information, contact 1-866-280-2852."
+          }
+        ],
+        "after": [
+          {
+            "text": "if you are taking anticoagulant or antiplatelet medications, or have a bleeding disorder, consult your healthcare provider before taking this product",
+            "evidence": "Caution: If you are taking anticoagulant or antiplatelet medications, or have a bleeding disorder, consult your healthcare provider before taking this product."
+          },
+          {
+            "text": "do not exceed recommended dose",
+            "evidence": "Do not exceed recommended dose."
+          },
+          {
+            "text": "when using nutritional supplements, consult with your physician if you are undergoing treatment for a medical condition or if you are pregnant or lactating",
+            "evidence": "When using nutritional supplements, please consult with your physician if you are undergoing treatment for a medical condition or if you are pregnant or lactating."
+          },
+          {
+            "text": "contains soybeans",
+            "evidence": "Contains soybeans."
+          }
+        ],
+        "reason": "Reporting contact information alone does not state a caution, contraindication, interaction, or effect; retain the actual warnings."
+      },
+      {
+        "dsld_id": 182388,
+        "field": "risk",
+        "before": [
+          {
+            "text": "avoid use during pregnancy",
+            "evidence": "Caution: Avoid use during pregnancy."
+          },
+          {
+            "text": "do not exceed recommended dose",
+            "evidence": "Do not exceed recommended dose."
+          },
+          {
+            "text": "when using nutritional supplements, consult with your physician if you are undergoing treatment for a medical condition or if you are lactating",
+            "evidence": "When using nutritional supplements, please consult with your physician if you are undergoing treatment for a medical condition or if you are lactating."
+          },
+          {
+            "text": "to report a serious adverse event or obtain product information, contact 1-866-280-2852",
+            "evidence": "To report a serious adverse event or obtain product information, contact 1-866-280-2852."
+          }
+        ],
+        "after": [
+          {
+            "text": "avoid use during pregnancy",
+            "evidence": "Caution: Avoid use during pregnancy."
+          },
+          {
+            "text": "do not exceed recommended dose",
+            "evidence": "Do not exceed recommended dose."
+          },
+          {
+            "text": "when using nutritional supplements, consult with your physician if you are undergoing treatment for a medical condition or if you are lactating",
+            "evidence": "When using nutritional supplements, please consult with your physician if you are undergoing treatment for a medical condition or if you are lactating."
+          }
+        ],
+        "reason": "Reporting contact information alone does not state a caution, contraindication, interaction, or effect; retain the actual warnings."
+      },
+      {
+        "dsld_id": 250760,
+        "field": "risk",
+        "before": [
+          {
+            "text": "do not use as a substitute for a well-balanced diet and a healthy lifestyle",
+            "evidence": "Do not use as a substitute for a well-balanced diet and a healthy lifestyle."
+          },
+          {
+            "text": "do not exceed the recommended serving",
+            "evidence": "Do not exceed the recommended serving."
+          },
+          {
+            "text": "to report serious adverse event, contact 1-866-641-5222",
+            "evidence": "To report serious adverse event, contact 1-866-641-5222."
+          }
+        ],
+        "after": [
+          {
+            "text": "do not use as a substitute for a well-balanced diet and a healthy lifestyle",
+            "evidence": "Do not use as a substitute for a well-balanced diet and a healthy lifestyle."
+          },
+          {
+            "text": "do not exceed the recommended serving",
+            "evidence": "Do not exceed the recommended serving."
+          }
+        ],
+        "reason": "Reporting contact information alone does not state a caution, contraindication, interaction, or effect; retain the actual warnings."
+      },
+      {
+        "dsld_id": 32342,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of reach of children",
+            "evidence": "KEEP OUT OF REACH OF CHILDREN."
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 32342,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 32849,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of reach of children",
+            "evidence": "KEEP OUT OF REACH OF CHILDREN."
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 32849,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 53893,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of the reach of children",
+            "evidence": "Keep out of the reach of children"
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 53893,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 54005,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of the reach of children",
+            "evidence": "Keep Out of the Reach of Children"
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 54005,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 175056,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of the reach of children",
+            "evidence": "Keep out of the reach of children."
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 175056,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 209777,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of the reach of children",
+            "evidence": "Keep out of the reach of children"
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 209777,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 210172,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of the reach of children",
+            "evidence": "Keep out of the reach of children"
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 210172,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 216276,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of reach of children",
+            "evidence": "Keep out of reach of children."
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 216276,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 276482,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "keep out of the reach of children",
+            "evidence": "Keep out of the reach of children."
+          }
+        ],
+        "reason": "Restore the prompt-permitted child-safety fallback: no substantive risk statement is present."
+      },
+      {
+        "dsld_id": 276482,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for boilerplate-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 70108,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "do not use if inner seal is missing or damaged",
+            "evidence": "Do not use if inner seal is missing or damaged."
+          }
+        ],
+        "reason": "Restore the explicit packaging-only fallback permitted by the frozen prompt when no other risk text exists."
+      },
+      {
+        "dsld_id": 70108,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for packaging-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 208596,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "do not use if inner seal is missing or damaged",
+            "evidence": "Do not use if inner seal is missing or damaged."
+          }
+        ],
+        "reason": "Restore the explicit packaging-only fallback permitted by the frozen prompt when no other risk text exists."
+      },
+      {
+        "dsld_id": 208596,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for packaging-only fallback, consistent with existing fallback rows."
+      },
+      {
+        "dsld_id": 208665,
+        "field": "risk",
+        "before": [],
+        "after": [
+          {
+            "text": "do not use if inner seal is missing or damaged",
+            "evidence": "Do not use if inner seal is missing or damaged."
+          }
+        ],
+        "reason": "Restore the explicit packaging-only fallback permitted by the frozen prompt when no other risk text exists."
+      },
+      {
+        "dsld_id": 208665,
+        "field": "risk_confidence",
+        "before": 0,
+        "after": 1,
+        "reason": "Low confidence for packaging-only fallback, consistent with existing fallback rows."
+      }
+    ],
+    "grounded_field": "Added grounded=true to all new evidence entries only after exact case-sensitive substring checks."
+  },
+  "conventions": {
+    "expansion_instructions": "gold-1000.instructions.md",
+    "original_100": "Unchanged prior annotations and prompt convention. Their evidence blocks and granularity can be broader than the expansion.",
+    "expansion_900": "Use the frozen instructions, including general packaging exclusion, its explicit no-other-risk fallback, storage exclusion and child-safety fallback. Finer distinct-claim splitting retained from Claude.",
+    "adverse_event_contact": "Pure reporting/contact lines excluded as administrative text; actual adverse effects and medical-response cautions retained.",
+    "limitations": "Mixed annotators and prompt versions; claim granularity varies. Grounding verifies quotations, not completeness or semantic correctness. The set has not been independently human-adjudicated."
+  },
+  "header_audit": {
+    "n_evidence_spans": 4281,
+    "n_exact_grounded": 4281,
+    "n_statement_body_matches": 4281,
+    "n_header_only": 0,
+    "n_header_and_statement_body": 0,
+    "n_ungrounded": 0,
+    "method": "Case-sensitive substring check in full passage and statement body after removing bracketed statement-type prefixes; separately check pre-LABEL STATEMENTS headers.",
+    "interpretation": "No retained evidence requires metadata headers. This does not prove that removing header context leaves model predictions unchanged."
+  }
+}

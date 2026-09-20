@@ -1,0 +1,162 @@
+{
+  "scope": "All ingredientRows, recursively including nestedRows; otheringredients excluded. Populated groups include nutrition totals and do not identify a main ingredient.",
+  "counts": {
+    "ingredient_rows": 9172,
+    "top_level_rows": 5679,
+    "populated_rows": 8715,
+    "labels": 1000,
+    "labels_with_no_ingredient_rows": 0,
+    "labels_with_any_group": 1000,
+    "labels_with_all_rows_grouped": 994,
+    "labels_with_missing_group": 6,
+    "labels_with_placeholder_group": 251,
+    "labels_with_only_missing_or_placeholder_groups": 8,
+    "nested_rows": 3493,
+    "placeholder_rows": 451,
+    "missing_rows": 6
+  },
+  "placeholder_values": [
+    "blend",
+    "blend (combination)",
+    "blend (herb/botanical)",
+    "header",
+    "proprietary blend",
+    "proprietary blend (combination)",
+    "proprietary blend (herb/botanical)",
+    "tbd"
+  ],
+  "placeholder_row_counts": {
+    "Proprietary Blend (Combination)": 89,
+    "Proprietary Blend (Herb/Botanical)": 56,
+    "Blend (Herb/Botanical)": 46,
+    "Blend (Combination)": 100,
+    "TBD": 15,
+    "Header": 34,
+    "Proprietary Blend": 41,
+    "Blend": 70
+  },
+  "missing_rows": [
+    {
+      "dsld_id": 9289,
+      "product": "SlimStyles PGX",
+      "path": "ingredientRows[2]",
+      "ingredient_name": "PGX(R) Proprietary Blend",
+      "ingredient_group": null,
+      "group_status": "missing"
+    },
+    {
+      "dsld_id": 9354,
+      "product": "Natural Vitamin C 500 mg",
+      "path": "ingredientRows[1]",
+      "ingredient_name": "Proprietary Blend",
+      "ingredient_group": null,
+      "group_status": "missing"
+    },
+    {
+      "dsld_id": 9422,
+      "product": "BlueRich Super Strength 36:1 Standardized Blueberry Concentrate",
+      "path": "ingredientRows[0].nestedRows[0]",
+      "ingredient_name": "Yielding 2.5% Anthocyanins",
+      "ingredient_group": null,
+      "group_status": "missing"
+    },
+    {
+      "dsld_id": 41151,
+      "product": "Tranquility Berry Bliss",
+      "path": "ingredientRows[1].nestedRows[9]",
+      "ingredient_name": "Sodium Chloride",
+      "ingredient_group": null,
+      "group_status": "missing"
+    },
+    {
+      "dsld_id": 54917,
+      "product": "Avmacol Immune",
+      "path": "ingredientRows[2].nestedRows[0].nestedRows[0]",
+      "ingredient_name": "Glucoraphanin",
+      "ingredient_group": null,
+      "group_status": "missing"
+    },
+    {
+      "dsld_id": 56754,
+      "product": "Ciltep",
+      "path": "ingredientRows[0]",
+      "ingredient_name": "Vitamin B-6",
+      "ingredient_group": null,
+      "group_status": "missing"
+    }
+  ],
+  "labels_without_meaningful_group": [
+    {
+      "dsld_id": 12683,
+      "product": "Black Walnut & Wormwood Complex Alcohol-Free",
+      "ingredient_row_count": 1,
+      "missing_group_count": 0,
+      "placeholder_group_count": 1,
+      "distinct_group_count": 1,
+      "ingredient_groups": "Proprietary Blend (Herb/Botanical)"
+    },
+    {
+      "dsld_id": 20518,
+      "product": "Chlorophyll Concentrate",
+      "ingredient_row_count": 1,
+      "missing_group_count": 0,
+      "placeholder_group_count": 1,
+      "distinct_group_count": 1,
+      "ingredient_groups": "Blend (Combination)"
+    },
+    {
+      "dsld_id": 20681,
+      "product": "IsoCort",
+      "ingredient_row_count": 1,
+      "missing_group_count": 0,
+      "placeholder_group_count": 1,
+      "distinct_group_count": 1,
+      "ingredient_groups": "Proprietary Blend (Combination)"
+    },
+    {
+      "dsld_id": 22379,
+      "product": "Earth Tonify Warm The Center",
+      "ingredient_row_count": 1,
+      "missing_group_count": 0,
+      "placeholder_group_count": 1,
+      "distinct_group_count": 1,
+      "ingredient_groups": "Proprietary Blend (Combination)"
+    },
+    {
+      "dsld_id": 177604,
+      "product": "DIM Complex 100 mg",
+      "ingredient_row_count": 1,
+      "missing_group_count": 0,
+      "placeholder_group_count": 1,
+      "distinct_group_count": 1,
+      "ingredient_groups": "Proprietary Blend (Combination)"
+    },
+    {
+      "dsld_id": 237676,
+      "product": "Starwort",
+      "ingredient_row_count": 1,
+      "missing_group_count": 0,
+      "placeholder_group_count": 1,
+      "distinct_group_count": 1,
+      "ingredient_groups": "TBD"
+    },
+    {
+      "dsld_id": 238276,
+      "product": "Anastatica Non-Alcohol",
+      "ingredient_row_count": 1,
+      "missing_group_count": 0,
+      "placeholder_group_count": 1,
+      "distinct_group_count": 1,
+      "ingredient_groups": "TBD"
+    },
+    {
+      "dsld_id": 267219,
+      "product": "Sytrinol 150 mg",
+      "ingredient_row_count": 1,
+      "missing_group_count": 0,
+      "placeholder_group_count": 1,
+      "distinct_group_count": 1,
+      "ingredient_groups": "Proprietary Blend (Combination)"
+    }
+  ]
+}

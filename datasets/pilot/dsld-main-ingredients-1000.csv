@@ -1,0 +1,1001 @@
+dsld_id,product,main_ingredient,largest_among_quantified,status,eligible_ingredient_count,unresolved_structure_count,excluded_aggregate_count
+709,Huperzine A,Huperzine A,,sole_eligible_ingredient,1,0,0
+885,Spirulina Blue-Green Algae 500 mg,Spirulina,,largest_complete_comparable_mass,2,0,0
+889,Goldenseal Root 470 mg,Goldenseal,,sole_eligible_ingredient,1,0,0
+1024,Fish Oil,Eicosapentaenoic Acid,,largest_complete_comparable_mass,2,0,2
+1690,White Willow Bark,White Willow bark fluid extract,,sole_eligible_ingredient,1,0,0
+1736,Ginkgo Leaf Extract 500 mg,Ginkgo Extract,,sole_eligible_ingredient,1,0,0
+2036,Ultra Green Tea,,Calcium,largest_among_quantified_only,13,1,0
+2167,Ultralean,,,unknown_no_comparable_amounts,8,0,2
+2417,Hydroxycut Advanced,,Vitamin C,largest_among_quantified_only,11,2,0
+2454,3-in-1 Joint Formula,,Glucosamine Sulfate,largest_among_quantified_only,14,1,0
+3299,StemFlo,,,unknown_no_comparable_amounts,4,2,0
+3488,Animal Cuts,,,unknown_no_comparable_amounts,38,1,0
+3881,MultiLogics for Women,,Calcium,largest_among_quantified_only,26,1,0
+4900,Odorless Garlic 1000 mg,,,unknown_no_comparable_amounts,0,1,0
+5174,Policosanol,Policosanol,,sole_eligible_ingredient,1,0,0
+5242,Opti-Sel,Selenium,,sole_eligible_ingredient,1,0,0
+5400,C-Max,,Vitamin C,largest_among_quantified_only,1,1,0
+5777,Tribulus Terrestris,Tribulus terrestris extract,,sole_eligible_ingredient,1,0,0
+5784,Potassium Gluconate 595 mg,Potassium,,sole_eligible_ingredient,1,0,0
+5839,Grape Seed Xtra 50 mg,,Selenium,largest_among_quantified_only,4,1,0
+6517,Cell-Tech Hardcore Pro Series Lemon Lime,,Vitamin C,largest_among_quantified_only,28,1,2
+6616,MedCaps Menopause,Panax Ginseng Root Powder,,largest_complete_comparable_mass,10,0,0
+6769,Boswellia Extract 400 mg,,Boswellia serrata gum extract,largest_among_quantified_only,6,0,0
+7013,Cat's Claw,Cat's claw,,sole_eligible_ingredient,1,0,0
+7322,"Vitamin D-3 1,000 IU",Vitamin D,,sole_eligible_ingredient,1,0,0
+7388,Echinacea 400 mg,Echinacea,,sole_eligible_ingredient,1,0,0
+7443,FamilE,D-Gamma Tocopherol,,largest_complete_comparable_mass,3,0,0
+7688,Omega3 + D,,Cholesterol,largest_among_quantified_only,2,1,2
+7871,Super Cod Liver Oil,,Cod Liver Oil,largest_among_quantified_only,4,0,3
+7914,PomeGreat Pomegranate,,Iron,largest_among_quantified_only,2,1,2
+7991,Ultra Policosanols 10 mg,Policosanols,,sole_eligible_ingredient,1,0,0
+8470,MSM (MethylSulfonylMethane),Methylsulfonylmethane,,sole_eligible_ingredient,1,0,0
+9061,Prostate Health Complete Herbal Formula,,Beta Sitosterol extract,largest_among_quantified_only,5,1,2
+9232,Adult Multivitamin,,Vitamin C,largest_among_quantified_only,19,0,1
+9289,SlimStyles PGX,,Sodium,largest_among_quantified_only,1,1,1
+9354,Natural Vitamin C 500 mg,,Vitamin C,largest_among_quantified_only,1,1,0
+9422,BlueRich Super Strength 36:1 Standardized Blueberry Concentrate,,,unknown_no_comparable_amounts,0,1,0
+10214,Cat's Claw Bark,Cat's Claw extract,,sole_eligible_ingredient,1,0,0
+10406,Coffee Granate Forte,,,unknown_tie_or_serving_disagreement,2,0,0
+10598,Vein Integrity With Trunorin,Trunorin,,largest_complete_comparable_mass,5,0,0
+10613,PQQ Plus,Alpha GPC,,largest_complete_comparable_mass,2,0,0
+10809,C-Plex Powder,Vitamin C,,largest_complete_comparable_mass,9,0,3
+10837,DHEA 25 mg,Dehydroepiandrosterone,,largest_complete_comparable_mass,2,0,0
+10891,Double Strength 5-HTP L-5-Hydroxytryptophan 100 mg,5-Hydroxytryptophan,,largest_complete_comparable_mass,5,0,0
+10932,Pycnogenol 30 mg,Citrus Bioflavonoids Complex,,largest_complete_comparable_mass,2,0,0
+10975,Maximum Strength Glucosamine MSM Complex,Glucosamine Sulfate,,largest_complete_comparable_mass,7,0,2
+11325,Liquid Co-Q10 With Vitamins C & E Natural Tangerine Flavor,,,unknown_tie_or_serving_disagreement,4,0,2
+11400,Iron 65 mg,Iron,,sole_eligible_ingredient,1,0,0
+11807,Muira Puama Bark,Muira Puama Bark,,sole_eligible_ingredient,1,0,0
+11945,Pumpkin Seed Organic Alcohol,Pumpkin seed fluid extract,,sole_eligible_ingredient,1,0,0
+12018,Children's Multivitamin,,,unknown_tie_or_serving_disagreement,21,0,1
+12172,Green Tea Complex 1000 mg,,,unknown_no_comparable_amounts,0,1,0
+12284,High Potency Calcium 600+Vitamin D3,,Calcium,largest_among_quantified_only,3,0,0
+12513,Stack Pre-workout,,Caffeine,largest_among_quantified_only,9,5,3
+12533,Boswellia Extract,Boswellia Extract,,sole_eligible_ingredient,1,0,0
+12563,Red Clover Flowering Tops Alcohol-Free,Red Clover flowering tops fluid extract,,sole_eligible_ingredient,1,0,0
+12612,Bone Calcium,,Calcium,largest_among_quantified_only,8,0,0
+12620,Sublingual B-12 Herbal Lozenges,,,unknown_tie_or_serving_disagreement,5,0,1
+12683,Black Walnut & Wormwood Complex Alcohol-Free,,,unknown_no_comparable_amounts,0,1,0
+12835,Inositol Capsules 500 mg,Inositol,,sole_eligible_ingredient,1,0,0
+12866,Licorice Root,Licorice root powder,,sole_eligible_ingredient,1,0,0
+12911,Super C,,Vitamin C,largest_among_quantified_only,13,0,0
+13079,SAMe 200 mg,,Vitamin B6,largest_among_quantified_only,3,1,0
+13084,L-Methionine 500 mg,L-Methionine,,largest_complete_comparable_mass,3,0,0
+13316,Pure CoQ-10 60 mg,,Coenzyme Q-10,largest_among_quantified_only,3,0,0
+13504,Dong Quai 520 mg,Dong Quai powder,,sole_eligible_ingredient,1,0,1
+13711,Bee Pollen Caps 500 mg,Bee Pollen powder,,sole_eligible_ingredient,1,0,0
+14390,C-500 Calcium Ascorbate-C,Vitamin C,,largest_complete_comparable_mass,3,0,0
+14528,Karbolyn Neutral Flavor,Karbolyn,,largest_complete_comparable_mass,3,0,5
+14539,Hyaluronic Acid Double Strength - 100 mg,,,unknown_tie_or_serving_disagreement,5,0,0
+14741,Immuno-Hep Liquid Phyto-Caps,,Reishi mushroom,largest_among_quantified_only,2,1,1
+14782,Olive Leaf Liquid Phyto-Caps,total alcohol free Olive extract,,sole_eligible_ingredient,1,0,1
+15169,Vitamin C,Organic Gold Standard Amla,,largest_complete_comparable_mass,3,0,0
+15260,CAL/MAG Caps,Calcium,,largest_complete_comparable_mass,2,0,0
+15317,African Mango,African mango (Irvingia gabonensis) Seed Extract,,largest_complete_comparable_mass,2,0,0
+15600,Vit-Min 75+,,Vitamin C,largest_among_quantified_only,36,1,0
+15650,Vitomanhills,,,unknown_no_comparable_amounts,0,2,0
+15726,Acai Berry,Acai Berry Powder,,sole_eligible_ingredient,1,0,0
+15930,Super Fat Burner,L-Choline Bitartrate,,largest_complete_comparable_mass,12,0,3
+16209,Extractacaps Thyroid Complete,L-Tyrosine,,largest_complete_comparable_mass,12,0,0
+16228,Right Whey Creamy Chocolate,,New Zealand Whey Protein concentrate,largest_among_quantified_only,8,2,5
+16729,Oats Fresh Green Milky Seed,Organic Oat Seed Extract,,sole_eligible_ingredient,1,0,0
+16777,Dr. Cutler's Ultimate Memory Formula,,,unknown_no_comparable_amounts,1,1,0
+17196,Chromium Picolinate 200 mcg,Chromium,,sole_eligible_ingredient,1,0,0
+17217,Specialized Formula Collagen,Hydrolyzed Collagen,,largest_complete_comparable_mass,5,0,3
+18040,Bullnox Androrush Fruit Punch,,Magnesium,largest_among_quantified_only,5,5,4
+18162,Neurocore Grape,,CarnoSyn,largest_among_quantified_only,9,1,0
+18332,Artemisia Combination,,,unknown_no_comparable_amounts,8,0,0
+18888,Secretagogue-One Orange,,Potassium,largest_among_quantified_only,2,2,2
+18982,Joint Maxx,,Methylsulfonylmethane,largest_among_quantified_only,7,1,0
+19036,SAM-e 200 mg,SAM-e,,sole_eligible_ingredient,1,0,0
+19402,Norwegian Cod Liver Oil Great Bubble Gum Taste!,,Cholesterol,largest_among_quantified_only,5,1,2
+19409,Norwegian Salmon Oil,,Cholesterol,largest_among_quantified_only,2,1,2
+19412,Be-Energized,Caffeine Anhydrous,,largest_complete_comparable_mass,8,0,0
+19644,Pineapple PM,,Sodium,largest_among_quantified_only,4,0,1
+19655,Super-C-Complex,,,unknown_tie_or_serving_disagreement,2,0,0
+19799,Able Eyes,,Vitamin C,largest_among_quantified_only,15,1,0
+20061,Clinical Strength Lutein & Zeaxanthin,Lutein,,largest_complete_comparable_mass,2,0,0
+20284,Sustained Release Melatonin,Melatonin,,sole_eligible_ingredient,1,0,0
+20287,Super B Caps,Vitamin B5,,largest_complete_comparable_mass,11,0,0
+20362,Pregnenolone 50,Pregnenolone,,sole_eligible_ingredient,1,0,0
+20434,L-Glutamine,L-Glutamine,,sole_eligible_ingredient,1,0,0
+20518,Chlorophyll Concentrate,,,unknown_no_comparable_amounts,0,1,0
+20681,IsoCort,,,unknown_no_comparable_amounts,0,1,0
+20755,Spiru-Tein High Protein High Energy Tangerine Dream,,,unknown_no_comparable_amounts,25,1,4
+20777,Colon Support,Cascara Sagrada,,largest_complete_comparable_mass,8,0,0
+20965,Magnesium Chloride 617 mg,,,unknown_no_comparable_amounts,0,1,0
+21007,Milk Thistle 175 mg,Milk Thistle seed extract,,sole_eligible_ingredient,1,0,0
+21131,7-Keto DHEA 25 mg,7-Keto(R) - Dehydroepiandrosterone Acetate,,sole_eligible_ingredient,1,0,0
+21205,Electro Mix Natural Lemon-Lime Flavor,Potassium,,largest_complete_comparable_mass,6,0,2
+21290,Norwegian Salmon Oil And GLA,,Gamma-Linolenic Acid,largest_among_quantified_only,3,1,2
+21577,CoQ-Zyme 30,Coenzyme Q10,,largest_complete_comparable_mass,3,0,0
+22363,"Glucosamine 500 mg, Marine Chondroitin 100 mg & MSM 100 mg",Glucosamine Sulphate 2KCl,,largest_complete_comparable_mass,3,0,0
+22379,Earth Tonify Warm The Center,,,unknown_no_comparable_amounts,0,1,0
+22770,Core Olive Leaf Extract,Olive,,sole_eligible_ingredient,1,0,0
+22950,Multiphasic Melatonin-SR 1.8 mg,Calcium,,largest_complete_comparable_mass,3,0,0
+22953,SpectraMin,Chloride,,largest_complete_comparable_mass,7,0,0
+22976,OmegAvail Hi-Po,,Cholesterol,largest_among_quantified_only,1,1,2
+23203,HTN Complex,,,unknown_tie_or_serving_disagreement,10,1,0
+23668,Mega Magnesium,Magnesium,,largest_complete_comparable_mass,2,0,0
+23936,CD-Herbal,,,unknown_tie_or_serving_disagreement,4,0,0
+24271,Best 3000 GDU Bromelain,Bromelain,,sole_eligible_ingredient,1,0,0
+24277,Bone Response,,Phenolics,largest_among_quantified_only,2,11,0
+24282,Rhizinate 3X German Chocolate Flavor,Deglycyrrhizinated Licorice (DGL) (Glycyrrhiza glabra) root extract,,largest_complete_comparable_mass,2,0,2
+24342,Z,,Magnesium,largest_among_quantified_only,25,0,0
+24393,GLA-240,,,unknown_no_comparable_amounts,1,1,5
+24437,Best Benfotiamine 150,Benfotiamine,,sole_eligible_ingredient,1,0,0
+24792,Cell Forte IP-6 & Inositol Double-Strength Chewable Citrus Flavored,IP-6,,largest_complete_comparable_mass,5,0,2
+24938,Comprehensive Prostate Formula,,Beta Sitosterols,largest_among_quantified_only,9,2,0
+24948,Extra Strength Ginkgo 120 mg,,,unknown_no_comparable_amounts,0,1,0
+25007,Real Krill,,Phospholipids,largest_among_quantified_only,3,1,0
+25441,Chromium Picolinate Plus,,,unknown_tie_or_serving_disagreement,6,0,0
+25701,Power Mushrooms,,,unknown_no_comparable_amounts,4,0,0
+25741,Super Advanced Whey Isolate Chocolate,Potassium,,largest_complete_comparable_mass,6,0,4
+25811,Tremella And American Ginseng,,,unknown_no_comparable_amounts,24,0,0
+25970,Cranberry Plus Vitamin C,,Cranberry concentrate,largest_among_quantified_only,3,0,0
+25993,Zinc For Acne,,Vitamin C,largest_among_quantified_only,6,0,0
+26044,CertaVite With Antioxidants,,Calcium,largest_among_quantified_only,31,0,0
+26344,Blessed Thistle 340 mg,Blessed Thistle,,sole_eligible_ingredient,1,0,0
+26384,Complete Prenatal System,,Calcium,largest_among_quantified_only,41,0,0
+26402,Perika St. John's Wort,St. John's Wort Extract,,largest_complete_comparable_mass,2,0,0
+26550,Aloe Vera 500 mg,Cape Aloe leaves latex powder,,sole_eligible_ingredient,1,0,0
+26891,Total Joint Health Advanced Plus MSM & Vitamin D3,,Glucosamine Hydrochloride,largest_among_quantified_only,6,0,0
+27094,Cardiovascular Mender,,,unknown_no_comparable_amounts,5,1,0
+27233,Mag 2: Cal 1,,Magnesium,largest_among_quantified_only,5,1,0
+27378,Memory Mender,CDP-Choline,,sole_eligible_ingredient,1,0,0
+27380,Olive Leaf Extract,Olive leaf extract,,sole_eligible_ingredient,1,0,0
+27924,CoQ10 Extra Strength,Crystalline Coenzyme Q10,,largest_complete_comparable_mass,2,0,0
+27940,Phyto Complete,,Carrot Root Powder,largest_among_quantified_only,42,0,3
+27987,Sea Nourishment,,Sodium,largest_among_quantified_only,17,2,3
+28542,Propolis 500 mg Concentrate,Bee Propolis Concentrate,,sole_eligible_ingredient,1,0,0
+28742,Perfor-Max,,Grape seed extract,largest_among_quantified_only,6,0,0
+29204,Coenzyme Q-10 75 mg,Q-Sorb(TM) Coenzyme Q-10,,sole_eligible_ingredient,1,0,0
+29228,Warrior Food Extreme Vanilla Plus,,Sodium,largest_among_quantified_only,8,1,3
+29662,Filaree Flower Essence,infusion (1:6000) of Erodium cicutarium,,sole_eligible_ingredient,1,0,0
+29949,Vitamins To Go! Specially Formulated For Men,,Vitamin C,largest_among_quantified_only,21,0,2
+30021,Muscle Infusion Black Cookie Madness,,,unknown_tie_or_serving_disagreement,28,0,4
+30154,Ultimate Calcium Intensive Care,,Calcium,largest_among_quantified_only,5,0,0
+30431,Kre-Alkalyn EFX,Kre-Alkalyn,,sole_eligible_ingredient,1,0,0
+30610,Herb Plus,Senna,,largest_complete_comparable_mass,12,0,0
+30792,Strength Fruit Punch,Creatine HCl,,largest_complete_comparable_mass,2,0,2
+30836,Liquid L-Carnitine Wild Cherry Flavor,L-Carnitine,,largest_complete_comparable_mass,6,0,2
+31046,Cyclo-Shred,Garcinia cambogia Fruit Extract,,largest_complete_comparable_mass,18,0,0
+31160,CleanStart Cleansing Drink Mix,,,unknown_no_comparable_amounts,10,0,1
+31314,Vanilla Custard,,Sodium,largest_among_quantified_only,25,0,5
+31571,CholestHealth,,Niacin,largest_among_quantified_only,6,2,4
+31743,Luv My Gummies,,Vitamin C,largest_among_quantified_only,13,0,3
+31846,Slimify,,Garcinia cambogia extract,largest_among_quantified_only,7,0,0
+31924,Micellar Casein Z6 Vanilla,,Micellar Casein,largest_among_quantified_only,6,1,5
+31939,Lean Gainer Active Vanilla,,Sodium,largest_among_quantified_only,12,4,5
+32053,FitFood Lite Whey Banana Flavor,,Immunoglobulins,largest_among_quantified_only,8,0,5
+32095,L-Carnitine 250 mg,L-Carnitine,,sole_eligible_ingredient,1,0,0
+32268,Calcium+D3 Gummies 500 mg Assorted Flavors,,Calcium,largest_among_quantified_only,3,0,2
+32342,Calcium Citrate + D3,,Calcium,largest_among_quantified_only,2,0,0
+32584,CoQ-10 100 mg,,Coenzyme Q-10,largest_among_quantified_only,2,0,0
+32618,Golden Echinacea,,,unknown_no_comparable_amounts,2,0,0
+32849,No Flush Niacin 500 mg,Niacin,,sole_eligible_ingredient,1,0,0
+32915,Children's Winter Health,,,unknown_no_comparable_amounts,8,0,0
+32924,Adrenal Support,,,unknown_no_comparable_amounts,5,0,0
+32970,DIM 100 mg,Diindolymethane,,sole_eligible_ingredient,1,0,0
+33173,Chelated Chromium,Niacin,,largest_complete_comparable_mass,2,0,0
+33306,MasterMind,L-Tryptophan,,largest_complete_comparable_mass,7,0,0
+33309,1-Andro Liquid,,,unknown_no_comparable_amounts,2,0,0
+33613,CLA,Conjugated Linoleic Acid,,sole_eligible_ingredient,1,0,2
+33754,Udo's Oil High Lignan 3-6-9 Blend,,Alpha-Linolenic Acid,largest_among_quantified_only,2,1,3
+33813,Calcium (Carbonate) 500 mg,,,unknown_no_comparable_amounts,0,1,0
+33870,HRT Companion,,Garlic Extract,largest_among_quantified_only,12,0,0
+34109,White Mulberry,White Mulberry (Morus alba) Leaf Powder,,sole_eligible_ingredient,1,0,0
+34116,MSM 750 mg,MSM,,sole_eligible_ingredient,1,0,0
+34237,Women's Rejuvenator Plus,,Potassium,largest_among_quantified_only,11,0,0
+34292,Pure D-Ribose Powder,D-Ribose,,sole_eligible_ingredient,1,0,0
+34330,L-Arginine L-Citrulline Complex 1000 mg,L-Arginine,,largest_complete_comparable_mass,2,0,0
+34658,Advantrim 1166 mg,,Vitamin C,largest_among_quantified_only,15,0,0
+34671,L-Carnitine 500 mg,L-Carnitine,,sole_eligible_ingredient,1,0,0
+34923,OsoLean Whey Protein Supplement,,Sodium,largest_among_quantified_only,5,1,3
+34928,Cinnamon,certified organic Cinnamon,,sole_eligible_ingredient,1,0,0
+34936,Goldenseal,certified organic Goldenseal,,sole_eligible_ingredient,1,0,0
+35036,Ginger Wow!! Energy,,,unknown_no_comparable_amounts,5,0,0
+35043,Potty Helper,,,unknown_no_comparable_amounts,5,0,0
+35481,Occu-Plus Lutein,,Vitamin C,largest_among_quantified_only,16,0,0
+35580,Olive Leaf Extract,Olive extract,,sole_eligible_ingredient,1,0,0
+35612,Advanced Sleep Support,,,unknown_tie_or_serving_disagreement,7,0,0
+35850,Apple Cider Vinegar With Apple Pectin,Apple Cider Vinegar powder,,largest_complete_comparable_mass,2,0,0
+35889,BCAA Lemonade,,Leucine,largest_among_quantified_only,19,0,2
+36060,Ultimate Man,,Calcium,largest_among_quantified_only,57,1,0
+36085,Acai SuperFruit Juice,Potassium,,largest_complete_comparable_mass,3,0,4
+36101,Stress-X Magnesium Powder 350 mg Lemon Lime,,Magnesium,largest_among_quantified_only,2,1,2
+36272,B12 500 mcg,Vitamin B12,,sole_eligible_ingredient,1,0,0
+36330,Appetrex Control,,Yerba Mate extract,largest_among_quantified_only,14,0,0
+36493,Butcher's Broom,Butcher's Broom extract,,sole_eligible_ingredient,1,0,0
+36521,3 Day Slimming Pill,,,unknown_no_comparable_amounts,9,0,0
+36597,Chia Omega + D3,,,unknown_no_comparable_amounts,1,3,2
+37059,Natural Metabolic Whey Dutch Chocolate,,Potassium,largest_among_quantified_only,6,1,4
+37386,Triphala,,,unknown_no_comparable_amounts,0,1,0
+37391,Master Cleanse Lemonade Diet,,Vitamin C,largest_among_quantified_only,16,0,3
+37521,Adrenal Manager,Lemon Bioflavonoids Complex,,largest_complete_comparable_mass,18,0,0
+37742,99% Pure Policosanol 15 mg,,,unknown_no_comparable_amounts,1,1,3
+38083,Chitosan Plus 1300 mg,Chitosan,,largest_complete_comparable_mass,3,0,1
+38262,Telezyme,,,unknown_no_comparable_amounts,9,1,0
+38460,Spirulina Natural Powder,,Spirulina,largest_among_quantified_only,11,0,4
+39332,Calendula,Calendula liquid extract,,sole_eligible_ingredient,1,0,0
+39389,CholestCaps,Indian Gooseberry (Emblica officianalis) fruit extract,,sole_eligible_ingredient,1,0,0
+39468,Pro Thermogenic Diablo Pineapple Passionfruit,,L-Carnitine L-Tartrate,largest_among_quantified_only,12,0,0
+39508,Cal-C Junior Berry Flavor,,Calcium,largest_among_quantified_only,3,0,0
+39546,Fiber Fusioin,,,unknown_no_comparable_amounts,5,0,2
+40237,Pau d' Arco Inner Bark,Pau d' Arco,,largest_complete_comparable_mass,2,0,1
+40757,Coloclear Extra,,Brown Flax,largest_among_quantified_only,7,0,0
+41071,Lean Body Chocolate Ice Cream Flavor,,Potassium,largest_among_quantified_only,23,0,4
+41102,Gold Standard 100% Whey Double Rich Chocolate,,Sodium,largest_among_quantified_only,6,0,4
+41151,Tranquility Berry Bliss,,,unknown_no_comparable_amounts,10,0,1
+41301,Colostrum Plus Chewables Orange Creme,,Lactoferrin,largest_among_quantified_only,1,1,2
+41310,Rev Diet Energy,,Thiamine,largest_among_quantified_only,18,0,0
+42027,Pure Glycine 500 Milligrams,Glycine,,sole_eligible_ingredient,1,0,0
+42133,Extreme Flex,,Perluxan(R) Hops extract,largest_among_quantified_only,5,1,0
+42356,Taurine,L-Taurine,,sole_eligible_ingredient,1,0,0
+42646,Super C Buffered Vitamin C Powder,,Vitamin C,largest_among_quantified_only,16,1,0
+43102,Arctic Cod Liver Oil Orange,,,unknown_no_comparable_amounts,2,1,2
+43286,DHAlicious Organic Lemon & Green Tea Flavor,Total Algal Oil,,largest_complete_comparable_mass,3,0,0
+43289,"Sunny Gummies Vitamin D3 1,000 IU Yummy Lemon Flavor",Vitamin D,,sole_eligible_ingredient,1,0,2
+43541,Cal/Mag/Zinc Strawberry,,Calcium,largest_among_quantified_only,8,1,2
+43667,Women Over 40,,,unknown_no_comparable_amounts,25,2,0
+43781,Adult Multivitamin Plus Extra C,,Vitamin C,largest_among_quantified_only,11,0,3
+43812,Karbolic Super-Premium Muscle Fuel Orange Burst,,Phosphorus,largest_among_quantified_only,23,0,2
+43976,Endurance Fuel Citrus Burst,,Sodium,largest_among_quantified_only,15,0,4
+44094,Vegetarian CoQ-10 120 mg,Coenzyme Q-10,,sole_eligible_ingredient,1,0,0
+44151,Garlic Powder 500 mg,,,unknown_no_comparable_amounts,0,1,0
+44364,Astaxanthin 10 mg,Astaxanthin,,sole_eligible_ingredient,1,0,0
+44398,L-Glutamine 500 mg,L-Glutamine,,sole_eligible_ingredient,1,0,0
+44455,Echinacea Herb Extract,,raw Echinacea powder,largest_among_quantified_only,1,1,1
+44755,Healthy Skin & Hair Plus Nails,,Fish Oil,largest_among_quantified_only,13,0,0
+44978,Total Protein Creamy Vanilla,Calcium,,largest_complete_comparable_mass,3,0,4
+45128,Women's Formula,,Calcium,largest_among_quantified_only,21,0,0
+45514,Royal Jelly 500 mg,,,unknown_no_comparable_amounts,0,1,0
+45520,Grass Juice 750 mg,,,unknown_no_comparable_amounts,5,0,0
+45840,Memory Factors,,Niacin,largest_among_quantified_only,9,2,0
+46138,Double Strength Ginkgo Biloba 120 mg,Gotu Kola,,largest_complete_comparable_mass,3,0,0
+46533,Quercetin 500 mg,Quercetin,,largest_complete_comparable_mass,2,0,0
+46540,Nitric Force NO2 Muscle Builder,A-AKG,,largest_complete_comparable_mass,4,0,0
+46581,Green Vibrance,,Spirulina,largest_among_quantified_only,85,2,4
+46618,Whey Protein Isolate Vanilla,,Sodium,largest_among_quantified_only,7,0,4
+46740,Glucosamine 1500 mg Chondroitin 1200 mg,Glucosamine Hydrochloride,,largest_complete_comparable_mass,3,0,2
+47075,Maximum Vibrance,,Sunflower Lecithin,largest_among_quantified_only,120,7,1
+47120,Olive Leaf Complex Peppermint Flavor,,,unknown_no_comparable_amounts,1,1,5
+47168,Creatine Micronized Watermelon,Creatine Monohydrate,,sole_eligible_ingredient,1,0,0
+47201,Organic Plant-Protein Powder Chocolate,,Sodium,largest_among_quantified_only,2,2,4
+47232,"Extra Strength Omega-3 Krill Oil Softgels, 500 mg",,,unknown_no_comparable_amounts,0,1,2
+47268,Xtreme Testrone,,,unknown_no_comparable_amounts,8,0,0
+47349,Incinerate,Green Tea extract,,largest_complete_comparable_mass,6,0,0
+47462,Restal,Valerian root extract,,largest_complete_comparable_mass,5,0,0
+47475,Tart Cherry,,,unknown_no_comparable_amounts,2,0,0
+47512,Krill Oil Gold 500 mg,,Cholesterol,largest_among_quantified_only,2,1,2
+47677,"Vitamin A 25,000 IU from Fish Liver Oil",Vitamin A,,sole_eligible_ingredient,1,0,0
+47712,Cod Liver Oil 1000,,Cholesterol,largest_among_quantified_only,3,1,3
+47766,Joint Maintenance 2700,Glucosamine Sulfate,,largest_complete_comparable_mass,5,0,2
+47895,MYOLEAN EVOLUTION Banana,,Potassium,largest_among_quantified_only,26,0,4
+49196,L-Carnitine,L-Carnitine,,sole_eligible_ingredient,1,0,0
+49384,Ultra Lipoic,,Alpha Lipoic Acid,largest_among_quantified_only,9,5,0
+49496,CoQmax CF,Coenzyme Q10,,sole_eligible_ingredient,1,0,2
+49505,Fast Fuel Fruit Punch,,Sodium,largest_among_quantified_only,15,0,0
+49705,Vitamin C Natural Orange Juice Flavor,Vitamin C,,largest_complete_comparable_mass,2,0,2
+50080,Tulsi Holy Basil Turmeric Ginger,,,unknown_no_comparable_amounts,8,0,0
+50243,HB Pressure Tonic,,,unknown_no_comparable_amounts,0,1,0
+50259,Allertonic,,,unknown_no_comparable_amounts,0,1,0
+50517,St. John's Wort,fresh & dried St. John's Wort,,sole_eligible_ingredient,1,0,0
+50541,Guggul,Guggul oleo-gum-resin (Commiphora mukul) extract,,sole_eligible_ingredient,1,0,0
+50960,Skin ReVive,,Vitamin C,largest_among_quantified_only,22,2,0
+51137,Jarro-Zymes Plus,,Alpha-Galactosidase,largest_among_quantified_only,4,0,0
+51185,Energy Mango Orange,Sodium,,largest_complete_comparable_mass,8,0,3
+51198,100% Whey Protein Isolate Unflavored,,Whey Protein isolate,largest_among_quantified_only,4,0,3
+51315,Mixed Vitamin E 400 IU,,Mixed Tocopherols,largest_among_quantified_only,2,0,0
+51377,Coenzyme Q10 100 mg,Coenzyme Q10,,sole_eligible_ingredient,1,0,0
+51428,Iron Chelate 18 Milligrams,Iron,,sole_eligible_ingredient,1,0,0
+51539,HMB 1000 mg,HMB,,sole_eligible_ingredient,1,0,0
+51644,Agmatine,Agmatine Sulfate,,sole_eligible_ingredient,1,0,0
+53249,CoQ10 100 mg,Coenzyme Q10,,largest_complete_comparable_mass,2,0,0
+53318,5-HTP 50 mg,5-Hydroxytryptophan,,sole_eligible_ingredient,1,0,0
+53658,"Vitamin C 1,000 mg",Vitamin C,,sole_eligible_ingredient,1,0,0
+53881,Black Walnut Hulls,Black Walnut,,sole_eligible_ingredient,1,0,0
+53893,American Ginseng,American Ginseng root (Panax quinquefolius) extract,,sole_eligible_ingredient,1,0,0
+54005,Valerian Alcohol-Free,Valerian rhizome w/root (Valeriana officinalis) extract,,sole_eligible_ingredient,1,0,0
+54023,St. John's Wort,St. John's Wort flowering top (Hypericum perforatum) extract,,sole_eligible_ingredient,1,0,0
+54162,Multivitamin Natural Fruit Flavor,,Vitamin B12,largest_among_quantified_only,20,0,0
+54447,Creatine & Glutamine With Beta-Alanine Unflavored,Creatine Monohydrate,,largest_complete_comparable_mass,3,0,0
+54495,Vitamin K2 MK-7 (Menaquinone-7) 45 mcg,Vitamin K2,,sole_eligible_ingredient,1,0,0
+54538,Mini-Multi,,Vitamin C,largest_among_quantified_only,20,0,0
+54917,Avmacol Immune,,Vitamin C,largest_among_quantified_only,3,1,1
+54963,Alpha Lipoic Acid 50 mg,Alpha Lipoic Acid,,sole_eligible_ingredient,1,0,0
+55179,HMB,Calcium HMB,,largest_complete_comparable_mass,2,0,0
+55248,Biotin 300 mcg,Biotin,,sole_eligible_ingredient,1,0,0
+55303,Bee Pollen Caps 500 mg,Bee Pollen powder,,sole_eligible_ingredient,1,0,0
+55565,CoQ-10 100 mg,,Coenzyme Q-10,largest_among_quantified_only,2,0,0
+55774,D3 K2 Mulsion Citrus Flavor,,Stevia (Stevia rebaudiana) leaf std. extract,largest_among_quantified_only,3,0,0
+55817,Cod Liver Oil,,Cholesterol,largest_among_quantified_only,4,1,3
+55828,Nattikinase With Rutin 100 mg,Nattokinase,,largest_complete_comparable_mass,2,0,0
+55980,Tocomin SupraBio Tocotrienols 100 mg,,Tocomin SupraBio,largest_among_quantified_only,4,1,0
+56155,Glucosamine Sulfate,Glucosamine Sulfate,,sole_eligible_ingredient,1,0,0
+56751,Garcinia Cambogia,Garcinia cambogia extract,,largest_complete_comparable_mass,3,0,0
+56754,Ciltep,Artichoke extract,,largest_complete_comparable_mass,5,0,0
+57146,Lutein,Lutein,,sole_eligible_ingredient,1,0,0
+57539,TruCDP,CDP-Choline,,sole_eligible_ingredient,1,0,0
+57804,L-Carnitine LS3 Mixed Berry,L-Carnitine,,largest_complete_comparable_mass,3,0,0
+57946,Fish Oil 1000 mg,,Cholesterol,largest_among_quantified_only,1,1,2
+57997,Alpha Lipoic Acid 100 mg,Alpha Lipoic Acid,,sole_eligible_ingredient,1,0,0
+58178,Green Barley Grass 500 mg,Barley grass powder,,largest_complete_comparable_mass,26,0,3
+58191,SinuCheck,Soledum brand Eucalyptus globulus oil extract,,sole_eligible_ingredient,1,0,0
+58552,Fringe Tree,Fringe Tree root bark (Chionanthus virginicus) extract,,sole_eligible_ingredient,1,0,0
+58857,Water Soluble Pumpkin Seed Extract,water soluble Pumpkin extract,,sole_eligible_ingredient,1,0,0
+58958,Ginkgo 500 mg Alcohol-Free,Ginkgo (Ginkgo biloba) leaf extract,,sole_eligible_ingredient,1,0,0
+59130,Daily Vits,,Calcium,largest_among_quantified_only,25,0,0
+59222,Prenatal DHA,,,unknown_no_comparable_amounts,1,1,2
+59261,Guggul 500 mg,Guggul (Commiphora mukul) oleo-gum-resin extract,,sole_eligible_ingredient,1,0,0
+59297,Valerian Root 500 mg,Valerian extract,,sole_eligible_ingredient,1,0,0
+59528,Stone Breaker,,,unknown_no_comparable_amounts,4,0,0
+60421,Premium Bee Pollen 1000 Plus Complex,,Bee Pollen,largest_among_quantified_only,3,0,0
+60462,True Focus,L-Tyrosine,,largest_complete_comparable_mass,11,0,0
+60463,Life Extension Mix Tablets,,Vitamin C,largest_among_quantified_only,57,3,0
+60732,FLORASSIST Balance,,,unknown_no_comparable_amounts,6,0,0
+60803,Liver Support,,,unknown_no_comparable_amounts,8,0,0
+60853,Niacin Inositol Hexanicotinate 500 mg Flush Free,Niacin,,largest_complete_comparable_mass,2,0,0
+62376,Calcium 600 +D,,Calcium,largest_among_quantified_only,2,0,0
+62725,Meadowsweet,dried Meadowsweet flowering tops extract,,sole_eligible_ingredient,1,0,0
+63241,Astragalus Root,Astragalus,,sole_eligible_ingredient,1,0,2
+63318,L-Glutamine Powder,L-Glutamine,,sole_eligible_ingredient,1,0,1
+63368,Concentrated Cranberry Fruit,,Cranberry concentrate,largest_among_quantified_only,3,0,0
+63527,E-Oil,Vitamin E,,sole_eligible_ingredient,1,0,0
+63560,"Week Two: Detox, PM Pack",,Vitamin C,largest_among_quantified_only,21,3,0
+63841,Milk Thistle 200 mg,Milk Thistle seed extract,,sole_eligible_ingredient,1,0,0
+64028,Thyrocsin Thyroid Cofactors,,L-Tyrosine,largest_among_quantified_only,9,0,0
+64095,Atomic 7 Black Cherry Bomb,L-Leucine,,largest_complete_comparable_mass,7,0,0
+64131,BCAA 2000,,,unknown_tie_or_serving_disagreement,6,0,0
+64152,Whey Protein Isolate Chocolate Flavored,,Potassium,largest_among_quantified_only,4,2,4
+64169,Vitamin D3 2200 IU,Vitamin D3,,sole_eligible_ingredient,1,0,0
+64360,Whey Protein Isolate Vanilla Flavored,,Sodium,largest_among_quantified_only,7,0,4
+64437,Vitamin B-6 100 mg,Vitamin B6,,sole_eligible_ingredient,1,0,0
+64455,Q-Sorb CoQ-10 100 mg,Q-Sorb Coenzyme Q-10,,sole_eligible_ingredient,1,0,0
+64476,Micro-gen,,,unknown_no_comparable_amounts,3,0,0
+64622,Joint Support,,,unknown_no_comparable_amounts,12,0,0
+64675,Adult Multi Gummies with Essential Vitamins,,Vitamin C,largest_among_quantified_only,15,0,2
+65174,Quercetin with Bromelain,Quercetin,,largest_complete_comparable_mass,2,0,0
+65829,Juniper Berry,dried Juniper berry extract,,sole_eligible_ingredient,1,0,0
+66276,Hair/Skin/Nails,,Hydrolyzed collagen,largest_among_quantified_only,8,0,1
+66462,hCG Activator,,,unknown_no_comparable_amounts,10,0,0
+66522,Rebellion Fruit Punch,,L-Glutamine,largest_among_quantified_only,2,1,0
+66534,Muscle Matrix Protein Wild Strawberry,,Whey Protein isolate,largest_among_quantified_only,6,3,4
+66800,Women,,Calcium,largest_among_quantified_only,39,1,0
+66876,Men's Multi,,Vitamin C,largest_among_quantified_only,53,0,0
+67145,Milk Thistle Extract Plus,,Milk Thistle (Silybum marianum) extract,largest_among_quantified_only,6,0,0
+67200,Ginkgo Biloba Standardized Extract 60 mg,Ginkgo biloba extract,,sole_eligible_ingredient,1,0,0
+67293,Chromease With ALA,Alpha Lipoic Acid,,largest_complete_comparable_mass,2,0,0
+67336,100% Sugar Free Whey Protein Coconut Flavor,Whey Protein Isolate,,largest_complete_comparable_mass,7,0,4
+67404,Nectar Pink Grapefruit,,Potassium,largest_among_quantified_only,9,0,4
+67444,"Hair, Skin & Nails Gummies with Biotin Strawberry Flavored",,Vitamin C,largest_among_quantified_only,4,0,2
+67523,Shot-O-B12 5000 mcg Natural Wild Berry Flavor,Vitamin B12,,sole_eligible_ingredient,1,0,2
+67600,Gastro Cleanser Formula,Fennel seed powder,,largest_complete_comparable_mass,8,0,0
+68964,Life Support 2.0,,,unknown_tie_or_serving_disagreement,11,0,0
+68978,Ultimate Woman 50+,,Calcium,largest_among_quantified_only,36,1,0
+69368,Iron 65 mg,Iron,,sole_eligible_ingredient,1,0,0
+69375,Olive Leaf Extract,Olive leaf extract,,sole_eligible_ingredient,1,0,0
+69512,Probiotic Digestive Support,,,unknown_no_comparable_amounts,19,0,0
+69826,Paratrex,,,unknown_no_comparable_amounts,26,0,0
+69889,Liquid Pro Anti-Aging Therapy,,L-Glutamine,largest_among_quantified_only,36,1,4
+69976,Fenugreek 500 mg,organic Fenugreek,,sole_eligible_ingredient,1,0,1
+70075,Uber Omega-3,,,unknown_no_comparable_amounts,0,1,3
+70108,Adrenal Support,,Pantothenic Acid,largest_among_quantified_only,13,0,0
+70131,Heart,,Phytosterols,largest_among_quantified_only,38,0,0
+70133,Gold Capsules,,Vitamin C,largest_among_quantified_only,235,7,2
+70271,Buffered C-1000 Complex,Vitamin C,,largest_complete_comparable_mass,5,0,0
+70501,Potassium 99 mg,Potassium,,sole_eligible_ingredient,1,0,0
+70700,Chewable Iron Chelate Cherry flavor,Iron,,sole_eligible_ingredient,1,0,2
+70711,Rhodiola 150,Rhodiola (Rhodiola rosea) root std. extract,,sole_eligible_ingredient,1,0,0
+70741,"Max Strength Aloe Vera 12,000 mg",Aloe vera,,sole_eligible_ingredient,1,0,0
+71385,Anti-Inflammatory,,,unknown_no_comparable_amounts,9,0,0
+71658,L-Arginine Alpha Ketoglutarate 3500 mg Unflavored,,,unknown_no_comparable_amounts,0,1,0
+71760,Instantized BCAA 2:1:1 Fruit Punch,L-Leucine,,largest_complete_comparable_mass,3,0,0
+71856,Daily Vitamin with Iron,,Vitamin C,largest_among_quantified_only,13,0,0
+72221,Chlorella Broken Cell,Chlorella,,sole_eligible_ingredient,1,0,0
+72377,Daily Essential Enzymes 500 mg,,,unknown_no_comparable_amounts,8,0,0
+72517,Lignan Flax Oil,,Oleic Acid,largest_among_quantified_only,2,2,2
+72628,Complete Multi+,,Vitamin C,largest_among_quantified_only,18,0,2
+72653,Maca Root 4:1 Extract,Maca root extract,,sole_eligible_ingredient,1,0,0
+72955,Bedtime,,Valerian root extract,largest_among_quantified_only,13,0,0
+73049,Maternal Herbal,,,unknown_no_comparable_amounts,16,0,0
+73332,Natural Noni 500 mg,Organic Noni,,sole_eligible_ingredient,1,0,0
+73423,Cholesterol Pro,Bergamonte Citrus Bergamot Polyphenolic extract,,largest_complete_comparable_mass,2,0,0
+73462,EMIQ,EMIQ Complex,,largest_complete_comparable_mass,2,0,0
+73509,Adult's Probiotic 17 Billion Cells,,,unknown_no_comparable_amounts,6,0,0
+73566,Ultra Omega-3,,,unknown_no_comparable_amounts,0,1,2
+73650,GABA,Gamma Aminobutyric Acid,,sole_eligible_ingredient,1,0,0
+73829,Magnesium 250 mg,Magnesium,,sole_eligible_ingredient,1,0,0
+74117,Reishi Extract,,,unknown_no_comparable_amounts,2,0,0
+74232,Grass-Fed Whey Protein Concentrate Creamy Vanilla,Potassium,,largest_complete_comparable_mass,6,0,4
+74511,Cortrex,Adrenal,,largest_complete_comparable_mass,9,0,0
+74678,Vitamin C 500 mg With Rose Hips,Vitamin C,,sole_eligible_ingredient,1,0,0
+74734,Melatonin 10 mg,Melatonin,,sole_eligible_ingredient,1,0,0
+74782,Creatine Monohydrate,Creatine Monohydrate,,sole_eligible_ingredient,1,0,0
+74848,Calcium Plus With Magnesium & Vitamin D-3,,Calcium,largest_among_quantified_only,3,0,0
+74929,P.M.,,Vitamin C,largest_among_quantified_only,20,2,0
+75195,Classic Protein Chocolate,,Calcium,largest_among_quantified_only,6,0,4
+75308,Ultra NourishHair,,MSM,largest_among_quantified_only,23,0,0
+75577,Ultra Potency Omega-3 Fish Oil,,Cholesterol,largest_among_quantified_only,1,1,2
+75667,Osteo Bi-Flex Joint Health Triple Strength + MSM Formula,,,unknown_tie_or_serving_disagreement,4,0,2
+75771,Horny Goat Weed 600 mg,Epimedium aerial parts extract,,largest_complete_comparable_mass,2,0,0
+75916,Vitamin B6 100 mg,Vitamin B6,,sole_eligible_ingredient,1,0,0
+76112,Lignans With Lycopene,,Vitamin B6,largest_among_quantified_only,7,0,0
+76215,Adult Multivitamin Gummies,,Vitamin C,largest_among_quantified_only,13,1,2
+76396,Clear Ear Complex,Magnesium,,largest_complete_comparable_mass,9,0,0
+76578,Olive Leaf Extract,Olive leaf extract,,sole_eligible_ingredient,1,0,0
+76801,Daily Ultra Matrix Softgels,,Medium Chain Triglycerides,largest_among_quantified_only,5,0,4
+76821,Reishi Mushroom Supreme 650 mg,,Calcium,largest_among_quantified_only,14,0,0
+76871,Pro-Flora Immune,,Lactoferrin,largest_among_quantified_only,5,0,0
+77086,Curcumax,,Turmeric (Curcuma longa) rhizome extract,largest_among_quantified_only,7,1,0
+77231,No2 Black,,,unknown_tie_or_serving_disagreement,4,1,0
+77554,Digest Support,,Calcium,largest_among_quantified_only,13,0,0
+77744,Papaya Enzyme,Papain,,largest_complete_comparable_mass,4,0,1
+77867,Primadophilus Fortify Daily Probiotic 50 Billion,,,unknown_no_comparable_amounts,0,2,0
+77899,Calcium D-Glucarate,Calcium D-Glucarate,,largest_complete_comparable_mass,2,0,1
+77923,B-Complex 50,,,unknown_tie_or_serving_disagreement,10,1,0
+78021,Cascara Sagrada Bark 425 mg,Cascara Sagrada,,sole_eligible_ingredient,1,0,0
+78412,Echinacea Goldenseal 450 mg,,,unknown_no_comparable_amounts,7,0,0
+78451,African Mango Plus,Certified Irvingia,,largest_complete_comparable_mass,5,0,0
+78485,Beauty,,Calcium,largest_among_quantified_only,40,0,0
+78492,Magnesium Citrate,Magnesium,,sole_eligible_ingredient,1,0,0
+78885,PM Formula,Valerian root extract,,largest_complete_comparable_mass,4,0,0
+79118,Ginkgold Eyes,Bilberry,,largest_complete_comparable_mass,4,0,1
+79385,Dry Vitamin A 1500 mg,Vitamin C,,largest_complete_comparable_mass,2,0,0
+79681,Beet Root,organic Beet root powder,,largest_complete_comparable_mass,2,0,4
+79992,Holy Basil Liquid Phyto-Caps,,Holy Basil leaf extract,largest_among_quantified_only,1,1,1
+80096,Digestive Enzymes,,,unknown_no_comparable_amounts,13,0,0
+80106,Meat-SNX Crispy Protean Bites Cinnamon Bun,Calcium,,largest_complete_comparable_mass,3,0,5
+80305,Active-C Plus 500 mg,,Hesperidin,largest_among_quantified_only,11,4,0
+80313,Olive Leaf,,,unknown_no_comparable_amounts,0,1,1
+80492,Precision Protein Neapolitan Ice Cream,,Sodium,largest_among_quantified_only,6,0,4
+80667,CheleX,Himalayan Shilajit extract,,largest_complete_comparable_mass,7,0,0
+80933,Taurine 500 mg,Taurine,,sole_eligible_ingredient,1,0,0
+81380,Gecko Tonic Teapills,,,unknown_no_comparable_amounts,17,0,0
+81537,Yin Chiao Chieh Tu Pien,,,unknown_no_comparable_amounts,9,0,0
+81656,Vitamin D3,Vitamin D3,,sole_eligible_ingredient,1,0,0
+81783,Better Bitters Bittersweet,,,unknown_no_comparable_amounts,7,0,0
+82114,Thyroid Care,,L-Tyrosine,largest_among_quantified_only,1,1,0
+82468,Hydrangea,Hydrangea,,sole_eligible_ingredient,1,0,0
+82773,C4 Ripped Raspberry Lemonade,,Beta-Alanine,largest_among_quantified_only,15,0,0
+83115,Afternoon,,,unknown_no_comparable_amounts,4,0,0
+103306,Choline 250 mg,Choline,,sole_eligible_ingredient,1,0,0
+174090,Recovery Zymes,,Papain,largest_among_quantified_only,10,0,0
+174174,Super Mass Gainer Cookies & Cream,,,unknown_no_comparable_amounts,19,0,4
+174316,Red Yeast Rice Plus,Red Yeast Rice,,largest_complete_comparable_mass,3,0,0
+174363,B-Minus,Pantothenic Acid,,largest_complete_comparable_mass,6,0,0
+174424,5-HTP,5-HTP,,sole_eligible_ingredient,1,0,0
+174503,ISO100 Clear Fruit Punch,Sodium,,sole_eligible_ingredient,1,0,4
+174529,Melatonin 5 mg,Melatonin,,sole_eligible_ingredient,1,0,0
+174552,Calcium + Vitamin D3,,Calcium,largest_among_quantified_only,4,0,2
+174789,L-Carnitine,L-Carnitine,,sole_eligible_ingredient,1,0,0
+174981,Ultra Super Fuel Mixed Berry Flavored,,Potassium,largest_among_quantified_only,4,0,4
+174991,Co Q-10 Gummies 200 mg Peach Mango Flavored,Coenzyme Q-10,,sole_eligible_ingredient,1,0,3
+175056,Advanced B Complex,Potassium,,largest_complete_comparable_mass,9,0,2
+175065,"Cleavers 2,000 mg",Cleavers (Galium aparine) aerial parts extract,,sole_eligible_ingredient,1,0,0
+175239,100% Whey Protein Chocolate Flavor,Whey Protein Isolate,,largest_complete_comparable_mass,9,0,4
+175278,Amino Force Pineapple,,Sodium,largest_among_quantified_only,10,1,3
+175317,Full Spectrum Amalaki Complex,,,unknown_tie_or_serving_disagreement,7,0,0
+175727,Cloves,organic Clove,,sole_eligible_ingredient,1,0,0
+175847,Lung Essentials,,,unknown_no_comparable_amounts,16,0,0
+176074,Full Control Watermelon Kiwi Flavor,Glucomannan (Amorphophallus konjac) (root) powder,,largest_complete_comparable_mass,4,0,2
+176231,TriActive Biotics Daily Care,,Prebiotic,largest_among_quantified_only,21,0,0
+176267,Fit Chews,,,unknown_no_comparable_amounts,3,0,3
+176537,L-Theanine 150 mg,L-Theanine,,sole_eligible_ingredient,1,0,0
+176590,Multi-Probiotic 15 Billion,,,unknown_no_comparable_amounts,10,0,0
+177134,Full Spectrum Catnip 400 mg,Catnip,,sole_eligible_ingredient,1,0,0
+177604,DIM Complex 100 mg,,,unknown_no_comparable_amounts,0,1,0
+177784,L-Theanine 200 mg,PhytoSure L-Theanine,,sole_eligible_ingredient,1,0,0
+177929,Co-Enzyme Q10 100 mg,Coenzyme Q10,,largest_complete_comparable_mass,3,0,0
+177964,MNS E,,,unknown_tie_or_serving_disagreement,54,0,2
+177965,Iron Response,,Orange,largest_among_quantified_only,2,10,0
+177983,MegaFlora For Baby & Me,,,unknown_tie_or_serving_disagreement,17,1,0
+178052,Hello Kitty Complete Multivitamin Gummies,,Vitamin C,largest_among_quantified_only,12,0,2
+178508,Jack The Ripper Strawberry Lemonade,Citrulline Malate,,largest_complete_comparable_mass,14,0,0
+178579,Rapid-Release CoQ10 100 mg,Coenzyme Q10,,sole_eligible_ingredient,1,0,0
+178741,Sublingual Vitamin B12 Supplement 500 mcg Natural Cherry Flavor,Vitamin B12,,sole_eligible_ingredient,1,0,0
+179203,Bee Propolis Tincture 65% Extract,Bee Propolis,,sole_eligible_ingredient,1,0,1
+180205,Endo Rush Dragon's Blood,CarnoSyn,,largest_complete_comparable_mass,3,0,2
+180245,Energy Mixed Berry,Vitamin B12,,sole_eligible_ingredient,1,0,0
+180371,Biotin 1000 mcg,Biotin,,sole_eligible_ingredient,1,0,0
+180434,D3 1000 IU,Vitamin D3,,sole_eligible_ingredient,1,0,0
+180452,CGCZ,,,unknown_no_comparable_amounts,5,0,0
+180545,Modern BCAA+ Green Apple,,Sodium,largest_among_quantified_only,12,0,0
+180611,Critical Aminos XT Sweet Tea,L-Glutamine,,largest_complete_comparable_mass,9,0,0
+180738,Ubiquinol 200 mg,Ubiquinol,,sole_eligible_ingredient,1,0,0
+180802,Pre-Effect Fruit Punch,,Creatine Monohydrate,largest_among_quantified_only,13,0,3
+180818,Advanced Multi Vanilla Chai Superfood,,organic Barley Grass,largest_among_quantified_only,48,0,9
+180890,E-1000 (DL-Alpha-Tocopheryl Acetate),Vitamin E,,sole_eligible_ingredient,1,0,0
+180928,L-Arginine HCl 500 mg,L-Arginine Hydrochloride,,sole_eligible_ingredient,1,0,0
+180931,Grape Seed Extract (95% Total Polyphenols) 100 mg,Grape seed extract,,sole_eligible_ingredient,1,0,0
+181482,Turmeric Force Detox Action,,organic Green Tea (Camellia sinensis) (leaf) aqueous extract,largest_among_quantified_only,3,4,0
+181779,Buffered C Powder,Vitamin C,,largest_complete_comparable_mass,4,0,0
+181852,Men's Complete,,Coenzyme Q10,largest_among_quantified_only,21,1,2
+181871,Integra-Lean 150 mg,Integra-Lean African Mango (Irvingia gabonensis) Proprietary extract,,sole_eligible_ingredient,1,0,0
+181971,Vision Formula,,L-Taurine,largest_among_quantified_only,9,0,0
+182098,Bone Restore with Vitamin K2,,Calcium,largest_among_quantified_only,8,0,0
+182203,Alphamine Appletini,,Caffeine Anhydrous,largest_among_quantified_only,6,0,0
+182226,CoEnzyme Q10 300 mg,Coenzyme Q10,,sole_eligible_ingredient,1,0,0
+182388,MacuGuard Ocular Support with Saffron & Astaxanthin,,Saffron extract,largest_among_quantified_only,4,1,0
+182572,Genistein 125 mg,Genistein,,sole_eligible_ingredient,1,0,0
+182776,Cissus,Cissus quadrangularis extract,,sole_eligible_ingredient,1,0,0
+182847,Elite Casein Rich Chocolate,,Potassium,largest_among_quantified_only,7,0,4
+183189,Grow Peanut Butter Pie,,Potassium,largest_among_quantified_only,33,0,4
+183229,Apothe-Cherry,,Sodium,largest_among_quantified_only,2,0,4
+183271,Selenium (Citrate),Selenium,,sole_eligible_ingredient,1,0,0
+183647,100% Pure Creatine Monohydrate Unflavored,Creatine Monohydrate,,sole_eligible_ingredient,1,0,0
+183853,Core Daily 1 for Women,,Calcium,largest_among_quantified_only,74,3,0
+183935,P+ 100% Plant Protein Flex Vanilla Flavor,,Phosphorus,largest_among_quantified_only,13,0,4
+184171,Bone Calcium Complex,,Calcium,largest_among_quantified_only,16,1,0
+184291,Ginkgo 50 160 mg,Ginkgo (Ginkgo biloba) extract,,sole_eligible_ingredient,1,0,0
+184356,Best-Rest Formula,Valerian (Valeriana officinalis) extract,,largest_complete_comparable_mass,9,0,0
+184395,Soy Isoflavones,SoyLife Soy Germ Complex,,sole_eligible_ingredient,1,0,0
+184580,5-HTP (5-Hydroxytryptophan) 50 mg,5-HTP,,sole_eligible_ingredient,1,0,0
+184651,AMPilean,,,unknown_no_comparable_amounts,0,1,0
+184654,Krill-Plex,,Cholesterol,largest_among_quantified_only,1,1,2
+184668,Magnesium (Citrate),Magnesium,,sole_eligible_ingredient,1,0,0
+184772,Spirulina & Chlorella,,,unknown_tie_or_serving_disagreement,2,0,0
+184848,Clinical Nutrients For Women,,Calcium,largest_among_quantified_only,50,0,2
+185146,Super Mass Gainer Fudge Brownie,,,unknown_no_comparable_amounts,19,0,4
+185261,Nutrient 950,,Vitamin C,largest_among_quantified_only,27,1,0
+187468,Phyto-4,Perluxan Hops (Humulus lupulus) extract,,largest_complete_comparable_mass,4,0,0
+187501,PureMelt B12 Folate,,Vitamin B12,largest_among_quantified_only,1,1,0
+187540,Gymnema Sylvestre Leaf 400 mg,Gymnema sylvestre,,sole_eligible_ingredient,1,0,0
+187592,EPA/DHA Select,,,unknown_no_comparable_amounts,0,1,2
+199525,AvoVida Avocado/Soy Unsaponifiables 100 mg,,,unknown_no_comparable_amounts,0,1,0
+199753,Neem,Neem,,sole_eligible_ingredient,1,0,0
+199899,Oregano Spirits,,,unknown_no_comparable_amounts,2,0,0
+200070,L-Carnitine 500 mg,L-Carnitine,,sole_eligible_ingredient,1,0,0
+200172,Swedish Bitters,,,unknown_no_comparable_amounts,14,0,1
+200180,Classic Protein Chocolate,Sodium,,largest_complete_comparable_mass,4,0,4
+200466,Green Tea Triple Echinacea,,Echinacea purpurea root extract,largest_among_quantified_only,7,0,0
+200878,B-Stress Formula with Eleuthero,,Vitamin C,largest_among_quantified_only,12,1,0
+201108,Proflavanol C 100,Vitamin C,,largest_complete_comparable_mass,2,0,0
+201136,Therems-M,,Magnesium,largest_among_quantified_only,31,0,0
+201353,Iron-Free Formula VM-75,,Vitamin C,largest_among_quantified_only,34,1,0
+201355,Boswellia 300 mg,Boswellia serrata,,sole_eligible_ingredient,1,0,0
+201440,Adrenal Support,,,unknown_no_comparable_amounts,5,0,0
+201441,Gluta-Tren Orange Creme,,Niacin,largest_among_quantified_only,10,0,1
+201667,Vitamin D3 (Cholecalciferol) 125 mcg (5000 IU),Vitamin D3,,sole_eligible_ingredient,1,0,0
+201721,Purely Probiotic Tropical Mango,Bacillus coagulans,,sole_eligible_ingredient,1,0,2
+201833,Flaxseed Oil 1000 mg,,,unknown_no_comparable_amounts,0,1,2
+202121,ZemBright MoodPlus,KSM-66 Ashwagandha extract,,largest_complete_comparable_mass,5,0,0
+202219,Sambucus for Kids Gummies,,Vitamin C,largest_among_quantified_only,3,1,2
+202636,Glutamine Unflavored,L-Glutamine,,sole_eligible_ingredient,1,0,0
+202647,One Daily Women's Multi Gold,,Vitamin C,largest_among_quantified_only,27,0,0
+202740,Digestive Enzymes,,,unknown_no_comparable_amounts,16,0,0
+202977,TBMP,Porcine (Sus scrofa) Brain,,largest_complete_comparable_mass,5,0,0
+203003,Soy Isoflavones 50 mg,Total Isoflavones,,sole_eligible_ingredient,1,0,0
+203005,Full Spectrum Jujube Fruit 675 mg,Jujube,,sole_eligible_ingredient,1,0,0
+203140,Benfotiamine 300 mg,Benfotiamine,,largest_complete_comparable_mass,2,0,0
+203143,Magnesium Lactate 84 mg,Magnesium,,sole_eligible_ingredient,1,0,0
+203154,Sunflower Lecithin,,,unknown_no_comparable_amounts,0,1,2
+203179,Quercetin 475 mg High Potency,Quercetin,,sole_eligible_ingredient,1,0,0
+203227,Lactobacillus Gasseri Probiotic,Lactobacillus gasseri,,sole_eligible_ingredient,1,0,0
+203250,Melatonin 10 mg Fast Dissolve Strawberry Flavor,Melatonin,,sole_eligible_ingredient,1,0,0
+203264,Daily Liver Formula Liquid Phyto-Caps,,Milk Thistle seed extract,largest_among_quantified_only,5,0,1
+203580,DIM + BioPerine,DIM,,largest_complete_comparable_mass,2,0,0
+203999,Cleanse & Detox,Orthosiphon,,largest_complete_comparable_mass,10,0,2
+204010,Pygeum Extract,,,unknown_tie_or_serving_disagreement,2,0,0
+204099,"Vitamin B6, B12 plus Folic Acid Natural Raspberry Flavor",,Vitamin B6,largest_among_quantified_only,2,1,2
+204151,Trim Cafe,WellTrim iG (IGOB131) African Mango (Irvingia gabonensis) seed extract,,sole_eligible_ingredient,1,0,0
+204588,Electrolyte/Energy Formula,L-Tyrosine,,largest_complete_comparable_mass,9,0,2
+204689,Blood Pressure Support,,,unknown_no_comparable_amounts,5,0,0
+204743,Curcumin,Curcumin extract,,sole_eligible_ingredient,1,0,0
+204760,Chelated Zinc 50 mg,Zinc,,sole_eligible_ingredient,1,0,0
+204795,Adrenal Care,,,unknown_tie_or_serving_disagreement,8,0,0
+204985,R3Build Edge Strawberry Orange,,L-Glutamine,largest_among_quantified_only,16,0,2
+205254,100% Pure Whey Protein Isolate Vanilla Flavor,Sodium,,largest_complete_comparable_mass,7,0,4
+205553,Echinacea 200 mg,Echinacea extract,,sole_eligible_ingredient,1,0,0
+205573,Pippali Powder,Long Pepper,,sole_eligible_ingredient,1,0,0
+205634,Licorice Root,Licorice,,sole_eligible_ingredient,1,0,0
+205735,Melatonin,Melatonin,,sole_eligible_ingredient,1,0,0
+205867,DIM 200,DIM,,largest_complete_comparable_mass,4,0,0
+205878,Lycopene 10 mg,Lycopene,,sole_eligible_ingredient,1,0,0
+205926,PureForm for Him,Longjack (Eurycoma longifolia; Tongkat Ali) extract,,largest_complete_comparable_mass,8,0,0
+206047,Glucosamine Sulphate 2KCl 1000 mg,,,unknown_no_comparable_amounts,0,1,0
+206054,Baby Probiotics 4 Billion Flavorless,,Inulin,largest_among_quantified_only,8,0,5
+206060,Omega-3 Fish Oil 1000 mg,,Cholesterol,largest_among_quantified_only,2,1,3
+206098,5-hour Energy Berry,,Caffeine,largest_among_quantified_only,12,0,0
+206126,Rhodiola 500 mg,Rhodiola extract,,sole_eligible_ingredient,1,0,0
+206509,N2Gout,VitaCherry Tart Cherry powder,,largest_complete_comparable_mass,4,0,0
+206573,Glucosamine & Chondroitin,Glucosamine Hydrochloride,,largest_complete_comparable_mass,3,0,0
+206575,ProBiotic Multi,,,unknown_no_comparable_amounts,6,0,0
+206999,Acetyl-L-Carnitine 250 mg,Acetyl-L-Carnitine,,sole_eligible_ingredient,1,0,0
+207133,Glucosamine Daily Complex,Glucosamine HCl,,largest_complete_comparable_mass,3,0,2
+207326,B Complex & Vitamin C 500 mg USP,,Vitamin C,largest_among_quantified_only,13,0,0
+207476,PreNatal DHA,Dextrose,,sole_eligible_ingredient,1,0,1
+207537,Min-Chex,,Niacin,largest_among_quantified_only,16,0,1
+207589,Cal-Mag 2:1 Ratio,Calcium,,largest_complete_comparable_mass,2,0,0
+207849,Saccharomyces Boulardii,Saccharomyces boulardii,,sole_eligible_ingredient,1,0,0
+207960,Collagen 1500,Hydrolyzed Collagen,,largest_complete_comparable_mass,3,0,0
+207975,MicroDefense w/Oregano,Sweet Wormwood (Artemisia annua) extract,,largest_complete_comparable_mass,5,0,0
+208036,Chondroitin Sulfate 250 mg,Chondroitin Sulfate,,sole_eligible_ingredient,1,0,0
+208102,Vitamin D3,Vitamin D,,sole_eligible_ingredient,1,0,0
+208425,One Daily Men's 50+,,,unknown_tie_or_serving_disagreement,23,0,0
+208596,Alpha Lipoic Acid,Alpha Lipoic Acid,,largest_complete_comparable_mass,2,0,0
+208655,PowerMaker,,,unknown_no_comparable_amounts,13,0,6
+208665,Calcium-Magnesium with SynerPro Concentrate,,Calcium,largest_among_quantified_only,17,0,0
+208674,Lobelia,certified organic fresh Lobelia,,sole_eligible_ingredient,1,0,0
+208734,D3 125 mcg (5000 IU),Vitamin D3,,sole_eligible_ingredient,1,0,0
+208920,"Vitamin D3 5,000 IU (125 mcg)",Vitamin D3,,sole_eligible_ingredient,1,0,0
+209055,Vitamin D3 + K2 50 mcg & 90 mcg,Vitamin K2,,largest_complete_comparable_mass,2,0,0
+209133,Nutra-Support Joint,,,unknown_tie_or_serving_disagreement,4,0,0
+209254,Niacin-Time 500 mg,Niacin,,sole_eligible_ingredient,1,0,0
+209777,Chaste Tree,Chaste Tree berry (Vitex agnus-castus) extract,,sole_eligible_ingredient,1,0,0
+209892,Alpha,,Mucuna pruriens seed extract,largest_among_quantified_only,7,0,0
+210172,Hawthorn Blend,,,unknown_no_comparable_amounts,2,0,0
+210550,ISO100 Hydrolyzed Gourmet Chocolate,Potassium,,largest_complete_comparable_mass,6,0,4
+210981,Bio-Quercetin,,,unknown_no_comparable_amounts,0,1,0
+211181,Super Bio-Curcumin,BCM-95 Bio-Curcumin Turmeric 25:1 extract,,sole_eligible_ingredient,1,0,0
+211182,Oyster Shell Calcium 500 mg,Calcium,,sole_eligible_ingredient,1,0,0
+211287,Vitex Berry,,,unknown_no_comparable_amounts,0,1,2
+211308,Phos Choline,,,unknown_no_comparable_amounts,0,1,2
+211417,Immortale for Women,,,unknown_no_comparable_amounts,7,0,0
+212007,DHA,,Cholesterol,largest_among_quantified_only,1,1,0
+212096,L-Glutamine Powder,L-Glutamine,,sole_eligible_ingredient,1,0,0
+212125,Glucosamine + Chondroitin,,Vitamin C,largest_among_quantified_only,2,2,0
+212377,B12 1000 mcg,Vitamin B12,,sole_eligible_ingredient,1,0,0
+213426,Adult's Probiotic 17 Billion Cells,,,unknown_no_comparable_amounts,6,0,0
+213638,Niacin SR,Niacin,,sole_eligible_ingredient,1,0,0
+213677,PM Packet,,Beta Glucans,largest_among_quantified_only,12,0,0
+213821,Keto Shake Vanilla Caramel,,Sodium,largest_among_quantified_only,6,0,4
+214008,MagTech,,,unknown_no_comparable_amounts,0,1,0
+214015,Fortify Optima Probiotic Adult 50+ 50 Billion,,,unknown_no_comparable_amounts,0,2,0
+214081,Green Superfood The Original,,Potassium,largest_among_quantified_only,32,0,3
+214250,Reduced L-Glutathione 50 mg,L-Glutathione,,sole_eligible_ingredient,1,0,0
+214353,GTF Trivalent Chromium,Chromium,,sole_eligible_ingredient,1,0,0
+214429,Arjuna Flow,,,unknown_no_comparable_amounts,0,1,0
+214647,MSM (Methylsulfonylmethane) 500 mg,MSM,,sole_eligible_ingredient,1,0,1
+214747,Organic Maca Magic,,,unknown_no_comparable_amounts,3,0,0
+214767,Aller-Calm,,,unknown_no_comparable_amounts,6,0,0
+214963,100% Organic Milkmaid Tea,,,unknown_no_comparable_amounts,9,0,1
+214969,Leucine Powder,L-Leucine,,sole_eligible_ingredient,1,0,0
+215057,Digestive Formlula,,Ginger (Zingiber officinale) rhizome extract,largest_among_quantified_only,9,0,0
+215425,Calcium 125 mg,Calcium,,sole_eligible_ingredient,1,0,0
+215741,Vitamin E Selenium,,Selenium Amino Acid Chelated,largest_among_quantified_only,2,0,0
+216098,Cardiogenics Intensive Care,L-Taurine,,largest_complete_comparable_mass,7,0,1
+216269,SeroSyn,,Chinese Skullcap (Scutellaria baicalensis) root extract,largest_among_quantified_only,7,0,0
+216276,"MSM 1,000 mg",MSM,,sole_eligible_ingredient,1,0,0
+216313,Glutathione Booster,,,unknown_tie_or_serving_disagreement,12,0,3
+216722,Fit Drops Natural Hemp Flavor,,,unknown_no_comparable_amounts,1,1,0
+216784,Brahmi,Gotu Kola,,sole_eligible_ingredient,1,0,0
+216801,Ginger-Burst,,Zingiberene,largest_among_quantified_only,1,1,0
+216809,Women's Longevity Rhythms,,Vitamin C,largest_among_quantified_only,48,0,0
+217381,Magnesium Bisglycinate,Magnesium,,sole_eligible_ingredient,1,0,0
+217392,Beta-Pepsin,Betaine Hydrochloride,,largest_complete_comparable_mass,2,0,0
+217497,Bio.Me Barrier,,,unknown_no_comparable_amounts,6,0,0
+217529,Calcium Magnesium plus Boron,Calcium,,largest_complete_comparable_mass,4,0,0
+217668,L-Arginine Extra Strength,,,unknown_tie_or_serving_disagreement,4,0,0
+218082,Alpha Lipoic Acid 600 mg,Alpha Lipoic Acid,,sole_eligible_ingredient,1,0,0
+218193,RegeneMax Liquid,Choline,,largest_complete_comparable_mass,2,0,0
+218466,Guggul Gold 500 mg,organic Guggul extract,,sole_eligible_ingredient,1,0,0
+218879,BE MINDFUL,,Magnesium,largest_among_quantified_only,15,0,0
+219135,Amino hGH,,,unknown_no_comparable_amounts,4,0,0
+219170,Premier Psyllium Fiber,,,unknown_no_comparable_amounts,11,0,2
+219187,Sereniten Plus,Lactium Casein Decapeptide,,largest_complete_comparable_mass,3,0,0
+219263,Sleep Solution Natural Raspberry-Lemonade Flavor,Glycine,,largest_complete_comparable_mass,4,0,0
+219491,Manganese (Aspartate/Citrate),Manganese,,sole_eligible_ingredient,1,0,0
+219505,Cat's Claw,Cat's Claw (Uncaria tomentosa) extract,,sole_eligible_ingredient,1,0,0
+219584,Multivitamin EasySticks Natural Blueberry Flavor,,Blueberry (Vaccinium angustifolium) powder,largest_among_quantified_only,21,1,2
+219841,FlorAdvanced,,,unknown_no_comparable_amounts,12,0,0
+220232,Rapid Immune Boost,,,unknown_no_comparable_amounts,10,0,0
+220724,Kava Kava,Kava Kava,,sole_eligible_ingredient,1,0,0
+220742,Kava Kava,Kava Kava,,sole_eligible_ingredient,1,0,0
+220778,Magnolia Bark,Magnolia,,sole_eligible_ingredient,1,0,0
+220854,Liver Anti-Oxidant Extracts,,,unknown_tie_or_serving_disagreement,7,0,0
+220867,Adrenal Factors Stress Support,,Vitamin C,largest_among_quantified_only,9,0,0
+220911,Muira Puama,Muira puama,,sole_eligible_ingredient,1,0,0
+221009,DHEA Complex For Women,,Dehydroepiandrosterone,largest_among_quantified_only,5,0,0
+221328,Buffered Vitamin C 500 mg,Vitamin C,,largest_complete_comparable_mass,2,0,0
+221552,Vinpocetine 10 mg,Calcium,,largest_complete_comparable_mass,2,0,0
+223352,Multi-Nutrients 4 (with Copper & Iron),,Vitamin C,largest_among_quantified_only,27,0,0
+223495,Molybdenum 250 mcg,Molybdenum,,sole_eligible_ingredient,1,0,0
+223591,Complete Omega Lemon,,,unknown_no_comparable_amounts,0,3,2
+224628,CoQ-10 200 mg,Coenzyme Q-10,,sole_eligible_ingredient,1,0,0
+227913,Illumination,Aloe vera extract,,largest_complete_comparable_mass,5,0,0
+228033,Proven Whey Vanilla Ice Cream,Potassium,,largest_complete_comparable_mass,6,0,4
+228397,Micro Greens Organic Berry,,Magnesium,largest_among_quantified_only,56,1,4
+228456,Brainz Power,,St. John's Wort 0.3% extract,largest_among_quantified_only,7,1,0
+228772,Ripped Watermelon Lime,,L-Leucine,largest_among_quantified_only,14,0,3
+228788,C4 Ultimate Sour Batch Bros,L-Citrulline,,largest_complete_comparable_mass,14,0,2
+228986,Elite Sour Gummy Flavor,,L-Leucine,largest_among_quantified_only,18,0,2
+229058,BCAA Watermelon,Leucine,,largest_complete_comparable_mass,11,0,0
+229138,Renewable Energy. Beet & Pomegranate Flavor,,Sodium,largest_among_quantified_only,18,0,2
+229143,Sol Food.,Vitamin D3,,sole_eligible_ingredient,1,0,0
+229557,Xuan Bi Teapills,,,unknown_no_comparable_amounts,10,0,0
+229624,"Ionic Potassium 19,800 PPM",Potassium,,sole_eligible_ingredient,1,0,0
+229635,Ionic Selenium 70 PPM,Selenium,,sole_eligible_ingredient,1,0,0
+229878,Goji Berry,Goji berry extract,,sole_eligible_ingredient,1,0,0
+229924,FertilAid for Men,,Vitamin C,largest_among_quantified_only,24,0,0
+230023,Fortify Optima Women's Probiotic 50 Billion,,,unknown_no_comparable_amounts,7,0,0
+230144,100% Whey Isolate Cocoa Pebbles,Potassium,,largest_complete_comparable_mass,6,0,4
+230159,PerfectAminoXP Powder Mixed Berry,,,unknown_no_comparable_amounts,8,0,1
+230256,Biotin for Hair,,,unknown_tie_or_serving_disagreement,10,0,0
+230403,Ultra Preventive X,,Vitamin C,largest_among_quantified_only,55,1,0
+230715,Omega-3+,,,unknown_no_comparable_amounts,1,1,2
+230930,Evening Primrose Oil 1000 mg,Evening Primrose Oil,,largest_complete_comparable_mass,3,0,0
+231031,Lion's Mane,organic Lion's Mane Mushroom extract,,sole_eligible_ingredient,1,0,0
+231309,Hydration Fuel Fruit Punch,,L-Glutamine,largest_among_quantified_only,12,0,3
+231353,Organic Pure Vision,,,unknown_no_comparable_amounts,7,0,0
+232099,Chaga Mushroom Extract Capsules 500 mg,Chaga,,sole_eligible_ingredient,1,0,0
+232101,Chaga Mushroom Extract,Chaga,,sole_eligible_ingredient,1,0,0
+232429,Once-Daily Health Booster,,Chlorophyllin,largest_among_quantified_only,5,4,0
+232583,Breast Health Formula,,I3C,largest_among_quantified_only,11,0,0
+232605,Super-Absorbable Co-Q10 (Ubiquinone) 50 mg with d-Limonene,D-Limonene,,largest_complete_comparable_mass,2,0,0
+232641,Sytrinol Citrus Fruit & Malaysian Red Palm Oil Extract Softgels,,,unknown_no_comparable_amounts,0,1,3
+232708,Ageless Cell,N-Acetyl-L-Cysteine,,largest_complete_comparable_mass,5,0,0
+232741,Curcumin Elite Turmeric Extract,Curcuminoids,,largest_complete_comparable_mass,3,0,0
+233106,Gut Restore Advanced,,,unknown_no_comparable_amounts,8,1,0
+233140,Tart Cherry Extract 2500 mg,Tart Cherry,,sole_eligible_ingredient,1,0,0
+233305,Molecular H2,Magnesium,,sole_eligible_ingredient,1,0,0
+233499,Emulsified MCT Oil Vanilla Cream,Medium Chain Triglycerides,,sole_eligible_ingredient,1,0,3
+233534,CalmEZ Brain Tonic,,,unknown_no_comparable_amounts,3,0,0
+233733,Sleep Support,Lemon Balm 10:1 extract,,largest_complete_comparable_mass,7,0,0
+234425,Zhi Shi Sugar Free,certified organic Zhi Shi (Citrus x aurantium) dried immature fruit liquid extract,,sole_eligible_ingredient,1,0,0
+234447,Shen Qu,Shen Qu liquid extract,,sole_eligible_ingredient,1,0,0
+235139,Thuja Alcohol Free,certified organic Thuja (Thuja occidentalis) dried leaf liquid extract,,sole_eligible_ingredient,1,0,0
+235235,Sang Zhi,certified organic Sang Zhi (Morus alba) dried twig liquid extract,,sole_eligible_ingredient,1,0,0
+235251,N-Acetyl Glucosamine,N-Acetyl-D-Glucosamine,,sole_eligible_ingredient,1,0,0
+235312,Comfrey Alcohol Free,certified organic Comfrey (Symphytum uplandica) dried leaf liquid extract,,sole_eligible_ingredient,1,0,0
+235632,ProFema,,Vitamin C,largest_among_quantified_only,49,3,0
+236972,Menopause Support Complex,Angelica sinensis,,largest_complete_comparable_mass,7,0,0
+237068,Klean Focus,,Acetyl-L-Carnitine HCl,largest_among_quantified_only,16,0,0
+237096,Klean Hydration Natural Orange Flavor,,Sodium,largest_among_quantified_only,9,0,2
+237195,Lipanase,,,unknown_no_comparable_amounts,3,0,0
+237373,Bugleweed,certified organic Bugleweed extract,,sole_eligible_ingredient,1,0,0
+237543,Poppy,wildcrafted Poppy extract,,sole_eligible_ingredient,1,0,0
+237549,Queen's Root,wildcrafted Queen's Root extract,,sole_eligible_ingredient,1,0,0
+237600,Sea Cucumber (Cucumaria frondosa),wildcrafted Sea Cucumber extract,,sole_eligible_ingredient,1,0,0
+237604,China Root,China Root extract,,sole_eligible_ingredient,1,0,0
+237646,Gou Teng,wildcrafted Gou Teng extract,,sole_eligible_ingredient,1,0,0
+237676,Starwort,Starwort extract,,sole_eligible_ingredient,1,0,0
+237840,Wild Yam,wildcrafted Wild Yam extract,,sole_eligible_ingredient,1,0,0
+238034,Heather Non-Alcohol,certified organic Heather extract,,sole_eligible_ingredient,1,0,0
+238081,Akebia (Akebia trifoliata) Non-Alcohol,Akebia extract,,sole_eligible_ingredient,1,0,0
+238215,Beet Root Non-Alcohol,certified organic Beet root extract,,sole_eligible_ingredient,1,0,0
+238266,Oriental Garlic Non-Alcohol,Oriental Garlic extract,,sole_eligible_ingredient,1,0,0
+238276,Anastatica Non-Alcohol,Anastatica extract,,sole_eligible_ingredient,1,0,0
+238473,Torreya Non-Alcohol,Torreya extract,,sole_eligible_ingredient,1,0,0
+238565,Superfood Shake French Vanilla,,Calcium,largest_among_quantified_only,27,0,4
+238737,Joint Support Supreme,,MSM,largest_among_quantified_only,5,2,2
+238751,100% Whey Isolate Protein Chocolate Peppermint,Potassium,,largest_complete_comparable_mass,7,0,5
+238977,100% Pure Green Coffee Bean Extract,,,unknown_no_comparable_amounts,1,0,0
+239009,Super Oxide Dismutase,,,unknown_no_comparable_amounts,3,0,0
+239039,Phytisone,Vitamin C,,largest_complete_comparable_mass,11,0,0
+239292,Marshmallow Root,,,unknown_no_comparable_amounts,1,0,0
+239501,Gold Label,Hemp Oil extract,,sole_eligible_ingredient,1,0,0
+239603,Women's,,Calcium,largest_among_quantified_only,15,1,2
+239978,MacuGuard Ocular Support with Saffron,,Saffron extract,largest_among_quantified_only,3,2,0
+240044,Plant Derived Minerals,,,unknown_no_comparable_amounts,0,1,1
+240153,CurcuPlex CR,,Turmeric extract,largest_among_quantified_only,1,1,0
+240374,OmegaPure 780 EC,,,unknown_no_comparable_amounts,0,1,2
+240701,Digesta Guard Forte 10 Probiotic Capsules,,Maltodextrin,largest_among_quantified_only,15,0,0
+240753,EPA/DHA Guard,Marine Lipid Oil,,largest_complete_comparable_mass,4,0,0
+240866,Marshmallow Root,organic Marshmallow extract,,sole_eligible_ingredient,1,0,0
+240944,Pain Guard Forte,Quercetin Dihydrate,,largest_complete_comparable_mass,4,0,0
+240994,Citrus Limonum,Lemon extract,,sole_eligible_ingredient,1,0,0
+241203,Ginger,fresh and dried Ginger extract,,sole_eligible_ingredient,1,0,0
+241611,CV Defense Immunity,,Zinc,largest_among_quantified_only,6,0,0
+241687,Serious Mass Strawberry,,Creatine Monohydrate,largest_among_quantified_only,30,1,4
+241702,Pimp My Calcium,,Calcium,largest_among_quantified_only,2,0,0
+242001,Moistur-Eyes,,Vitamin C,largest_among_quantified_only,7,2,2
+242084,Blood Nutrients,,Vitamin C,largest_among_quantified_only,14,1,0
+242197,GABA Brain Food,Gamma-Aminobutyric Acid,,largest_complete_comparable_mass,4,0,0
+242485,Beard Flow,,,unknown_tie_or_serving_disagreement,27,0,0
+242491,Pre-Workout Blue Raspberry Flavour,,Magnesium,largest_among_quantified_only,10,2,4
+242828,CX-2 Solution,,Glucosamine HCl,largest_among_quantified_only,8,1,0
+242835,B12 MC Liquid,,Vitamin B6,largest_among_quantified_only,2,1,0
+242873,Organic CBD Oil 30 mg Unflavored,,,unknown_no_comparable_amounts,0,1,2
+243433,Omega Gel,,Vitamin E,largest_among_quantified_only,1,1,2
+243450,PomeGreat Pomegranate,,Potassium,largest_among_quantified_only,1,1,2
+243559,Shilajit Fulvic Acid Complex 250 mg,PrimaVie,,sole_eligible_ingredient,1,0,0
+243694,Amino/Collagen Formula,,Collagen,largest_among_quantified_only,18,0,0
+243743,Superfood Greens Mocha Cocoa,,Potassium,largest_among_quantified_only,45,1,4
+243924,OmegaBerry,,HiActives organic Acai,largest_among_quantified_only,16,1,2
+244044,Organic Rice Bran Fiber,Phosphorus,,largest_complete_comparable_mass,8,0,4
+244183,Wild Oreganol Super Strength,,,unknown_no_comparable_amounts,1,0,0
+244260,D-Mulsion 400 Natural Lemon Flavor,Vitamin D,,sole_eligible_ingredient,1,0,0
+244499,Formula 21,Glucosamine Sulfate 2KCl,,largest_complete_comparable_mass,2,0,0
+244535,Maca Plus Pygeum,Maca extract,,largest_complete_comparable_mass,2,0,0
+244630,Energy/Sports Formula,,Vitamin C,largest_among_quantified_only,40,2,0
+244756,Bioflavonoid Complex,Bioflavonoid Complex,,sole_eligible_ingredient,1,0,0
+244775,Slippery Elm Powder,Slippery Elm powder,,sole_eligible_ingredient,1,0,2
+245166,American Ginseng 648 mg,American Ginseng,,sole_eligible_ingredient,1,0,0
+245532,Chelated Potassium Gluconate,Potassium,,sole_eligible_ingredient,1,0,0
+246033,Adrenal Health,Ashwagandha root 2.5% extract,,largest_complete_comparable_mass,13,0,0
+246140,Homocysteine Factors,,Trimethylglycine,largest_among_quantified_only,3,1,0
+246305,Cayenne 900 mg,Cayenne Pepper,,sole_eligible_ingredient,1,0,0
+246785,Premium Apple Cider Vinegar Detox,Apple Cider Vinegar,,sole_eligible_ingredient,1,0,0
+246818,Silbinol,Pterocarpus marsupium bark extract,,sole_eligible_ingredient,1,0,0
+246850,Vitamin C,Vitamin C,,sole_eligible_ingredient,1,0,0
+246885,5-HTP Select,5-HTP,,largest_complete_comparable_mass,2,0,0
+246974,Sleep,,,unknown_no_comparable_amounts,6,0,0
+247480,Collagen Powder,Collagen,,largest_complete_comparable_mass,2,0,2
+247572,750 Full Spectrum CBD Oil Peppermint,Hemp-Derived Broad Spectrum CBD,,sole_eligible_ingredient,1,0,3
+248789,Optimized Zinc,Taurine,,largest_complete_comparable_mass,6,0,0
+248795,Ester-C 1000 mg with Citrus Bioflavonoids,,Vitamin C,largest_among_quantified_only,2,1,0
+249514,Testosterone Support,Ashwagandha extract,,largest_complete_comparable_mass,10,0,0
+249699,ImmunActin Zinc Lozenges Delicious Wild Cherry,Zinc,,sole_eligible_ingredient,1,0,1
+249743,Omega 3/6/9 Junior Natural Lemon Flavor,,,unknown_no_comparable_amounts,0,3,2
+250213,Natural Lutein 20 mg,,,unknown_no_comparable_amounts,0,1,0
+250299,"1,000 mg Vitamin C Super Orange",,Vitamin C,largest_among_quantified_only,15,1,2
+250503,Goji Berry Extract 500 mg,Goji Berry extract,,sole_eligible_ingredient,1,0,0
+250760,Let's Breathe! Kids,European Elder extract,,largest_complete_comparable_mass,8,0,2
+250986,"Sunvite Mega-Potency Vitamin D3 250 mcg (10,000 IU)",Vitamin D,,sole_eligible_ingredient,1,0,0
+251147,Triveratrol Gold,,Grape extract,largest_among_quantified_only,6,1,0
+251326,Women's One Daily,,Vitamin C,largest_among_quantified_only,38,1,0
+251449,Women's 50+ Multi,,Vitamin C,largest_among_quantified_only,30,2,0
+251610,Gotu Kola Herb 950 mg,Gotu Kola,,sole_eligible_ingredient,1,0,0
+251753,Organic Turmeric,organic Turmeric powder,,sole_eligible_ingredient,1,0,0
+251803,Probiotic 30 Billion,,,unknown_no_comparable_amounts,10,0,0
+252063,Hemo Guard Supreme 510 mg,,,unknown_no_comparable_amounts,3,0,0
+252608,Chrysin,Chrysin,,sole_eligible_ingredient,1,0,0
+252826,N-Acetyl L-Cysteine,N-Acetyl L-Cysteine,,sole_eligible_ingredient,1,0,0
+253045,Women's Advanced Multivitamin,,Vitamin C,largest_among_quantified_only,39,4,0
+253132,Vitamin-D 5000 IU,Vitamin D3,,sole_eligible_ingredient,1,0,0
+253203,Vegan,,L-Glutamine,largest_among_quantified_only,23,1,0
+253283,Dandelion Extract,Dandelion extract,,sole_eligible_ingredient,1,0,0
+253475,Glycerol Monostearate,Glycerol Monostearate,,sole_eligible_ingredient,1,0,0
+253477,Eleuthero Powder (Siberian Ginseng),Eleuthero powder,,sole_eligible_ingredient,1,0,0
+253552,Goldenseal Powder,Goldenseal powder,,sole_eligible_ingredient,1,0,0
+253698,Corn Silk Extract,Corn Silk extract,,sole_eligible_ingredient,1,0,0
+253772,Guanabana Extract,Guanabana extract,,sole_eligible_ingredient,1,0,0
+253798,Dragon Fruit Extract,Dragon fruit extract,,sole_eligible_ingredient,1,0,0
+253996,Zeaxanthin 5%,Zeaxanthin,,sole_eligible_ingredient,1,0,0
+254712,Holy Basil,Holy Basil,,sole_eligible_ingredient,1,0,0
+254889,L-Valine,L-Valine,,sole_eligible_ingredient,1,0,0
+254936,Vitamin B-12 Lozenge 1000 mcg Natural Cherry Flavor,Vitamin B12,,largest_complete_comparable_mass,2,0,0
+254937,Centrum Silver Women 50+,,Calcium,largest_among_quantified_only,26,1,0
+255177,Red Yeast Rice CoQ-10,Red Yeast Rice extract,,largest_complete_comparable_mass,3,0,0
+255199,Chamomile,Chamomile,,sole_eligible_ingredient,1,0,0
+255509,Liver Detox Tea,,,unknown_no_comparable_amounts,7,0,0
+255523,Ultra Therm,,,unknown_no_comparable_amounts,5,0,0
+255525,L-Lysine Beta Glucan 1000 mg,L-Lysine,,largest_complete_comparable_mass,3,0,0
+255578,Chromium Picolinate 1000 mcg,Chromium,,sole_eligible_ingredient,1,0,0
+255598,Kava Kava Extract 1000 mg,Kava Kava extract,,sole_eligible_ingredient,1,0,0
+255611,Mega Stress,,,unknown_tie_or_serving_disagreement,18,0,0
+255778,Arthaffect,,Hydrolyzed Collagen,largest_among_quantified_only,23,0,4
+256246,Alka Pan,,Bromelain,largest_among_quantified_only,12,1,0
+256379,Immuno-Shield All Season Wellness,,,unknown_tie_or_serving_disagreement,15,0,4
+256442,Ancient Probiotics Ultimate,,,unknown_no_comparable_amounts,10,1,0
+256529,N.O.,,,unknown_tie_or_serving_disagreement,7,0,0
+256651,Selenium,Selenium,,sole_eligible_ingredient,1,0,0
+256705,Flintstones Gummies + Immunity Support,,Vitamin C,largest_among_quantified_only,11,0,2
+257032,Morning Buzz Blue Raspberry,,,unknown_tie_or_serving_disagreement,18,0,2
+257151,Maximum Strength Colon Cleanse,Cape Aloe leaf powder,,largest_complete_comparable_mass,5,0,0
+257155,Garcinia Cambogia 2100 mg,Garcinia cambogia extract complex,,largest_complete_comparable_mass,4,0,0
+257238,Slumber-EZ,,L-Tryptophan,largest_among_quantified_only,10,2,0
+257271,Electrolyte Powder Orange Natural Flavor,,Potassium,largest_among_quantified_only,5,1,0
+257330,Acerola Cherry Extract,Acerola Cherry extract,,sole_eligible_ingredient,1,0,0
+257441,Citrus Bioflavonoids 500 mg,Citrus Bioflavonoids,,sole_eligible_ingredient,1,0,0
+257623,Nascent Iodine,Iodine,,sole_eligible_ingredient,1,0,0
+257678,Horny Goat Weed Extract,Horny Goat Weed Leaf Extract,,sole_eligible_ingredient,1,0,0
+257842,Primasurge,Ashwagandha root extract,,largest_complete_comparable_mass,6,0,0
+258172,Super B Vitamin B Complex,,Pantothenic Acid,largest_among_quantified_only,8,1,0
+258401,Tocomin SupraBio Tocotrienols 200 mg,,,unknown_tie_or_serving_disagreement,2,1,0
+258516,Amino Build SX-7 Revolution White Raspberry Freezie,L-Leucine,,largest_complete_comparable_mass,11,0,1
+258678,PMS Nutritional Support,BioResponse DIM,,largest_complete_comparable_mass,5,0,0
+259279,Eight Treasures,,,unknown_no_comparable_amounts,10,0,0
+259804,Recovery Strawberry Margarita,L-Glutamine,,largest_complete_comparable_mass,10,0,4
+259865,Bio.Me Oral,,,unknown_no_comparable_amounts,9,0,0
+259992,Wheybolic Girl Scouts Lemon,,L-Leucine,largest_among_quantified_only,8,1,4
+260066,Super Celery Unflavored,organic Celery (Apium graveolens) stalk powder,,largest_complete_comparable_mass,4,0,4
+260107,Vitamin D-3 (Cholecalciferol) 125 mcg (5000 IU),Calcium,,largest_complete_comparable_mass,2,0,0
+260191,Meltatonin 5 mg Gummies Strawberry Flavor,,,unknown_tie_or_serving_disagreement,2,0,2
+260256,5-HTP Time Release 200 mg,5-HTP,,largest_complete_comparable_mass,2,0,0
+260474,Vitamin C 1000 mg Timed Release,Vitamin C,,largest_complete_comparable_mass,2,0,0
+260536,Triple Strength Lecithin Phosphatidyl Choline 420 mg,,Phosphatidylcholine,largest_among_quantified_only,1,1,2
+260680,Ultra Vita-Men,,Vitamin C,largest_among_quantified_only,30,8,0
+260882,Chondroitin Sulfate 850 mg,Chondroitin Sulfate,,sole_eligible_ingredient,1,0,0
+260946,Immuno Complex,,,unknown_tie_or_serving_disagreement,13,0,0
+261094,+Mind MindWorks,,Calcium,largest_among_quantified_only,7,1,1
+261143,Green Coffee Bean Extract 400 mg,Svetol,,sole_eligible_ingredient,1,0,0
+261412,Pro-Series Build Peach Mango,,Hydroxyisocaproic Acid,largest_among_quantified_only,7,1,2
+261493,Adrenal Forte,,,unknown_no_comparable_amounts,6,0,0
+261563,5-MTHF Methyl Folatte,Folate,,sole_eligible_ingredient,1,0,0
+261760,Brain ACTIVE,,,unknown_tie_or_serving_disagreement,9,2,0
+261772,Strontium,Strontium,,sole_eligible_ingredient,1,0,0
+261853,Nitric Oxide Ultra (Capsules),,L-Citrulline,largest_among_quantified_only,3,0,0
+262084,DL-Phenylalanine 500 mg,DL-Phenylalanine,,sole_eligible_ingredient,1,0,0
+262721,Aloe Vera Gel,Aloe vera gel 200:1 extract,,sole_eligible_ingredient,1,0,0
+263389,Tri Start One,,Algal Oil,largest_among_quantified_only,10,1,0
+263688,Libi Xplode,,Zinc Gluconate,largest_among_quantified_only,5,0,0
+263951,Magnesium Citrate 833 mg,Magnesium Citrate,,sole_eligible_ingredient,1,0,0
+264120,Cordyceps,,Cordyceps extract,largest_among_quantified_only,2,0,0
+264149,Original Superfood,,Saccharomyces cerevisiae,largest_among_quantified_only,16,0,3
+264504,Phyto-Gen Spm-gen,,,unknown_no_comparable_amounts,3,0,0
+264872,GastroThera,L-Glutamine,,largest_complete_comparable_mass,4,0,2
+264905,Methyl B-12 2500 mcg Tropical Flavor,Vitamin B12,,sole_eligible_ingredient,1,0,0
+265255,Ostera,Reduced Iso-Alpha Acids Complex,,largest_complete_comparable_mass,4,0,0
+265260,OmegaGenics EPA-DHA 2400 Natural Lemon Flavor,,Cholesterol,largest_among_quantified_only,1,1,2
+265262,ISONatural Chocolate,Potassium,,largest_complete_comparable_mass,3,0,4
+265333,E-Gems 400 IU (268 mg),Vitamin E,,sole_eligible_ingredient,1,0,0
+265343,Hooligan Extreme Pre-Workout Formula Pain Killer,,,unknown_tie_or_serving_disagreement,34,4,0
+265518,Rested-AF Lemon Ginger,,,unknown_no_comparable_amounts,9,0,0
+265532,Stressveda,,KSM-66 Ashwagandha root extract,largest_among_quantified_only,23,0,0
+265652,MCT & Omega-3,,,unknown_no_comparable_amounts,0,2,3
+266018,Unique B-12,Vitamin B6,,largest_complete_comparable_mass,4,0,0
+266053,6BG+,,Calcium,largest_among_quantified_only,17,1,0
+266082,Formula 19,,Calcium,largest_among_quantified_only,18,1,0
+266115,Marine Carotene,,,unknown_no_comparable_amounts,2,1,0
+266151,Formula 42,Milk Thistle extract,,largest_complete_comparable_mass,3,0,0
+266193,Resveratrol,,Pure Trans-Resveratrol,largest_among_quantified_only,5,0,0
+266294,E-Plex-400,Vitamin E,,sole_eligible_ingredient,1,0,0
+266554,SulforaClear,,Calcium,largest_among_quantified_only,2,2,0
+266625,Proteo-Zyme,,Bromelain,largest_among_quantified_only,7,0,0
+266917,5-HTP,Vitamin C,,largest_complete_comparable_mass,3,0,0
+266995,Turmeric Extract,organic Turmeric extract,,sole_eligible_ingredient,1,0,0
+267219,Sytrinol 150 mg,,,unknown_no_comparable_amounts,0,1,0
+267403,Digestive Enzyme Advantage,,Ox Bile powder,largest_among_quantified_only,12,0,0
+267406,Advanced Phytonutrient Shield,,,unknown_tie_or_serving_disagreement,12,0,0
+267456,MK-7,Menaquinone-7,,sole_eligible_ingredient,1,0,0
+267468,Cayenne Powder 475 mg,Cayenne,,sole_eligible_ingredient,1,0,0
+267589,Turmeric Root,,,unknown_no_comparable_amounts,4,0,0
+267649,Finest Pure Fish Oil Capsules,,Cholesterol,largest_among_quantified_only,1,1,2
+267771,White Grapefruit,White Grapefruit,,sole_eligible_ingredient,1,0,0
+267874,Psychotic Hellboy Fruit Punch,,,unknown_no_comparable_amounts,8,0,0
+267997,Hip Knee & Joints,Methylsulfonylmethane,,largest_complete_comparable_mass,3,0,0
+268161,"Biotin 10,000 mcg",Biotin,,sole_eligible_ingredient,1,0,0
+268211,Kid's Norwegian Cod Liver Oil Natural Green Apple Flavor,,Cholesterol,largest_among_quantified_only,4,1,2
+268564,Dilate Lemon Drop,L-Citrulline,,largest_complete_comparable_mass,6,0,0
+268693,Beef Organs,,,unknown_tie_or_serving_disagreement,5,0,0
+268706,NeuroHemp,,,unknown_no_comparable_amounts,2,1,0
+268710,Krill Oil Soft Gels,,,unknown_no_comparable_amounts,0,1,2
+268884,Ultra Test Testosterone Booster,Tribulus terrestris,,largest_complete_comparable_mass,9,0,0
+269246,High Absorption CoQ10 100 mg with BioPerine,Coenzyme Q10,,largest_complete_comparable_mass,2,0,0
+269273,Agmatine 1000 mg,Agmatine,,sole_eligible_ingredient,1,0,0
+269382,Whey Protein Isolate Vanilla,,Potassium,largest_among_quantified_only,6,0,4
+269448,Chromium Picolinate 200 mcg,Chromium,,sole_eligible_ingredient,1,0,0
+269537,PurePump Lemon,,,unknown_tie_or_serving_disagreement,15,0,2
+270083,PRO Fruity Cereal,Calcium,,largest_complete_comparable_mass,7,0,4
+270249,Vitex Fruit Women's Health 400 mg,Vitex agnus-castus,,sole_eligible_ingredient,1,0,0
+270293,Calcium Magnesium & Zinc with Vitamin D3 Raspberry Lemonade,Calcium,,largest_complete_comparable_mass,4,0,2
+270330,Creatine Monohydrate 5 g Unflavored,Creatine Monohydrate,,sole_eligible_ingredient,1,0,0
+270904,Blemish Blocker,DIM,,largest_complete_comparable_mass,4,0,0
+271183,Abdominal Lean,,,unknown_tie_or_serving_disagreement,7,0,0
+271296,Moringa,Moringa oleifera,,sole_eligible_ingredient,1,0,0
+271326,"Ferrous Sulfate Oral Solution, USP 300 mg",Iron,,sole_eligible_ingredient,1,0,0
+271649,Power C Natural Orange Flavor,Vitamin C,,largest_complete_comparable_mass,2,0,3
+271725,Men's Multi,,Vitamin C,largest_among_quantified_only,14,1,2
+271793,B-12 1000 mcg Natural Raspberry Flavor,Vitamin B12,,sole_eligible_ingredient,1,0,2
+272075,Collagen 1500 mg Complex,,,unknown_no_comparable_amounts,5,0,0
+272091,Joint Action,,,unknown_no_comparable_amounts,10,1,0
+272141,EcoDrink Multivitamin Orange,Potassium,,largest_complete_comparable_mass,28,0,2
+272323,Blood Pressure Factors,,Potassium,largest_among_quantified_only,14,0,0
+272363,Motherwort,Motherwort extract,,sole_eligible_ingredient,1,0,0
+272795,Whey Protein Isolate Creamy Vanilla,Xylitol,,largest_complete_comparable_mass,7,0,4
+272879,Moringa Leaf Liquid Extract,Moringa leaf extract,,sole_eligible_ingredient,1,0,0
+272895,Ligustrum Berry,dried Ligustrum berry extract,,sole_eligible_ingredient,1,0,0
+273018,Waves of Whey Protein Lemon Sugar Cookie,Sodium,,largest_complete_comparable_mass,6,0,4
+273026,Ginseng Complex 1000 mg,,Royal Jelly,largest_among_quantified_only,2,4,0
+273189,Yaeyama Chlorella 200 mg,Chlorella,,largest_complete_comparable_mass,4,0,2
+273770,CollagenUP Unflavored,Hydrolyzed Marine Collagen Peptides,,largest_complete_comparable_mass,4,0,2
+273903,Virattack,,,unknown_no_comparable_amounts,5,0,0
+273923,Kryp2Lean,,Glucosamine Sulfate,largest_among_quantified_only,10,0,0
+274103,Wellness Zinc Lozenges 23 mg Peach-Raspberry,Vitamin C,,largest_complete_comparable_mass,2,0,2
+274116,Red Yeast Rice with CoQ10,Red Yeast Rice Concentrate,,largest_complete_comparable_mass,2,0,0
+274353,EDTA Detox 1000 mg,Ethylenediaminetetraacetic Acid,,sole_eligible_ingredient,1,0,0
+274434,Pyrro-Cell,Alpha Lipoic Acid,,largest_complete_comparable_mass,3,0,0
+274476,Znac,,Vitamin C,largest_among_quantified_only,17,0,0
+274555,Coenzyme Q10 200 mg,Coenzyme Q-10,,sole_eligible_ingredient,1,0,0
+274984,Bee Pollen 1500 mg,Bee Pollen,,sole_eligible_ingredient,1,0,0
+274990,L-Glutamine 1000 mg,L-Glutamine,,sole_eligible_ingredient,1,0,0
+275059,Organic EveryDay Detox Dandelion,,,unknown_no_comparable_amounts,0,1,1
+275339,St. John's Wort Extract 300 mg,St. John's Wort aerial part extract,,sole_eligible_ingredient,1,0,0
+275444,Pomegranate Extract 500 mg,,,unknown_no_comparable_amounts,0,1,1
+275537,N-Acetyl Cysteine,N-Acetyl L-Cysteine,,sole_eligible_ingredient,1,0,0
+275567,Grassfed Pure Marrow,,,unknown_no_comparable_amounts,0,1,0
+275758,Reishi 415 Capsules,Reishi Extract 415,,sole_eligible_ingredient,1,0,0
+275901,Collagen Beauty Capsules,Collagen Hydrolysate,,largest_complete_comparable_mass,10,0,0
+275992,Super Cleanse,,Calcium,largest_among_quantified_only,15,1,0
+276013,BioFit Max,,,unknown_no_comparable_amounts,6,0,0
+276024,Brain C-13,,,unknown_tie_or_serving_disagreement,13,0,0
+276482,Zymessence,,Magnesium,largest_among_quantified_only,8,0,0
+276703,Base Control,,,unknown_tie_or_serving_disagreement,23,0,0
+276740,Keto Strong XP,,,unknown_no_comparable_amounts,6,0,0
+277101,Black Pepper,Black Pepper,,sole_eligible_ingredient,1,0,0
+277412,Biotin 1000 mcg,Biotin,,sole_eligible_ingredient,1,0,0
+277578,Ultra Cinnamon 1500 mg,,Biotin,largest_among_quantified_only,4,0,0

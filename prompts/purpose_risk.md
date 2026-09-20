@@ -21,6 +21,14 @@ Rules:
   is not a purpose. Directions/dosage alone are not a purpose.
 - "KEEP OUT OF REACH OF CHILDREN" alone is boilerplate, not a risk; include it
   only if no other risk text exists.
+- A risk is about the product's effect on the person taking it -- who should
+  not take it, what to watch for, what it interacts with. Statements about the
+  container, its packaging, its seal or its physical condition are not risks,
+  however they are phrased and even when phrased as an instruction not to use
+  the product. They describe the package, not the supplement, and they would
+  be equally true of any bottled product. Exclude them; include one only if
+  the label states no other risk text at all.
+- Storage and handling instructions are likewise not risks.
 - Return an empty list when the label genuinely does not state a field. Empty
   is a valid and common answer -- prefer it over a guess.
 

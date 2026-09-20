@@ -1,0 +1,1228 @@
+{
+  "method": "Case-sensitive verbatim evidence matching; collapse raw statement whitespace as in renderer. Multi-type matches count in each type. Exclusive means no alternative type/field contains the complete evidence span. No inference about model accuracy.",
+  "labels": 1000,
+  "totals": {
+    "purpose_claims": 1979,
+    "risk_claims": 2302
+  },
+  "frozen_passage_characters": 1890693,
+  "statement_types": {
+    "Brand IP Statement(s) re: (c), (TM), (SM)": {
+      "raw_labels": 487,
+      "raw_statements": 892,
+      "frozen_labels": 487,
+      "excluded_before_annotation": false,
+      "purpose_claims": 100,
+      "risk_claims": 3,
+      "purpose_labels": 73,
+      "risk_labels": 2,
+      "exclusive_claims": 96,
+      "exclusive_labels": 72,
+      "examples": [
+        {
+          "dsld_id": 2167,
+          "kind": "purpose",
+          "evidence": "ULTRALEAN(TM) is a thermogenic abdominal fat incinerator that provides the body with a healthy combination of natural herbs and healthy naturally occurring oils. The precise combination of these natural ingredients enhance the rate of calorie metabolism, increase energy levels, support body-fat reduction (particularly in the abdominal area) and suppress the appetite. ULTRALEAN(TM) delivers astounding results which are amplified when used in combination with EXCELLEAN(TM)."
+        },
+        {
+          "dsld_id": 2417,
+          "kind": "purpose",
+          "evidence": "New, Powerful and Easier to Use than Ever!? Hydroxycut(R) Advanced is a powerful new formula that helps you lose weight fast! ‡ And now with only 2 servings a day, Hydroxycut Advanced is even easier to use. Plus, a new primary ingredient in the Hydroxycut Advanced has been researched in multiple double-blind, placebo-controlled published studies. In one of these published clinical studies, subjects taking the primary ingredient (Cissus quadrangularis) in Hydroxycut(R) Advanced for 10 weeks lost an average of up to 4 times the weight than the placebo group (19.25 vs. 4.54 lbs.). There is also an added metabolic booster that also helps you burn calories and increase energy, providing a total solution for you!?"
+        },
+        {
+          "dsld_id": 3299,
+          "kind": "purpose",
+          "evidence": "StemFlo is a proprietary blend of herbs and all natural ingredients that support optimal blood circulation by reducing oxidative stress in the blood, detoxifying the blood and improving overall blood flow. StemFlo is especially designed to support the delivery of stem cells to all parts of the body. When used in conjunction with StemEnhance, StemFlo optimizes the body's ability to deliver and circulate adult stem cells to the tissues and organs where they are needed. StemFlo also supports the delivery of nutrients and oxygen, as well as immune cells, throughout the whole body"
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 100,
+        "risk_claims": 3,
+        "purpose_labels": 73,
+        "risk_labels": 2,
+        "exclusive_claims": 96,
+        "exclusive_labels": 72,
+        "examples": [
+          {
+            "dsld_id": 2167,
+            "kind": "purpose",
+            "evidence": "ULTRALEAN(TM) is a thermogenic abdominal fat incinerator that provides the body with a healthy combination of natural herbs and healthy naturally occurring oils. The precise combination of these natural ingredients enhance the rate of calorie metabolism, increase energy levels, support body-fat reduction (particularly in the abdominal area) and suppress the appetite. ULTRALEAN(TM) delivers astounding results which are amplified when used in combination with EXCELLEAN(TM)."
+          },
+          {
+            "dsld_id": 2417,
+            "kind": "purpose",
+            "evidence": "New, Powerful and Easier to Use than Ever!? Hydroxycut(R) Advanced is a powerful new formula that helps you lose weight fast! ‡ And now with only 2 servings a day, Hydroxycut Advanced is even easier to use. Plus, a new primary ingredient in the Hydroxycut Advanced has been researched in multiple double-blind, placebo-controlled published studies. In one of these published clinical studies, subjects taking the primary ingredient (Cissus quadrangularis) in Hydroxycut(R) Advanced for 10 weeks lost an average of up to 4 times the weight than the placebo group (19.25 vs. 4.54 lbs.). There is also an added metabolic booster that also helps you burn calories and increase energy, providing a total solution for you!?"
+          },
+          {
+            "dsld_id": 3299,
+            "kind": "purpose",
+            "evidence": "StemFlo is a proprietary blend of herbs and all natural ingredients that support optimal blood circulation by reducing oxidative stress in the blood, detoxifying the blood and improving overall blood flow. StemFlo is especially designed to support the delivery of stem cells to all parts of the body. When used in conjunction with StemEnhance, StemFlo optimizes the body's ability to deliver and circulate adult stem cells to the tissues and organs where they are needed. StemFlo also supports the delivery of nutrients and oxygen, as well as immune cells, throughout the whole body"
+          }
+        ]
+      }
+    },
+    "FDA Disclaimer Statement": {
+      "raw_labels": 789,
+      "raw_statements": 801,
+      "frozen_labels": 0,
+      "excluded_before_annotation": true,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": [],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 0,
+        "purpose_labels": 0,
+        "risk_labels": 0,
+        "exclusive_claims": 0,
+        "exclusive_labels": 0,
+        "examples": []
+      }
+    },
+    "FDA Statement of Identity": {
+      "raw_labels": 943,
+      "raw_statements": 954,
+      "frozen_labels": 0,
+      "excluded_before_annotation": true,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": [],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 0,
+        "purpose_labels": 0,
+        "risk_labels": 0,
+        "exclusive_claims": 0,
+        "exclusive_labels": 0,
+        "examples": []
+      }
+    },
+    "Formula re: Contains": {
+      "raw_labels": 642,
+      "raw_statements": 1210,
+      "frozen_labels": 640,
+      "excluded_before_annotation": false,
+      "purpose_claims": 381,
+      "risk_claims": 68,
+      "purpose_labels": 217,
+      "risk_labels": 66,
+      "exclusive_claims": 431,
+      "exclusive_labels": 258,
+      "examples": [
+        {
+          "dsld_id": 2036,
+          "kind": "purpose",
+          "evidence": "Mega-T Ultra is a dietary supplement formulated to help you burn fat and achieve your weight loss goals. Each caplet contains a unique blend of Green Tea, White Tea, Black Tea and Oolong Tea whole leaf extracts. MEGA-T Ultra contains 90 mg of EGCG and 150 mg of caffeine."
+        },
+        {
+          "dsld_id": 5777,
+          "kind": "purpose",
+          "evidence": "Triggers Anabolic Factors with High-Quality Tribulus & Fenugreek*"
+        },
+        {
+          "dsld_id": 7443,
+          "kind": "risk",
+          "evidence": "Contains: Soy."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 381,
+        "risk_claims": 76,
+        "purpose_labels": 217,
+        "risk_labels": 74,
+        "exclusive_claims": 388,
+        "exclusive_labels": 228,
+        "examples": [
+          {
+            "dsld_id": 2036,
+            "kind": "purpose",
+            "evidence": "Mega-T Ultra is a dietary supplement formulated to help you burn fat and achieve your weight loss goals. Each caplet contains a unique blend of Green Tea, White Tea, Black Tea and Oolong Tea whole leaf extracts. MEGA-T Ultra contains 90 mg of EGCG and 150 mg of caffeine."
+          },
+          {
+            "dsld_id": 5777,
+            "kind": "purpose",
+            "evidence": "Triggers Anabolic Factors with High-Quality Tribulus & Fenugreek*"
+          },
+          {
+            "dsld_id": 7443,
+            "kind": "risk",
+            "evidence": "Contains: Soy."
+          }
+        ]
+      }
+    },
+    "Formula re: Kosher": {
+      "raw_labels": 78,
+      "raw_statements": 79,
+      "frozen_labels": 51,
+      "excluded_before_annotation": false,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": [],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 0,
+        "purpose_labels": 0,
+        "risk_labels": 0,
+        "exclusive_claims": 0,
+        "exclusive_labels": 0,
+        "examples": []
+      }
+    },
+    "Formula re: Type": {
+      "raw_labels": 84,
+      "raw_statements": 95,
+      "frozen_labels": 79,
+      "excluded_before_annotation": false,
+      "purpose_claims": 34,
+      "risk_claims": 4,
+      "purpose_labels": 26,
+      "risk_labels": 4,
+      "exclusive_claims": 35,
+      "exclusive_labels": 28,
+      "examples": [
+        {
+          "dsld_id": 3881,
+          "kind": "purpose",
+          "evidence": "Comprehensive Multivitamin for Women"
+        },
+        {
+          "dsld_id": 3881,
+          "kind": "purpose",
+          "evidence": "PRODUCT BENEFITS: This unique product is a comprehensive formulation with vitamins, herbs, minerals, and nutrients for the specific needs of women. MultiLogics(R) for Women includes Black Cohosh, Dong Quai, and Chasteberry."
+        },
+        {
+          "dsld_id": 6616,
+          "kind": "purpose",
+          "evidence": "Female Herbal Nutrient Formula"
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 35,
+        "risk_claims": 4,
+        "purpose_labels": 27,
+        "risk_labels": 4,
+        "exclusive_claims": 35,
+        "exclusive_labels": 28,
+        "examples": [
+          {
+            "dsld_id": 3881,
+            "kind": "purpose",
+            "evidence": "Comprehensive Multivitamin for Women"
+          },
+          {
+            "dsld_id": 3881,
+            "kind": "purpose",
+            "evidence": "PRODUCT BENEFITS: This unique product is a comprehensive formulation with vitamins, herbs, minerals, and nutrients for the specific needs of women. MultiLogics(R) for Women includes Black Cohosh, Dong Quai, and Chasteberry."
+          },
+          {
+            "dsld_id": 6616,
+            "kind": "purpose",
+            "evidence": "Female Herbal Nutrient Formula"
+          }
+        ]
+      }
+    },
+    "Formulation re: Does NOT Contain": {
+      "raw_labels": 742,
+      "raw_statements": 1107,
+      "frozen_labels": 728,
+      "excluded_before_annotation": false,
+      "purpose_claims": 3,
+      "risk_claims": 1,
+      "purpose_labels": 3,
+      "risk_labels": 1,
+      "exclusive_claims": 4,
+      "exclusive_labels": 4,
+      "examples": [
+        {
+          "dsld_id": 43976,
+          "kind": "purpose",
+          "evidence": "Twinlab Endurance Fuel is a caffeine-free serious multi-stage formula that anticipates the body’s needs for pre, during and post-race nutrition to sustain optimal performance, enhance endurance and speed recovery."
+        },
+        {
+          "dsld_id": 67336,
+          "kind": "purpose",
+          "evidence": "BioChem whey protein is your pure and sugar free solution to adding protein to your diet, after exercise recovery, or even supporting your weight management goals"
+        },
+        {
+          "dsld_id": 177929,
+          "kind": "purpose",
+          "evidence": "Promotes heart health and antioxidant defense"
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 3,
+        "risk_claims": 1,
+        "purpose_labels": 3,
+        "risk_labels": 1,
+        "exclusive_claims": 4,
+        "exclusive_labels": 4,
+        "examples": [
+          {
+            "dsld_id": 43976,
+            "kind": "purpose",
+            "evidence": "Twinlab Endurance Fuel is a caffeine-free serious multi-stage formula that anticipates the body’s needs for pre, during and post-race nutrition to sustain optimal performance, enhance endurance and speed recovery."
+          },
+          {
+            "dsld_id": 67336,
+            "kind": "purpose",
+            "evidence": "BioChem whey protein is your pure and sugar free solution to adding protein to your diet, after exercise recovery, or even supporting your weight management goals"
+          },
+          {
+            "dsld_id": 177929,
+            "kind": "purpose",
+            "evidence": "Promotes heart health and antioxidant defense"
+          }
+        ]
+      }
+    },
+    "Formulation re: Organic": {
+      "raw_labels": 57,
+      "raw_statements": 84,
+      "frozen_labels": 53,
+      "excluded_before_annotation": false,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": [],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 0,
+        "purpose_labels": 0,
+        "risk_labels": 0,
+        "exclusive_claims": 0,
+        "exclusive_labels": 0,
+        "examples": []
+      }
+    },
+    "Formulation re: Other": {
+      "raw_labels": 344,
+      "raw_statements": 728,
+      "frozen_labels": 334,
+      "excluded_before_annotation": false,
+      "purpose_claims": 507,
+      "risk_claims": 2,
+      "purpose_labels": 238,
+      "risk_labels": 2,
+      "exclusive_claims": 507,
+      "exclusive_labels": 238,
+      "examples": [
+        {
+          "dsld_id": 208425,
+          "kind": "purpose",
+          "evidence": "Supports: Heart & Eye Health Normal Blood Pressure Immune Health Energy Metabolism Cell Health"
+        },
+        {
+          "dsld_id": 208425,
+          "kind": "purpose",
+          "evidence": "Supports: Heart & Eye Health Normal Blood Pressure Immune Health Energy Metabolism Cell Health"
+        },
+        {
+          "dsld_id": 208425,
+          "kind": "purpose",
+          "evidence": "Supports: Heart & Eye Health Normal Blood Pressure Immune Health Energy Metabolism Cell Health"
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 507,
+        "risk_claims": 2,
+        "purpose_labels": 238,
+        "risk_labels": 2,
+        "exclusive_claims": 506,
+        "exclusive_labels": 237,
+        "examples": [
+          {
+            "dsld_id": 208425,
+            "kind": "purpose",
+            "evidence": "Supports: Heart & Eye Health Normal Blood Pressure Immune Health Energy Metabolism Cell Health"
+          },
+          {
+            "dsld_id": 208425,
+            "kind": "purpose",
+            "evidence": "Supports: Heart & Eye Health Normal Blood Pressure Immune Health Energy Metabolism Cell Health"
+          },
+          {
+            "dsld_id": 208425,
+            "kind": "purpose",
+            "evidence": "Supports: Heart & Eye Health Normal Blood Pressure Immune Health Energy Metabolism Cell Health"
+          }
+        ]
+      }
+    },
+    "Formulation re: Vegetarian/Vegan": {
+      "raw_labels": 196,
+      "raw_statements": 215,
+      "frozen_labels": 175,
+      "excluded_before_annotation": false,
+      "purpose_claims": 1,
+      "risk_claims": 0,
+      "purpose_labels": 1,
+      "risk_labels": 0,
+      "exclusive_claims": 1,
+      "exclusive_labels": 1,
+      "examples": [
+        {
+          "dsld_id": 253203,
+          "kind": "purpose",
+          "evidence": "Real-Zymes Vegan is a powerful digestive enzyme supplement for vegans, but includes lactase in case some dairy slips in."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 2,
+        "risk_claims": 0,
+        "purpose_labels": 2,
+        "risk_labels": 0,
+        "exclusive_claims": 1,
+        "exclusive_labels": 1,
+        "examples": [
+          {
+            "dsld_id": 253203,
+            "kind": "purpose",
+            "evidence": "Real-Zymes Vegan is a powerful digestive enzyme supplement for vegans, but includes lactase in case some dairy slips in."
+          }
+        ]
+      }
+    },
+    "General Statements: All Other Content": {
+      "raw_labels": 858,
+      "raw_statements": 3053,
+      "frozen_labels": 858,
+      "excluded_before_annotation": false,
+      "purpose_claims": 943,
+      "risk_claims": 17,
+      "purpose_labels": 409,
+      "risk_labels": 15,
+      "exclusive_claims": 956,
+      "exclusive_labels": 414,
+      "examples": [
+        {
+          "dsld_id": 709,
+          "kind": "purpose",
+          "evidence": "Supports Memory Retention*"
+        },
+        {
+          "dsld_id": 885,
+          "kind": "purpose",
+          "evidence": "General Health*"
+        },
+        {
+          "dsld_id": 885,
+          "kind": "purpose",
+          "evidence": "Spirulina is a blue/green algae that can be found in the world's oceans and lakes. In addition, our product promotes general health and wellness.*"
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 949,
+        "risk_claims": 17,
+        "purpose_labels": 409,
+        "risk_labels": 15,
+        "exclusive_claims": 956,
+        "exclusive_labels": 414,
+        "examples": [
+          {
+            "dsld_id": 709,
+            "kind": "purpose",
+            "evidence": "Supports Memory Retention*"
+          },
+          {
+            "dsld_id": 885,
+            "kind": "purpose",
+            "evidence": "General Health*"
+          },
+          {
+            "dsld_id": 885,
+            "kind": "purpose",
+            "evidence": "Spirulina is a blue/green algae that can be found in the world's oceans and lakes. In addition, our product promotes general health and wellness.*"
+          }
+        ]
+      }
+    },
+    "General: Product/Version Code": {
+      "raw_labels": 461,
+      "raw_statements": 463,
+      "frozen_labels": 0,
+      "excluded_before_annotation": true,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": [],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 0,
+        "purpose_labels": 0,
+        "risk_labels": 0,
+        "exclusive_claims": 0,
+        "exclusive_labels": 0,
+        "examples": []
+      }
+    },
+    "Precautions re: All Other": {
+      "raw_labels": 728,
+      "raw_statements": 1157,
+      "frozen_labels": 727,
+      "excluded_before_annotation": false,
+      "purpose_claims": 1,
+      "risk_claims": 843,
+      "purpose_labels": 1,
+      "risk_labels": 450,
+      "exclusive_claims": 806,
+      "exclusive_labels": 449,
+      "examples": [
+        {
+          "dsld_id": 1736,
+          "kind": "risk",
+          "evidence": "Discontinue use and consult your doctor if any adverse reactions occur."
+        },
+        {
+          "dsld_id": 2036,
+          "kind": "risk",
+          "evidence": "Discontinue use and consult a physician if you experience rapid heartbeat, dizziness, severe headaches, shortness of breath or develop symptoms of liver trouble such as abdominal pain, dark urine, jaundice or other similar symptoms."
+        },
+        {
+          "dsld_id": 2036,
+          "kind": "risk",
+          "evidence": "WARNING: For adults only (18 years and older)."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 1,
+        "risk_claims": 846,
+        "purpose_labels": 1,
+        "risk_labels": 451,
+        "exclusive_claims": 802,
+        "exclusive_labels": 446,
+        "examples": [
+          {
+            "dsld_id": 1736,
+            "kind": "risk",
+            "evidence": "Discontinue use and consult your doctor if any adverse reactions occur."
+          },
+          {
+            "dsld_id": 2036,
+            "kind": "risk",
+            "evidence": "Discontinue use and consult a physician if you experience rapid heartbeat, dizziness, severe headaches, shortness of breath or develop symptoms of liver trouble such as abdominal pain, dark urine, jaundice or other similar symptoms."
+          },
+          {
+            "dsld_id": 2036,
+            "kind": "risk",
+            "evidence": "WARNING: For adults only (18 years and older)."
+          }
+        ]
+      }
+    },
+    "Precautions re: Allergies": {
+      "raw_labels": 280,
+      "raw_statements": 312,
+      "frozen_labels": 204,
+      "excluded_before_annotation": false,
+      "purpose_claims": 0,
+      "risk_claims": 231,
+      "purpose_labels": 0,
+      "risk_labels": 203,
+      "exclusive_claims": 224,
+      "exclusive_labels": 201,
+      "examples": [
+        {
+          "dsld_id": 2417,
+          "kind": "risk",
+          "evidence": "CONTAINS SOY INGREDIENTS."
+        },
+        {
+          "dsld_id": 2454,
+          "kind": "risk",
+          "evidence": "Contains: Soy, Fish (anchovy, sardine), Crustacean Shellfish (lobster, shrimp, crab)"
+        },
+        {
+          "dsld_id": 3488,
+          "kind": "risk",
+          "evidence": "Made in a GMP facility that uses milk, soy, egg, peanuts."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 271,
+        "purpose_labels": 0,
+        "risk_labels": 233,
+        "exclusive_claims": 214,
+        "exclusive_labels": 191,
+        "examples": [
+          {
+            "dsld_id": 2417,
+            "kind": "risk",
+            "evidence": "CONTAINS SOY INGREDIENTS."
+          },
+          {
+            "dsld_id": 2454,
+            "kind": "risk",
+            "evidence": "Contains: Soy, Fish (anchovy, sardine), Crustacean Shellfish (lobster, shrimp, crab)"
+          },
+          {
+            "dsld_id": 3488,
+            "kind": "risk",
+            "evidence": "Made in a GMP facility that uses milk, soy, egg, peanuts."
+          }
+        ]
+      }
+    },
+    "Precautions re: Children": {
+      "raw_labels": 819,
+      "raw_statements": 933,
+      "frozen_labels": 802,
+      "excluded_before_annotation": false,
+      "purpose_claims": 0,
+      "risk_claims": 248,
+      "purpose_labels": 0,
+      "risk_labels": 218,
+      "exclusive_claims": 218,
+      "exclusive_labels": 192,
+      "examples": [
+        {
+          "dsld_id": 1736,
+          "kind": "risk",
+          "evidence": "Not intended for use by persons under the age of 18."
+        },
+        {
+          "dsld_id": 3881,
+          "kind": "risk",
+          "evidence": "WARNING: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under six."
+        },
+        {
+          "dsld_id": 3881,
+          "kind": "risk",
+          "evidence": "In case of accidental overdose, call a doctor or Poison Control Center immediately."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 282,
+        "purpose_labels": 0,
+        "risk_labels": 251,
+        "exclusive_claims": 207,
+        "exclusive_labels": 181,
+        "examples": [
+          {
+            "dsld_id": 1736,
+            "kind": "risk",
+            "evidence": "Not intended for use by persons under the age of 18."
+          },
+          {
+            "dsld_id": 3881,
+            "kind": "risk",
+            "evidence": "WARNING: Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under six."
+          },
+          {
+            "dsld_id": 3881,
+            "kind": "risk",
+            "evidence": "In case of accidental overdose, call a doctor or Poison Control Center immediately."
+          }
+        ]
+      }
+    },
+    "Precautions re: Pregnant or Nursing or Prescription Medications": {
+      "raw_labels": 700,
+      "raw_statements": 754,
+      "frozen_labels": 688,
+      "excluded_before_annotation": false,
+      "purpose_claims": 1,
+      "risk_claims": 873,
+      "purpose_labels": 1,
+      "risk_labels": 686,
+      "exclusive_claims": 837,
+      "exclusive_labels": 665,
+      "examples": [
+        {
+          "dsld_id": 709,
+          "kind": "risk",
+          "evidence": "WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery."
+        },
+        {
+          "dsld_id": 709,
+          "kind": "risk",
+          "evidence": "WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery."
+        },
+        {
+          "dsld_id": 709,
+          "kind": "risk",
+          "evidence": "WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 1,
+        "risk_claims": 888,
+        "purpose_labels": 1,
+        "risk_labels": 698,
+        "exclusive_claims": 801,
+        "exclusive_labels": 633,
+        "examples": [
+          {
+            "dsld_id": 709,
+            "kind": "risk",
+            "evidence": "WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery."
+          },
+          {
+            "dsld_id": 709,
+            "kind": "risk",
+            "evidence": "WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery."
+          },
+          {
+            "dsld_id": 709,
+            "kind": "risk",
+            "evidence": "WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery."
+          }
+        ]
+      }
+    },
+    "Seals/Symbols": {
+      "raw_labels": 565,
+      "raw_statements": 912,
+      "frozen_labels": 556,
+      "excluded_before_annotation": false,
+      "purpose_claims": 0,
+      "risk_claims": 1,
+      "purpose_labels": 0,
+      "risk_labels": 1,
+      "exclusive_claims": 1,
+      "exclusive_labels": 1,
+      "examples": [
+        {
+          "dsld_id": 260680,
+          "kind": "risk",
+          "evidence": "If you are taking any medication or planning any medical procedure, consult your doctor before use."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 1,
+        "purpose_labels": 0,
+        "risk_labels": 1,
+        "exclusive_claims": 1,
+        "exclusive_labels": 1,
+        "examples": [
+          {
+            "dsld_id": 260680,
+            "kind": "risk",
+            "evidence": "If you are taking any medication or planning any medical procedure, consult your doctor before use."
+          }
+        ]
+      }
+    },
+    "Storage": {
+      "raw_labels": 759,
+      "raw_statements": 791,
+      "frozen_labels": 759,
+      "excluded_before_annotation": false,
+      "purpose_claims": 0,
+      "risk_claims": 2,
+      "purpose_labels": 0,
+      "risk_labels": 2,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": [
+        {
+          "dsld_id": 180371,
+          "kind": "risk",
+          "evidence": "Store in a cool, dry place, out of reach of children."
+        },
+        {
+          "dsld_id": 180434,
+          "kind": "risk",
+          "evidence": "Store in a cool, dry place, out of reach of children."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 0,
+        "risk_claims": 2,
+        "purpose_labels": 0,
+        "risk_labels": 2,
+        "exclusive_claims": 0,
+        "exclusive_labels": 0,
+        "examples": [
+          {
+            "dsld_id": 180371,
+            "kind": "risk",
+            "evidence": "Store in a cool, dry place, out of reach of children."
+          },
+          {
+            "dsld_id": 180434,
+            "kind": "risk",
+            "evidence": "Store in a cool, dry place, out of reach of children."
+          }
+        ]
+      }
+    },
+    "Suggested/Recommended/Usage/Directions": {
+      "raw_labels": 981,
+      "raw_statements": 1115,
+      "frozen_labels": 981,
+      "excluded_before_annotation": false,
+      "purpose_claims": 19,
+      "risk_claims": 87,
+      "purpose_labels": 14,
+      "risk_labels": 66,
+      "exclusive_claims": 76,
+      "exclusive_labels": 60,
+      "examples": [
+        {
+          "dsld_id": 1690,
+          "kind": "risk",
+          "evidence": "SHAKE WELL. KEEP OUT OF REACH OF CHILDREN. WARNING: DO NOT USE IF PREGNANT OR NURSING. DO NOT USE IF SAFETY SEAL IS DAMAGED OR MISSING"
+        },
+        {
+          "dsld_id": 2036,
+          "kind": "risk",
+          "evidence": "Do not take more than 2 caplets daily (taking more will not help you lose weight faster)."
+        },
+        {
+          "dsld_id": 2167,
+          "kind": "risk",
+          "evidence": "Suggested Use: As a dietary supplement, take two softgels once or twice daily. Do not take before bed time."
+        }
+      ],
+      "raw_evidence": {
+        "purpose_claims": 19,
+        "risk_claims": 87,
+        "purpose_labels": 14,
+        "risk_labels": 66,
+        "exclusive_claims": 76,
+        "exclusive_labels": 60,
+        "examples": [
+          {
+            "dsld_id": 1690,
+            "kind": "risk",
+            "evidence": "SHAKE WELL. KEEP OUT OF REACH OF CHILDREN. WARNING: DO NOT USE IF PREGNANT OR NURSING. DO NOT USE IF SAFETY SEAL IS DAMAGED OR MISSING"
+          },
+          {
+            "dsld_id": 2036,
+            "kind": "risk",
+            "evidence": "Do not take more than 2 caplets daily (taking more will not help you lose weight faster)."
+          },
+          {
+            "dsld_id": 2167,
+            "kind": "risk",
+            "evidence": "Suggested Use: As a dietary supplement, take two softgels once or twice daily. Do not take before bed time."
+          }
+        ]
+      }
+    }
+  },
+  "raw_fields": {
+    "brandIpSymbol": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "brandName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "bundleName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "claims": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "contacts": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "entryDate": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "events": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "fullName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "hasOuterCarton": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "id": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "ingredientRows": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "labelRelationships": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "netContents": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "nhanesId": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "offMarket": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "otheringredients": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "pdf": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "percentDvFootnote": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "physicalState": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "productType": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "productVersionCode": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "servingSizes": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "servingsPerContainer": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "src": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "statements": {
+      "present_labels": 1000,
+      "purpose_claims": 1979,
+      "risk_claims": 2302,
+      "purpose_labels": 724,
+      "risk_labels": 908,
+      "exclusive_claims": 4281,
+      "exclusive_labels": 963,
+      "examples": [
+        {
+          "dsld_id": 709,
+          "kind": "purpose",
+          "evidence": "Supports Memory Retention*"
+        },
+        {
+          "dsld_id": 709,
+          "kind": "risk",
+          "evidence": "WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery."
+        },
+        {
+          "dsld_id": 709,
+          "kind": "risk",
+          "evidence": "WARNING: Do not exceed recommended intake. Consult your physicial prior to using this product if you are pregnant, nursing, taking medication, have high blood pressure, heart problems or have a medical condition. Discontinue use two weeks prior to surgery."
+        }
+      ]
+    },
+    "targetGroups": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "thumbnail": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "upcSku": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    },
+    "userGroups": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "risk_claims": 0,
+      "purpose_labels": 0,
+      "risk_labels": 0,
+      "exclusive_claims": 0,
+      "exclusive_labels": 0,
+      "examples": []
+    }
+  },
+  "variants": {
+    "all_statement_bodies_no_headers_or_type_prefixes": {
+      "characters": 1149138,
+      "reduction_vs_frozen_passages": 0.392213,
+      "purpose_claims_lost": 0,
+      "risk_claims_lost": 0,
+      "labels_losing_evidence": 0
+    },
+    "only_types_with_observed_gold_evidence_in_this_sample": {
+      "characters": 1144837,
+      "reduction_vs_frozen_passages": 0.394488,
+      "purpose_claims_lost": 0,
+      "risk_claims_lost": 0,
+      "labels_losing_evidence": 0
+    },
+    "only_general_and_precautions": {
+      "characters": 551745,
+      "reduction_vs_frozen_passages": 0.708178,
+      "purpose_claims_lost": 1034,
+      "risk_claims_lost": 124,
+      "labels_losing_evidence": 508
+    },
+    "drop_storage": {
+      "characters": 1111988,
+      "reduction_vs_frozen_passages": 0.411862,
+      "purpose_claims_lost": 0,
+      "risk_claims_lost": 0,
+      "labels_losing_evidence": 0
+    },
+    "only_precautions": {
+      "characters": 273927,
+      "reduction_vs_frozen_passages": 0.855118,
+      "purpose_claims_lost": 1977,
+      "risk_claims_lost": 141,
+      "labels_losing_evidence": 748
+    },
+    "remove_metadata_headers_keep_type_prefixes": {
+      "characters": 1582081,
+      "reduction_vs_frozen_passages": 0.163227,
+      "purpose_claims_lost": 0,
+      "risk_claims_lost": 0,
+      "labels_losing_evidence": 0
+    },
+    "remove_type_prefixes_keep_metadata_headers": {
+      "characters": 1457751,
+      "reduction_vs_frozen_passages": 0.228986,
+      "purpose_claims_lost": 0,
+      "risk_claims_lost": 0,
+      "labels_losing_evidence": 0
+    }
+  },
+  "raw_review_examples": [
+    {
+      "dsld_id": 74782,
+      "path": "statements[].notes [FDA Disclaimer Statement]",
+      "text": "Disclaimer: The above description is provided for information only and does not constitute medical advice. Please consult your physician or the appropriately licensed professional before engaging in a program of exercise or nutritional supplementation. No information in this site has been reviewed by the FDA. No product is intended to treat, diagnose, or cure any disease.",
+      "text_in_frozen_passage": false
+    },
+    {
+      "dsld_id": 273770,
+      "path": "statements[].notes [General: Product/Version Code]",
+      "text": "Consult with a physician, pharmacist, naturopath or other qualified healthcare professional prior to taking dietary supplements.",
+      "text_in_frozen_passage": false
+    },
+    {
+      "dsld_id": 7443,
+      "path": "statements[].notes [FDA Statement of Identity]",
+      "text": "Antioxidant Supplement",
+      "text_in_frozen_passage": false
+    },
+    {
+      "dsld_id": 229138,
+      "path": "statements[].notes [Formulation re: Organic]",
+      "text": "What am I? I'm an organic pre-workout and energy powder.",
+      "text_in_frozen_passage": true
+    },
+    {
+      "dsld_id": 175727,
+      "path": "statements[].notes [Formulation re: Organic]",
+      "text": "Let's get fresh. Go ahead, crack open the bottle. Enjoy the source of our best smelling antioxidant activity-Cloves. Grown organically and responsibly sourced, powdered and processed in small batches for optimum potency.",
+      "text_in_frozen_passage": true
+    },
+    {
+      "dsld_id": 29228,
+      "path": "ingredientRows[5].nestedRows[0].notes",
+      "text": "Nopal Cactus Note: (Organic)(TruGanic(TM))(supports endurance & blood sugar functions)",
+      "text_in_frozen_passage": false
+    }
+  ],
+  "input_sha256": {
+    "gold-1000.jsonl": "6762ec54ee3196466f25be8871ab44c052dddf04d0b86da24c658132a8a29afd",
+    "gold-1000.sources.jsonl": "492aa86b122d910489fa993bd8ed15f24a60b1560d8290a5b84f35b4da11b8e1"
+  }
+}

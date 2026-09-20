@@ -1,0 +1,1001 @@
+dsld_id,product,status,candidate_main_group,candidate_groups,direct_group_matches,meaningful_group_count,review_flags
+709,Huperzine A,single_group_candidate,Huperzine,"[""Huperzine""]","[""Huperzine""]",1,[]
+885,Spirulina Blue-Green Algae 500 mg,single_group_candidate,Blue-Green Algae,"[""Blue-Green Algae""]","[""Blue-Green Algae""]",2,"[""additional_groups_not_matched_in_title""]"
+889,Goldenseal Root 470 mg,single_group_candidate,Goldenseal,"[""Goldenseal""]","[""Goldenseal""]",1,[]
+1024,Fish Oil,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+1690,White Willow Bark,single_group_candidate,White Willow,"[""White Willow""]","[""White Willow""]",1,[]
+1736,Ginkgo Leaf Extract 500 mg,single_group_candidate,Ginkgo,"[""Ginkgo""]","[""Ginkgo""]",1,[]
+2036,Ultra Green Tea,single_group_candidate,Green Tea,"[""Green Tea""]","[""Green Tea""]",14,"[""additional_groups_not_matched_in_title""]"
+2167,Ultralean,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+2417,Hydroxycut Advanced,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+2454,3-in-1 Joint Formula,no_title_match,,[],[],17,"[""additional_groups_not_matched_in_title""]"
+3299,StemFlo,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+3488,Animal Cuts,no_title_match,,[],[],39,"[""additional_groups_not_matched_in_title""]"
+3881,MultiLogics for Women,no_title_match,,[],[],27,"[""additional_groups_not_matched_in_title""]"
+4900,Odorless Garlic 1000 mg,single_group_candidate,Garlic,"[""Garlic""]","[""Garlic""]",1,[]
+5174,Policosanol,single_group_candidate,Policosanol,"[""Policosanol""]","[""Policosanol""]",1,[]
+5242,Opti-Sel,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+5400,C-Max,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+5777,Tribulus Terrestris,single_group_candidate,Tribulus,"[""Tribulus""]","[""Tribulus""]",1,[]
+5784,Potassium Gluconate 595 mg,single_group_candidate,Potassium,"[""Potassium""]","[""Potassium""]",1,[]
+5839,Grape Seed Xtra 50 mg,single_group_candidate,Grape,"[""Grape""]","[""Grape""]",6,"[""additional_groups_not_matched_in_title""]"
+6517,Cell-Tech Hardcore Pro Series Lemon Lime,no_title_match,,[],[],30,"[""additional_groups_not_matched_in_title""]"
+6616,MedCaps Menopause,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+6769,Boswellia Extract 400 mg,single_group_candidate,Boswellia,"[""Boswellia""]","[""Boswellia""]",3,"[""additional_groups_not_matched_in_title""]"
+7013,Cat's Claw,single_group_candidate,Cat's Claw,"[""Cat's Claw""]","[""Cat's Claw""]",1,[]
+7322,"Vitamin D-3 1,000 IU",single_group_candidate,Vitamin D,"[""Vitamin D""]","[""Vitamin D""]",1,[]
+7388,Echinacea 400 mg,single_group_candidate,Echinacea (unspecified),"[""Echinacea (unspecified)""]",[],1,[]
+7443,FamilE,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+7688,Omega3 + D,no_title_match,,[],[],5,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+7871,Super Cod Liver Oil,single_group_candidate,Fish Liver oil,"[""Fish Liver oil""]",[],3,"[""additional_groups_not_matched_in_title""]"
+7914,PomeGreat Pomegranate,single_group_candidate,Pomegranate,"[""Pomegranate""]","[""Pomegranate""]",4,"[""additional_groups_not_matched_in_title""]"
+7991,Ultra Policosanols 10 mg,single_group_candidate,Policosanol,"[""Policosanol""]",[],1,[]
+8470,MSM (MethylSulfonylMethane),single_group_candidate,Methylsulfonylmethane,"[""Methylsulfonylmethane""]","[""Methylsulfonylmethane""]",1,[]
+9061,Prostate Health Complete Herbal Formula,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+9232,Adult Multivitamin,no_title_match,,[],[],19,"[""additional_groups_not_matched_in_title""]"
+9289,SlimStyles PGX,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+9354,Natural Vitamin C 500 mg,single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",1,[]
+9422,BlueRich Super Strength 36:1 Standardized Blueberry Concentrate,single_group_candidate,Blueberry,"[""Blueberry""]","[""Blueberry""]",1,[]
+10214,Cat's Claw Bark,single_group_candidate,Cat's Claw,"[""Cat's Claw""]","[""Cat's Claw""]",1,[]
+10406,Coffee Granate Forte,single_group_candidate,Coffee,"[""Coffee""]","[""Coffee""]",2,"[""additional_groups_not_matched_in_title""]"
+10598,Vein Integrity With Trunorin,single_group_candidate,Prickly Ash Bark,"[""Prickly Ash Bark""]",[],5,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+10613,PQQ Plus,no_title_match,,[],[],2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+10809,C-Plex Powder,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+10837,DHEA 25 mg,single_group_candidate,DHEA,"[""DHEA""]","[""DHEA""]",2,"[""additional_groups_not_matched_in_title""]"
+10891,Double Strength 5-HTP L-5-Hydroxytryptophan 100 mg,single_group_candidate,5-HTP,"[""5-HTP""]","[""5-HTP""]",5,"[""additional_groups_not_matched_in_title""]"
+10932,Pycnogenol 30 mg,single_group_candidate,maritime Pine,"[""maritime Pine""]",[],2,"[""additional_groups_not_matched_in_title""]"
+10975,Maximum Strength Glucosamine MSM Complex,single_group_candidate,Methylsulfonylmethane,"[""Methylsulfonylmethane""]",[],7,"[""additional_groups_not_matched_in_title""]"
+11325,Liquid Co-Q10 With Vitamins C & E Natural Tangerine Flavor,no_title_match,,[],[],4,"[""title_mentions_flavor"", ""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+11400,Iron 65 mg,single_group_candidate,Iron,"[""Iron""]","[""Iron""]",1,[]
+11807,Muira Puama Bark,single_group_candidate,Muira Puama,"[""Muira Puama""]","[""Muira Puama""]",1,[]
+11945,Pumpkin Seed Organic Alcohol,single_group_candidate,Pumpkin,"[""Pumpkin""]","[""Pumpkin""]",1,[]
+12018,Children's Multivitamin,no_title_match,,[],[],21,"[""additional_groups_not_matched_in_title""]"
+12172,Green Tea Complex 1000 mg,single_group_candidate,Green Tea,"[""Green Tea""]","[""Green Tea""]",4,"[""additional_groups_not_matched_in_title""]"
+12284,High Potency Calcium 600+Vitamin D3,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+12513,Stack Pre-workout,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+12533,Boswellia Extract,single_group_candidate,Boswellia,"[""Boswellia""]","[""Boswellia""]",1,[]
+12563,Red Clover Flowering Tops Alcohol-Free,single_group_candidate,Red Clover,"[""Red Clover""]","[""Red Clover""]",1,"[""title_has_possible_exclusion""]"
+12612,Bone Calcium,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",8,"[""additional_groups_not_matched_in_title""]"
+12620,Sublingual B-12 Herbal Lozenges,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+12683,Black Walnut & Wormwood Complex Alcohol-Free,no_title_match,,[],[],0,"[""title_has_possible_exclusion"", ""title_has_possible_combination""]"
+12835,Inositol Capsules 500 mg,single_group_candidate,Inositol,"[""Inositol""]","[""Inositol""]",1,[]
+12866,Licorice Root,single_group_candidate,Licorice,"[""Licorice""]","[""Licorice""]",1,[]
+12911,Super C,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+13079,SAMe 200 mg,single_group_candidate,SAMe,"[""SAMe""]","[""SAMe""]",4,"[""additional_groups_not_matched_in_title""]"
+13084,L-Methionine 500 mg,single_group_candidate,METHIONINE,"[""METHIONINE""]","[""METHIONINE""]",3,"[""additional_groups_not_matched_in_title""]"
+13316,Pure CoQ-10 60 mg,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+13504,Dong Quai 520 mg,single_group_candidate,Dong Quai,"[""Dong Quai""]","[""Dong Quai""]",1,[]
+13711,Bee Pollen Caps 500 mg,single_group_candidate,Bee Pollen,"[""Bee Pollen""]","[""Bee Pollen""]",1,[]
+14390,C-500 Calcium Ascorbate-C,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",3,"[""additional_groups_not_matched_in_title""]"
+14528,Karbolyn Neutral Flavor,no_title_match,,[],[],1,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+14539,Hyaluronic Acid Double Strength - 100 mg,single_group_candidate,Hyaluronic acid,"[""Hyaluronic acid""]","[""Hyaluronic acid""]",5,"[""additional_groups_not_matched_in_title""]"
+14741,Immuno-Hep Liquid Phyto-Caps,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+14782,Olive Leaf Liquid Phyto-Caps,single_group_candidate,Olive,"[""Olive""]","[""Olive""]",1,[]
+15169,Vitamin C,single_group_candidate,Vitamin C (unspecified),"[""Vitamin C (unspecified)""]",[],3,"[""additional_groups_not_matched_in_title""]"
+15260,CAL/MAG Caps,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+15317,African Mango,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+15600,Vit-Min 75+,no_title_match,,[],[],36,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+15650,Vitomanhills,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+15726,Acai Berry,single_group_candidate,Acai,"[""Acai""]","[""Acai""]",1,[]
+15930,Super Fat Burner,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+16209,Extractacaps Thyroid Complete,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+16228,Right Whey Creamy Chocolate,no_title_match,,[],[],31,"[""additional_groups_not_matched_in_title""]"
+16729,Oats Fresh Green Milky Seed,single_group_candidate,Oats,"[""Oats""]","[""Oats""]",1,[]
+16777,Dr. Cutler's Ultimate Memory Formula,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+17196,Chromium Picolinate 200 mcg,single_group_candidate,Chromium,"[""Chromium""]","[""Chromium""]",1,[]
+17217,Specialized Formula Collagen,single_group_candidate,Collagen,"[""Collagen""]","[""Collagen""]",5,"[""additional_groups_not_matched_in_title""]"
+18040,Bullnox Androrush Fruit Punch,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+18162,Neurocore Grape,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+18332,Artemisia Combination,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+18888,Secretagogue-One Orange,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+18982,Joint Maxx,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+19036,SAM-e 200 mg,single_group_candidate,SAM-e,"[""SAM-e""]","[""SAM-e""]",1,[]
+19402,Norwegian Cod Liver Oil Great Bubble Gum Taste!,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+19409,Norwegian Salmon Oil,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+19412,Be-Energized,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+19644,Pineapple PM,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+19655,Super-C-Complex,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+19799,Able Eyes,no_title_match,,[],[],17,"[""additional_groups_not_matched_in_title""]"
+20061,Clinical Strength Lutein & Zeaxanthin,multiple_group_candidates,,"[""Lutein"", ""Zeaxanthin""]","[""Lutein"", ""Zeaxanthin""]",2,"[""title_has_possible_combination""]"
+20284,Sustained Release Melatonin,single_group_candidate,Melatonin,"[""Melatonin""]","[""Melatonin""]",1,[]
+20287,Super B Caps,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+20362,Pregnenolone 50,single_group_candidate,Pregnenolone,"[""Pregnenolone""]","[""Pregnenolone""]",1,[]
+20434,L-Glutamine,single_group_candidate,Glutamine,"[""Glutamine""]","[""Glutamine""]",1,[]
+20518,Chlorophyll Concentrate,no_title_match,,[],[],0,[]
+20681,IsoCort,no_title_match,,[],[],0,[]
+20755,Spiru-Tein High Protein High Energy Tangerine Dream,no_title_match,,[],[],26,"[""additional_groups_not_matched_in_title""]"
+20777,Colon Support,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+20965,Magnesium Chloride 617 mg,single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",1,[]
+21007,Milk Thistle 175 mg,single_group_candidate,Milk Thistle,"[""Milk Thistle""]","[""Milk Thistle""]",1,[]
+21131,7-Keto DHEA 25 mg,single_group_candidate,7-KETO-DHEA,"[""7-KETO-DHEA""]","[""7-KETO-DHEA""]",1,[]
+21205,Electro Mix Natural Lemon-Lime Flavor,no_title_match,,[],[],6,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+21290,Norwegian Salmon Oil And GLA,multiple_group_candidates,,"[""Fish Oil"", ""Gamma Linolenic Acid""]",[],5,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+21577,CoQ-Zyme 30,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+22363,"Glucosamine 500 mg, Marine Chondroitin 100 mg & MSM 100 mg",no_title_match,,[],[],3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+22379,Earth Tonify Warm The Center,no_title_match,,[],[],0,[]
+22770,Core Olive Leaf Extract,single_group_candidate,Olive,"[""Olive""]","[""Olive""]",1,[]
+22950,Multiphasic Melatonin-SR 1.8 mg,single_group_candidate,Melatonin,"[""Melatonin""]","[""Melatonin""]",3,"[""additional_groups_not_matched_in_title""]"
+22953,SpectraMin,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+22976,OmegAvail Hi-Po,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+23203,HTN Complex,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+23668,Mega Magnesium,single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",2,"[""additional_groups_not_matched_in_title""]"
+23936,CD-Herbal,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+24271,Best 3000 GDU Bromelain,single_group_candidate,Bromelain,"[""Bromelain""]","[""Bromelain""]",1,[]
+24277,Bone Response,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+24282,Rhizinate 3X German Chocolate Flavor,no_title_match,,[],[],2,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+24342,Z,no_title_match,,[],[],25,"[""additional_groups_not_matched_in_title""]"
+24393,GLA-240,single_group_candidate,Gamma Linolenic Acid,"[""Gamma Linolenic Acid""]",[],6,"[""additional_groups_not_matched_in_title""]"
+24437,Best Benfotiamine 150,single_group_candidate,Benfotiamine,"[""Benfotiamine""]","[""Benfotiamine""]",1,[]
+24792,Cell Forte IP-6 & Inositol Double-Strength Chewable Citrus Flavored,multiple_group_candidates,,"[""IP-6"", ""Inositol""]","[""IP-6"", ""Inositol""]",5,"[""title_mentions_flavor"", ""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+24938,Comprehensive Prostate Formula,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+24948,Extra Strength Ginkgo 120 mg,single_group_candidate,Ginkgo,"[""Ginkgo""]","[""Ginkgo""]",3,"[""additional_groups_not_matched_in_title""]"
+25007,Real Krill,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+25441,Chromium Picolinate Plus,single_group_candidate,Chromium,"[""Chromium""]","[""Chromium""]",6,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+25701,Power Mushrooms,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+25741,Super Advanced Whey Isolate Chocolate,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+25811,Tremella And American Ginseng,multiple_group_candidates,,"[""American Ginseng"", ""Tremella (unspecified)""]","[""American Ginseng""]",23,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+25970,Cranberry Plus Vitamin C,multiple_group_candidates,,"[""Vitamin C"", ""cranberry""]","[""Vitamin C"", ""cranberry""]",3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+25993,Zinc For Acne,single_group_candidate,Zinc,"[""Zinc""]","[""Zinc""]",6,"[""additional_groups_not_matched_in_title""]"
+26044,CertaVite With Antioxidants,no_title_match,,[],[],31,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+26344,Blessed Thistle 340 mg,single_group_candidate,Blessed Thistle,"[""Blessed Thistle""]","[""Blessed Thistle""]",1,[]
+26384,Complete Prenatal System,no_title_match,,[],[],41,"[""additional_groups_not_matched_in_title""]"
+26402,Perika St. John's Wort,single_group_candidate,St. John's Wort,"[""St. John's Wort""]","[""St. John's Wort""]",2,"[""additional_groups_not_matched_in_title""]"
+26550,Aloe Vera 500 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+26891,Total Joint Health Advanced Plus MSM & Vitamin D3,multiple_group_candidates,,"[""Methylsulfonylmethane"", ""Vitamin D""]",[],6,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+27094,Cardiovascular Mender,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+27233,Mag 2: Cal 1,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+27378,Memory Mender,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+27380,Olive Leaf Extract,single_group_candidate,Olive,"[""Olive""]","[""Olive""]",1,[]
+27924,CoQ10 Extra Strength,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+27940,Phyto Complete,no_title_match,,[],[],41,"[""additional_groups_not_matched_in_title""]"
+27987,Sea Nourishment,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+28542,Propolis 500 mg Concentrate,single_group_candidate,Propolis,"[""Propolis""]","[""Propolis""]",1,[]
+28742,Perfor-Max,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+29204,Coenzyme Q-10 75 mg,single_group_candidate,Coenzyme Q-10,"[""Coenzyme Q-10""]","[""Coenzyme Q-10""]",1,[]
+29228,Warrior Food Extreme Vanilla Plus,single_group_candidate,Vanilla,"[""Vanilla""]","[""Vanilla""]",9,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+29662,Filaree Flower Essence,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+29949,Vitamins To Go! Specially Formulated For Men,no_title_match,,[],[],22,"[""additional_groups_not_matched_in_title""]"
+30021,Muscle Infusion Black Cookie Madness,no_title_match,,[],[],27,"[""additional_groups_not_matched_in_title""]"
+30154,Ultimate Calcium Intensive Care,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",5,"[""additional_groups_not_matched_in_title""]"
+30431,Kre-Alkalyn EFX,single_group_candidate,Creatine,"[""Creatine""]",[],1,[]
+30610,Herb Plus,no_title_match,,[],[],12,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+30792,Strength Fruit Punch,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+30836,Liquid L-Carnitine Wild Cherry Flavor,single_group_candidate,L-Carnitine,"[""L-Carnitine""]","[""L-Carnitine""]",6,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+31046,Cyclo-Shred,no_title_match,,[],[],18,"[""additional_groups_not_matched_in_title""]"
+31160,CleanStart Cleansing Drink Mix,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+31314,Vanilla Custard,no_title_match,,[],[],24,"[""additional_groups_not_matched_in_title""]"
+31571,CholestHealth,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+31743,Luv My Gummies,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+31846,Slimify,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+31924,Micellar Casein Z6 Vanilla,single_group_candidate,Casein Protein,"[""Casein Protein""]",[],24,"[""additional_groups_not_matched_in_title""]"
+31939,Lean Gainer Active Vanilla,no_title_match,,[],[],43,"[""additional_groups_not_matched_in_title""]"
+32053,FitFood Lite Whey Banana Flavor,no_title_match,,[],[],7,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+32095,L-Carnitine 250 mg,single_group_candidate,L-Carnitine,"[""L-Carnitine""]","[""L-Carnitine""]",1,[]
+32268,Calcium+D3 Gummies 500 mg Assorted Flavors,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+32342,Calcium Citrate + D3,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+32584,CoQ-10 100 mg,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+32618,Golden Echinacea,single_group_candidate,Echinacea purpurea,"[""Echinacea purpurea""]",[],2,"[""additional_groups_not_matched_in_title""]"
+32849,No Flush Niacin 500 mg,single_group_candidate,Niacin,"[""Niacin""]","[""Niacin""]",1,"[""title_has_possible_exclusion""]"
+32915,Children's Winter Health,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+32924,Adrenal Support,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+32970,DIM 100 mg,single_group_candidate,Diindolylmethane,"[""Diindolylmethane""]",[],1,[]
+33173,Chelated Chromium,single_group_candidate,Chromium,"[""Chromium""]","[""Chromium""]",2,"[""additional_groups_not_matched_in_title""]"
+33306,MasterMind,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+33309,1-Andro Liquid,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+33613,CLA,single_group_candidate,Conjugated Linoleic Acid,"[""Conjugated Linoleic Acid""]",[],1,[]
+33754,Udo's Oil High Lignan 3-6-9 Blend,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+33813,Calcium (Carbonate) 500 mg,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",1,[]
+33870,HRT Companion,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+34109,White Mulberry,single_group_candidate,White Mulberry,"[""White Mulberry""]","[""White Mulberry""]",1,[]
+34116,MSM 750 mg,single_group_candidate,Methylsulfonylmethane,"[""Methylsulfonylmethane""]",[],1,[]
+34237,Women's Rejuvenator Plus,no_title_match,,[],[],11,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+34292,Pure D-Ribose Powder,single_group_candidate,Ribose,"[""Ribose""]","[""Ribose""]",1,[]
+34330,L-Arginine L-Citrulline Complex 1000 mg,multiple_group_candidates,,"[""Arginine"", ""Citrulline""]","[""Arginine"", ""Citrulline""]",2,[]
+34658,Advantrim 1166 mg,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+34671,L-Carnitine 500 mg,single_group_candidate,L-Carnitine,"[""L-Carnitine""]","[""L-Carnitine""]",1,[]
+34923,OsoLean Whey Protein Supplement,single_group_candidate,Whey Protein,"[""Whey Protein""]","[""Whey Protein""]",4,"[""additional_groups_not_matched_in_title""]"
+34928,Cinnamon,single_group_candidate,Cinnamon,"[""Cinnamon""]","[""Cinnamon""]",1,[]
+34936,Goldenseal,single_group_candidate,Goldenseal,"[""Goldenseal""]","[""Goldenseal""]",1,[]
+35036,Ginger Wow!! Energy,single_group_candidate,Ginger,"[""Ginger""]","[""Ginger""]",5,"[""additional_groups_not_matched_in_title""]"
+35043,Potty Helper,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+35481,Occu-Plus Lutein,single_group_candidate,Lutein,"[""Lutein""]","[""Lutein""]",16,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+35580,Olive Leaf Extract,single_group_candidate,Olive,"[""Olive""]","[""Olive""]",1,[]
+35612,Advanced Sleep Support,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+35850,Apple Cider Vinegar With Apple Pectin,multiple_group_candidates,,"[""Apple Cider Vinegar"", ""Pectin""]","[""Apple Cider Vinegar"", ""Pectin""]",2,"[""title_has_possible_combination""]"
+35889,BCAA Lemonade,no_title_match,,[],[],17,"[""additional_groups_not_matched_in_title""]"
+36060,Ultimate Man,no_title_match,,[],[],61,"[""additional_groups_not_matched_in_title""]"
+36085,Acai SuperFruit Juice,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+36101,Stress-X Magnesium Powder 350 mg Lemon Lime,single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",2,"[""additional_groups_not_matched_in_title""]"
+36272,B12 500 mcg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+36330,Appetrex Control,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+36493,Butcher's Broom,single_group_candidate,Butcher's Broom,"[""Butcher's Broom""]","[""Butcher's Broom""]",1,[]
+36521,3 Day Slimming Pill,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+36597,Chia Omega + D3,no_title_match,,[],[],7,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+37059,Natural Metabolic Whey Dutch Chocolate,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+37386,Triphala,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+37391,Master Cleanse Lemonade Diet,no_title_match,,[],[],16,"[""additional_groups_not_matched_in_title""]"
+37521,Adrenal Manager,no_title_match,,[],[],18,"[""additional_groups_not_matched_in_title""]"
+37742,99% Pure Policosanol 15 mg,single_group_candidate,Policosanol,"[""Policosanol""]","[""Policosanol""]",7,"[""additional_groups_not_matched_in_title""]"
+38083,Chitosan Plus 1300 mg,single_group_candidate,Chitosan,"[""Chitosan""]","[""Chitosan""]",3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+38262,Telezyme,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+38460,Spirulina Natural Powder,single_group_candidate,Blue-Green Algae,"[""Blue-Green Algae""]",[],11,"[""additional_groups_not_matched_in_title""]"
+39332,Calendula,single_group_candidate,Calendula,"[""Calendula""]","[""Calendula""]",1,[]
+39389,CholestCaps,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+39468,Pro Thermogenic Diablo Pineapple Passionfruit,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+39508,Cal-C Junior Berry Flavor,no_title_match,,[],[],3,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+39546,Fiber Fusioin,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+40237,Pau d' Arco Inner Bark,single_group_candidate,Pau d'Arco,"[""Pau d'Arco""]","[""Pau d'Arco""]",2,"[""additional_groups_not_matched_in_title""]"
+40757,Coloclear Extra,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+41071,Lean Body Chocolate Ice Cream Flavor,no_title_match,,[],[],22,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+41102,Gold Standard 100% Whey Double Rich Chocolate,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+41151,Tranquility Berry Bliss,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+41301,Colostrum Plus Chewables Orange Creme,single_group_candidate,Colostrum,"[""Colostrum""]","[""Colostrum""]",4,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+41310,Rev Diet Energy,no_title_match,,[],[],18,"[""additional_groups_not_matched_in_title""]"
+42027,Pure Glycine 500 Milligrams,single_group_candidate,Glycine,"[""Glycine""]","[""Glycine""]",1,[]
+42133,Extreme Flex,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+42356,Taurine,single_group_candidate,Taurine,"[""Taurine""]","[""Taurine""]",1,[]
+42646,Super C Buffered Vitamin C Powder,single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",16,"[""additional_groups_not_matched_in_title""]"
+43102,Arctic Cod Liver Oil Orange,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+43286,DHAlicious Organic Lemon & Green Tea Flavor,no_title_match,,[],[],3,"[""title_mentions_flavor"", ""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+43289,"Sunny Gummies Vitamin D3 1,000 IU Yummy Lemon Flavor",no_title_match,,[],[],1,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+43541,Cal/Mag/Zinc Strawberry,single_group_candidate,Zinc,"[""Zinc""]","[""Zinc""]",8,"[""additional_groups_not_matched_in_title""]"
+43667,Women Over 40,no_title_match,,[],[],53,"[""additional_groups_not_matched_in_title""]"
+43781,Adult Multivitamin Plus Extra C,no_title_match,,[],[],11,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+43812,Karbolic Super-Premium Muscle Fuel Orange Burst,no_title_match,,[],[],24,"[""additional_groups_not_matched_in_title""]"
+43976,Endurance Fuel Citrus Burst,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+44094,Vegetarian CoQ-10 120 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+44151,Garlic Powder 500 mg,single_group_candidate,Garlic,"[""Garlic""]","[""Garlic""]",4,"[""additional_groups_not_matched_in_title""]"
+44364,Astaxanthin 10 mg,single_group_candidate,Astaxanthin,"[""Astaxanthin""]","[""Astaxanthin""]",1,[]
+44398,L-Glutamine 500 mg,single_group_candidate,Glutamine,"[""Glutamine""]","[""Glutamine""]",1,[]
+44455,Echinacea Herb Extract,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+44755,Healthy Skin & Hair Plus Nails,no_title_match,,[],[],13,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+44978,Total Protein Creamy Vanilla,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+45128,Women's Formula,no_title_match,,[],[],21,"[""additional_groups_not_matched_in_title""]"
+45514,Royal Jelly 500 mg,single_group_candidate,Royal Jelly,"[""Royal Jelly""]","[""Royal Jelly""]",1,[]
+45520,Grass Juice 750 mg,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+45840,Memory Factors,no_title_match,,[],[],22,"[""additional_groups_not_matched_in_title""]"
+46138,Double Strength Ginkgo Biloba 120 mg,single_group_candidate,Ginkgo,"[""Ginkgo""]","[""Ginkgo""]",3,"[""additional_groups_not_matched_in_title""]"
+46533,Quercetin 500 mg,single_group_candidate,Quercetin,"[""Quercetin""]","[""Quercetin""]",2,"[""additional_groups_not_matched_in_title""]"
+46540,Nitric Force NO2 Muscle Builder,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+46581,Green Vibrance,no_title_match,,[],[],79,"[""additional_groups_not_matched_in_title""]"
+46618,Whey Protein Isolate Vanilla,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+46740,Glucosamine 1500 mg Chondroitin 1200 mg,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+47075,Maximum Vibrance,no_title_match,,[],[],110,"[""additional_groups_not_matched_in_title""]"
+47120,Olive Leaf Complex Peppermint Flavor,single_group_candidate,Olive,"[""Olive""]","[""Olive""]",14,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+47168,Creatine Micronized Watermelon,single_group_candidate,Creatine,"[""Creatine""]","[""Creatine""]",1,[]
+47201,Organic Plant-Protein Powder Chocolate,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+47232,"Extra Strength Omega-3 Krill Oil Softgels, 500 mg",multiple_group_candidates,,"[""Krill Oil"", ""Omega-3""]","[""Krill Oil"", ""Omega-3""]",6,"[""additional_groups_not_matched_in_title""]"
+47268,Xtreme Testrone,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+47349,Incinerate,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+47462,Restal,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+47475,Tart Cherry,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+47512,Krill Oil Gold 500 mg,single_group_candidate,Krill Oil,"[""Krill Oil""]","[""Krill Oil""]",6,"[""additional_groups_not_matched_in_title""]"
+47677,"Vitamin A 25,000 IU from Fish Liver Oil",single_group_candidate,Vitamin A (unspecified),"[""Vitamin A (unspecified)""]",[],1,[]
+47712,Cod Liver Oil 1000,single_group_candidate,Fish Liver oil,"[""Fish Liver oil""]",[],7,"[""additional_groups_not_matched_in_title""]"
+47766,Joint Maintenance 2700,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+47895,MYOLEAN EVOLUTION Banana,no_title_match,,[],[],25,"[""additional_groups_not_matched_in_title""]"
+49196,L-Carnitine,single_group_candidate,L-Carnitine,"[""L-Carnitine""]","[""L-Carnitine""]",1,[]
+49384,Ultra Lipoic,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+49496,CoQmax CF,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+49505,Fast Fuel Fruit Punch,no_title_match,,[],[],16,"[""additional_groups_not_matched_in_title""]"
+49705,Vitamin C Natural Orange Juice Flavor,single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",2,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+50080,Tulsi Holy Basil Turmeric Ginger,multiple_group_candidates,,"[""Ginger"", ""Holy Basil"", ""Turmeric""]","[""Ginger"", ""Holy Basil"", ""Turmeric""]",7,"[""additional_groups_not_matched_in_title""]"
+50243,HB Pressure Tonic,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+50259,Allertonic,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+50517,St. John's Wort,single_group_candidate,St. John's Wort,"[""St. John's Wort""]","[""St. John's Wort""]",1,[]
+50541,Guggul,single_group_candidate,Guggul,"[""Guggul""]","[""Guggul""]",1,[]
+50960,Skin ReVive,no_title_match,,[],[],23,"[""additional_groups_not_matched_in_title""]"
+51137,Jarro-Zymes Plus,no_title_match,,[],[],5,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+51185,Energy Mango Orange,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+51198,100% Whey Protein Isolate Unflavored,single_group_candidate,Whey Protein,"[""Whey Protein""]","[""Whey Protein""]",3,"[""additional_groups_not_matched_in_title""]"
+51315,Mixed Vitamin E 400 IU,single_group_candidate,Vitamin E,"[""Vitamin E""]","[""Vitamin E""]",2,"[""additional_groups_not_matched_in_title""]"
+51377,Coenzyme Q10 100 mg,single_group_candidate,Coenzyme Q-10,"[""Coenzyme Q-10""]",[],1,[]
+51428,Iron Chelate 18 Milligrams,single_group_candidate,Iron,"[""Iron""]","[""Iron""]",1,[]
+51539,HMB 1000 mg,single_group_candidate,HMB Hydroxymethylbutyrate,"[""HMB Hydroxymethylbutyrate""]",[],1,[]
+51644,Agmatine,single_group_candidate,Agmatine,"[""Agmatine""]","[""Agmatine""]",1,[]
+53249,CoQ10 100 mg,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+53318,5-HTP 50 mg,single_group_candidate,5-HTP,"[""5-HTP""]","[""5-HTP""]",1,[]
+53658,"Vitamin C 1,000 mg",single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",1,[]
+53881,Black Walnut Hulls,single_group_candidate,Black Walnut,"[""Black Walnut""]","[""Black Walnut""]",1,[]
+53893,American Ginseng,single_group_candidate,American Ginseng,"[""American Ginseng""]","[""American Ginseng""]",1,[]
+54005,Valerian Alcohol-Free,single_group_candidate,Valerian,"[""Valerian""]","[""Valerian""]",1,"[""title_has_possible_exclusion""]"
+54023,St. John's Wort,single_group_candidate,St. John's Wort,"[""St. John's Wort""]","[""St. John's Wort""]",1,[]
+54162,Multivitamin Natural Fruit Flavor,no_title_match,,[],[],20,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+54447,Creatine & Glutamine With Beta-Alanine Unflavored,multiple_group_candidates,,"[""Beta-Alanine"", ""Creatine"", ""Glutamine""]","[""Beta-Alanine"", ""Creatine"", ""Glutamine""]",3,"[""title_has_possible_combination""]"
+54495,Vitamin K2 MK-7 (Menaquinone-7) 45 mcg,single_group_candidate,Vitamin K (menaquinone),"[""Vitamin K (menaquinone)""]",[],1,[]
+54538,Mini-Multi,no_title_match,,[],[],20,"[""additional_groups_not_matched_in_title""]"
+54917,Avmacol Immune,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+54963,Alpha Lipoic Acid 50 mg,single_group_candidate,Alpha Lipoic Acid,"[""Alpha Lipoic Acid""]","[""Alpha Lipoic Acid""]",1,[]
+55179,HMB,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+55248,Biotin 300 mcg,single_group_candidate,Biotin,"[""Biotin""]","[""Biotin""]",1,[]
+55303,Bee Pollen Caps 500 mg,single_group_candidate,Bee Pollen,"[""Bee Pollen""]","[""Bee Pollen""]",1,[]
+55565,CoQ-10 100 mg,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+55774,D3 K2 Mulsion Citrus Flavor,no_title_match,,[],[],3,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+55817,Cod Liver Oil,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+55828,Nattikinase With Rutin 100 mg,single_group_candidate,Rutin,"[""Rutin""]","[""Rutin""]",2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+55980,Tocomin SupraBio Tocotrienols 100 mg,single_group_candidate,Vitamin E (Mixed Tocopherols and Tocotrienols),"[""Vitamin E (Mixed Tocopherols and Tocotrienols)""]",[],6,"[""additional_groups_not_matched_in_title""]"
+56155,Glucosamine Sulfate,single_group_candidate,Glucosamine Sulfate,"[""Glucosamine Sulfate""]","[""Glucosamine Sulfate""]",1,[]
+56751,Garcinia Cambogia,single_group_candidate,Garcinia,"[""Garcinia""]","[""Garcinia""]",3,"[""additional_groups_not_matched_in_title""]"
+56754,Ciltep,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+57146,Lutein,single_group_candidate,Lutein,"[""Lutein""]","[""Lutein""]",1,[]
+57539,TruCDP,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+57804,L-Carnitine LS3 Mixed Berry,single_group_candidate,L-Carnitine,"[""L-Carnitine""]","[""L-Carnitine""]",3,"[""additional_groups_not_matched_in_title""]"
+57946,Fish Oil 1000 mg,single_group_candidate,Fish Oil,"[""Fish Oil""]","[""Fish Oil""]",5,"[""additional_groups_not_matched_in_title""]"
+57997,Alpha Lipoic Acid 100 mg,single_group_candidate,Alpha Lipoic Acid,"[""Alpha Lipoic Acid""]","[""Alpha Lipoic Acid""]",1,[]
+58178,Green Barley Grass 500 mg,single_group_candidate,Barley,"[""Barley""]","[""Barley""]",26,"[""additional_groups_not_matched_in_title""]"
+58191,SinuCheck,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+58552,Fringe Tree,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+58857,Water Soluble Pumpkin Seed Extract,single_group_candidate,Pumpkin,"[""Pumpkin""]","[""Pumpkin""]",1,[]
+58958,Ginkgo 500 mg Alcohol-Free,single_group_candidate,Ginkgo,"[""Ginkgo""]","[""Ginkgo""]",1,"[""title_has_possible_exclusion""]"
+59130,Daily Vits,no_title_match,,[],[],25,"[""additional_groups_not_matched_in_title""]"
+59222,Prenatal DHA,single_group_candidate,DHA (Docosahexaenoic Acid),"[""DHA (Docosahexaenoic Acid)""]",[],4,"[""additional_groups_not_matched_in_title""]"
+59261,Guggul 500 mg,single_group_candidate,Guggul,"[""Guggul""]","[""Guggul""]",1,[]
+59297,Valerian Root 500 mg,single_group_candidate,Valerian,"[""Valerian""]","[""Valerian""]",1,[]
+59528,Stone Breaker,single_group_candidate,Chanca Piedra,"[""Chanca Piedra""]",[],4,"[""additional_groups_not_matched_in_title""]"
+60421,Premium Bee Pollen 1000 Plus Complex,single_group_candidate,Bee Pollen,"[""Bee Pollen""]","[""Bee Pollen""]",3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+60462,True Focus,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+60463,Life Extension Mix Tablets,no_title_match,,[],[],61,"[""additional_groups_not_matched_in_title""]"
+60732,FLORASSIST Balance,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+60803,Liver Support,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+60853,Niacin Inositol Hexanicotinate 500 mg Flush Free,multiple_group_candidates,,"[""Inositol"", ""Niacin""]","[""Inositol"", ""Niacin""]",2,"[""title_has_possible_exclusion""]"
+62376,Calcium 600 +D,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+62725,Meadowsweet,single_group_candidate,Meadowsweet,"[""Meadowsweet""]","[""Meadowsweet""]",1,[]
+63241,Astragalus Root,single_group_candidate,Astragalus,"[""Astragalus""]","[""Astragalus""]",1,[]
+63318,L-Glutamine Powder,single_group_candidate,Glutamine,"[""Glutamine""]","[""Glutamine""]",1,[]
+63368,Concentrated Cranberry Fruit,single_group_candidate,cranberry,"[""cranberry""]","[""cranberry""]",3,"[""additional_groups_not_matched_in_title""]"
+63527,E-Oil,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+63560,"Week Two: Detox, PM Pack",no_title_match,,[],[],24,"[""additional_groups_not_matched_in_title""]"
+63841,Milk Thistle 200 mg,single_group_candidate,Milk Thistle,"[""Milk Thistle""]","[""Milk Thistle""]",1,[]
+64028,Thyrocsin Thyroid Cofactors,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+64095,Atomic 7 Black Cherry Bomb,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+64131,BCAA 2000,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+64152,Whey Protein Isolate Chocolate Flavored,no_title_match,,[],[],7,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+64169,Vitamin D3 2200 IU,single_group_candidate,Vitamin D,"[""Vitamin D""]",[],1,[]
+64360,Whey Protein Isolate Vanilla Flavored,no_title_match,,[],[],8,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+64437,Vitamin B-6 100 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+64455,Q-Sorb CoQ-10 100 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+64476,Micro-gen,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+64622,Joint Support,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+64675,Adult Multi Gummies with Essential Vitamins,no_title_match,,[],[],15,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+65174,Quercetin with Bromelain,multiple_group_candidates,,"[""Bromelain"", ""Quercetin""]","[""Bromelain"", ""Quercetin""]",2,"[""title_has_possible_combination""]"
+65829,Juniper Berry,single_group_candidate,Juniper,"[""Juniper""]","[""Juniper""]",1,[]
+66276,Hair/Skin/Nails,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+66462,hCG Activator,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+66522,Rebellion Fruit Punch,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+66534,Muscle Matrix Protein Wild Strawberry,single_group_candidate,Strawberry,"[""Strawberry""]","[""Strawberry""]",12,"[""additional_groups_not_matched_in_title"", ""matched_row_mentions_flavor""]"
+66800,Women,no_title_match,,[],[],58,"[""additional_groups_not_matched_in_title""]"
+66876,Men's Multi,no_title_match,,[],[],53,"[""additional_groups_not_matched_in_title""]"
+67145,Milk Thistle Extract Plus,single_group_candidate,Milk Thistle,"[""Milk Thistle""]","[""Milk Thistle""]",7,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+67200,Ginkgo Biloba Standardized Extract 60 mg,single_group_candidate,Ginkgo,"[""Ginkgo""]","[""Ginkgo""]",1,[]
+67293,Chromease With ALA,no_title_match,,[],[],2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+67336,100% Sugar Free Whey Protein Coconut Flavor,single_group_candidate,Whey Protein,"[""Whey Protein""]","[""Whey Protein""]",6,"[""title_mentions_flavor"", ""title_has_possible_exclusion"", ""additional_groups_not_matched_in_title""]"
+67404,Nectar Pink Grapefruit,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+67444,"Hair, Skin & Nails Gummies with Biotin Strawberry Flavored",single_group_candidate,Biotin,"[""Biotin""]","[""Biotin""]",4,"[""title_mentions_flavor"", ""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+67523,Shot-O-B12 5000 mcg Natural Wild Berry Flavor,no_title_match,,[],[],1,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+67600,Gastro Cleanser Formula,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+68964,Life Support 2.0,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+68978,Ultimate Woman 50+,no_title_match,,[],[],40,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+69368,Iron 65 mg,single_group_candidate,Iron,"[""Iron""]","[""Iron""]",1,[]
+69375,Olive Leaf Extract,single_group_candidate,Olive,"[""Olive""]","[""Olive""]",1,[]
+69512,Probiotic Digestive Support,no_title_match,,[],[],20,"[""additional_groups_not_matched_in_title""]"
+69826,Paratrex,no_title_match,,[],[],25,"[""additional_groups_not_matched_in_title""]"
+69889,Liquid Pro Anti-Aging Therapy,no_title_match,,[],[],37,"[""additional_groups_not_matched_in_title""]"
+69976,Fenugreek 500 mg,single_group_candidate,Fenugreek,"[""Fenugreek""]","[""Fenugreek""]",1,[]
+70075,Uber Omega-3,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+70108,Adrenal Support,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+70131,Heart,no_title_match,,[],[],38,"[""additional_groups_not_matched_in_title""]"
+70133,Gold Capsules,no_title_match,,[],[],228,"[""additional_groups_not_matched_in_title""]"
+70271,Buffered C-1000 Complex,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+70501,Potassium 99 mg,single_group_candidate,Potassium,"[""Potassium""]","[""Potassium""]",1,[]
+70700,Chewable Iron Chelate Cherry flavor,single_group_candidate,Iron,"[""Iron""]","[""Iron""]",1,"[""title_mentions_flavor""]"
+70711,Rhodiola 150,single_group_candidate,Rhodiola,"[""Rhodiola""]","[""Rhodiola""]",1,[]
+70741,"Max Strength Aloe Vera 12,000 mg",single_group_candidate,Aloe,"[""Aloe""]","[""Aloe""]",1,[]
+71385,Anti-Inflammatory,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+71658,L-Arginine Alpha Ketoglutarate 3500 mg Unflavored,single_group_candidate,Arginine Alpha Ketoglutarate,"[""Arginine Alpha Ketoglutarate""]","[""Arginine Alpha Ketoglutarate""]",1,[]
+71760,Instantized BCAA 2:1:1 Fruit Punch,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+71856,Daily Vitamin with Iron,single_group_candidate,Iron,"[""Iron""]","[""Iron""]",13,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+72221,Chlorella Broken Cell,single_group_candidate,Chlorella,"[""Chlorella""]","[""Chlorella""]",1,[]
+72377,Daily Essential Enzymes 500 mg,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+72517,Lignan Flax Oil,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+72628,Complete Multi+,no_title_match,,[],[],18,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+72653,Maca Root 4:1 Extract,single_group_candidate,Maca,"[""Maca""]","[""Maca""]",1,[]
+72955,Bedtime,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+73049,Maternal Herbal,no_title_match,,[],[],16,"[""additional_groups_not_matched_in_title""]"
+73332,Natural Noni 500 mg,single_group_candidate,Noni,"[""Noni""]","[""Noni""]",1,[]
+73423,Cholesterol Pro,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+73462,EMIQ,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+73509,Adult's Probiotic 17 Billion Cells,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+73566,Ultra Omega-3,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+73650,GABA,single_group_candidate,GABA,"[""GABA""]","[""GABA""]",1,[]
+73829,Magnesium 250 mg,single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",1,[]
+74117,Reishi Extract,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+74232,Grass-Fed Whey Protein Concentrate Creamy Vanilla,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+74511,Cortrex,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+74678,Vitamin C 500 mg With Rose Hips,single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",1,"[""title_has_possible_combination""]"
+74734,Melatonin 10 mg,single_group_candidate,Melatonin,"[""Melatonin""]","[""Melatonin""]",1,[]
+74782,Creatine Monohydrate,single_group_candidate,Creatine,"[""Creatine""]","[""Creatine""]",1,[]
+74848,Calcium Plus With Magnesium & Vitamin D-3,multiple_group_candidates,,"[""Calcium"", ""Magnesium"", ""Vitamin D""]","[""Calcium"", ""Magnesium"", ""Vitamin D""]",3,"[""title_has_possible_combination""]"
+74929,P.M.,no_title_match,,[],[],24,"[""additional_groups_not_matched_in_title""]"
+75195,Classic Protein Chocolate,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+75308,Ultra NourishHair,no_title_match,,[],[],24,"[""additional_groups_not_matched_in_title""]"
+75577,Ultra Potency Omega-3 Fish Oil,multiple_group_candidates,,"[""Fish Oil"", ""Omega-3""]","[""Fish Oil"", ""Omega-3""]",5,"[""additional_groups_not_matched_in_title""]"
+75667,Osteo Bi-Flex Joint Health Triple Strength + MSM Formula,single_group_candidate,Methylsulfonylmethane,"[""Methylsulfonylmethane""]",[],4,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+75771,Horny Goat Weed 600 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+75916,Vitamin B6 100 mg,single_group_candidate,Vitamin B6,"[""Vitamin B6""]","[""Vitamin B6""]",1,[]
+76112,Lignans With Lycopene,single_group_candidate,Lycopene,"[""Lycopene""]","[""Lycopene""]",7,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+76215,Adult Multivitamin Gummies,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+76396,Clear Ear Complex,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+76578,Olive Leaf Extract,single_group_candidate,Olive,"[""Olive""]","[""Olive""]",1,[]
+76801,Daily Ultra Matrix Softgels,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+76821,Reishi Mushroom Supreme 650 mg,single_group_candidate,Reishi mushroom,"[""Reishi mushroom""]","[""Reishi mushroom""]",12,"[""additional_groups_not_matched_in_title""]"
+76871,Pro-Flora Immune,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+77086,Curcumax,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+77231,No2 Black,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+77554,Digest Support,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+77744,Papaya Enzyme,single_group_candidate,Papaya,"[""Papaya""]","[""Papaya""]",4,"[""additional_groups_not_matched_in_title""]"
+77867,Primadophilus Fortify Daily Probiotic 50 Billion,single_group_candidate,Proprietary Blend (non-nutrient/non-botanical),"[""Proprietary Blend (non-nutrient/non-botanical)""]",[],6,"[""additional_groups_not_matched_in_title""]"
+77899,Calcium D-Glucarate,multiple_group_candidates,,"[""Calcium"", ""Calcium d-Glucarate""]","[""Calcium"", ""Calcium d-Glucarate""]",2,[]
+77923,B-Complex 50,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+78021,Cascara Sagrada Bark 425 mg,single_group_candidate,Cascara Sagrada,"[""Cascara Sagrada""]","[""Cascara Sagrada""]",1,[]
+78412,Echinacea Goldenseal 450 mg,single_group_candidate,Goldenseal,"[""Goldenseal""]","[""Goldenseal""]",7,"[""additional_groups_not_matched_in_title""]"
+78451,African Mango Plus,no_title_match,,[],[],5,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+78485,Beauty,no_title_match,,[],[],41,"[""additional_groups_not_matched_in_title""]"
+78492,Magnesium Citrate,single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",1,[]
+78885,PM Formula,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+79118,Ginkgold Eyes,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+79385,Dry Vitamin A 1500 mg,single_group_candidate,Vitamin A,"[""Vitamin A""]","[""Vitamin A""]",2,"[""additional_groups_not_matched_in_title""]"
+79681,Beet Root,single_group_candidate,Beet,"[""Beet""]","[""Beet""]",2,"[""additional_groups_not_matched_in_title""]"
+79992,Holy Basil Liquid Phyto-Caps,single_group_candidate,Holy Basil,"[""Holy Basil""]","[""Holy Basil""]",2,"[""additional_groups_not_matched_in_title""]"
+80096,Digestive Enzymes,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+80106,Meat-SNX Crispy Protean Bites Cinnamon Bun,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+80305,Active-C Plus 500 mg,no_title_match,,[],[],19,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+80313,Olive Leaf,single_group_candidate,Olive,"[""Olive""]","[""Olive""]",2,"[""additional_groups_not_matched_in_title""]"
+80492,Precision Protein Neapolitan Ice Cream,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+80667,CheleX,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+80933,Taurine 500 mg,single_group_candidate,Taurine,"[""Taurine""]","[""Taurine""]",1,[]
+81380,Gecko Tonic Teapills,single_group_candidate,Gecko,"[""Gecko""]","[""Gecko""]",17,"[""additional_groups_not_matched_in_title""]"
+81537,Yin Chiao Chieh Tu Pien,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+81656,Vitamin D3,single_group_candidate,Vitamin D,"[""Vitamin D""]",[],1,[]
+81783,Better Bitters Bittersweet,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+82114,Thyroid Care,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+82468,Hydrangea,single_group_candidate,Hydrangea,"[""Hydrangea""]","[""Hydrangea""]",1,[]
+82773,C4 Ripped Raspberry Lemonade,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+83115,Afternoon,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+103306,Choline 250 mg,single_group_candidate,Choline,"[""Choline""]","[""Choline""]",1,[]
+174090,Recovery Zymes,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+174174,Super Mass Gainer Cookies & Cream,no_title_match,,[],[],18,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+174316,Red Yeast Rice Plus,single_group_candidate,Red Yeast Rice,"[""Red Yeast Rice""]","[""Red Yeast Rice""]",3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+174363,B-Minus,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+174424,5-HTP,single_group_candidate,5-HTP,"[""5-HTP""]","[""5-HTP""]",1,[]
+174503,ISO100 Clear Fruit Punch,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+174529,Melatonin 5 mg,single_group_candidate,Melatonin,"[""Melatonin""]","[""Melatonin""]",1,[]
+174552,Calcium + Vitamin D3,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",4,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+174789,L-Carnitine,single_group_candidate,L-Carnitine,"[""L-Carnitine""]","[""L-Carnitine""]",1,[]
+174981,Ultra Super Fuel Mixed Berry Flavored,no_title_match,,[],[],4,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+174991,Co Q-10 Gummies 200 mg Peach Mango Flavored,no_title_match,,[],[],1,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+175056,Advanced B Complex,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+175065,"Cleavers 2,000 mg",single_group_candidate,Cleavers,"[""Cleavers""]","[""Cleavers""]",1,[]
+175239,100% Whey Protein Chocolate Flavor,single_group_candidate,Whey Protein,"[""Whey Protein""]","[""Whey Protein""]",8,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+175278,Amino Force Pineapple,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+175317,Full Spectrum Amalaki Complex,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+175727,Cloves,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+175847,Lung Essentials,no_title_match,,[],[],16,"[""additional_groups_not_matched_in_title""]"
+176074,Full Control Watermelon Kiwi Flavor,no_title_match,,[],[],4,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+176231,TriActive Biotics Daily Care,no_title_match,,[],[],17,"[""additional_groups_not_matched_in_title""]"
+176267,Fit Chews,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+176537,L-Theanine 150 mg,single_group_candidate,Theanine,"[""Theanine""]","[""Theanine""]",1,[]
+176590,Multi-Probiotic 15 Billion,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+177134,Full Spectrum Catnip 400 mg,single_group_candidate,Catnip,"[""Catnip""]","[""Catnip""]",1,[]
+177604,DIM Complex 100 mg,no_title_match,,[],[],0,[]
+177784,L-Theanine 200 mg,single_group_candidate,Theanine,"[""Theanine""]","[""Theanine""]",1,[]
+177929,Co-Enzyme Q10 100 mg,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+177964,MNS E,no_title_match,,[],[],54,"[""additional_groups_not_matched_in_title""]"
+177965,Iron Response,single_group_candidate,Iron,"[""Iron""]","[""Iron""]",19,"[""additional_groups_not_matched_in_title""]"
+177983,MegaFlora For Baby & Me,no_title_match,,[],[],18,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+178052,Hello Kitty Complete Multivitamin Gummies,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+178508,Jack The Ripper Strawberry Lemonade,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+178579,Rapid-Release CoQ10 100 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+178741,Sublingual Vitamin B12 Supplement 500 mcg Natural Cherry Flavor,single_group_candidate,Vitamin B12,"[""Vitamin B12""]","[""Vitamin B12""]",1,"[""title_mentions_flavor""]"
+179203,Bee Propolis Tincture 65% Extract,single_group_candidate,Propolis,"[""Propolis""]","[""Propolis""]",1,[]
+180205,Endo Rush Dragon's Blood,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+180245,Energy Mixed Berry,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+180371,Biotin 1000 mcg,single_group_candidate,Biotin,"[""Biotin""]","[""Biotin""]",1,[]
+180434,D3 1000 IU,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+180452,CGCZ,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+180545,Modern BCAA+ Green Apple,no_title_match,,[],[],12,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+180611,Critical Aminos XT Sweet Tea,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+180738,Ubiquinol 200 mg,single_group_candidate,Coenzyme Q-10,"[""Coenzyme Q-10""]",[],1,[]
+180802,Pre-Effect Fruit Punch,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+180818,Advanced Multi Vanilla Chai Superfood,no_title_match,,[],[],43,"[""additional_groups_not_matched_in_title""]"
+180890,E-1000 (DL-Alpha-Tocopheryl Acetate),no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+180928,L-Arginine HCl 500 mg,single_group_candidate,Arginine,"[""Arginine""]","[""Arginine""]",1,[]
+180931,Grape Seed Extract (95% Total Polyphenols) 100 mg,single_group_candidate,Grape,"[""Grape""]","[""Grape""]",1,[]
+181482,Turmeric Force Detox Action,single_group_candidate,Turmeric,"[""Turmeric""]","[""Turmeric""]",7,"[""additional_groups_not_matched_in_title""]"
+181779,Buffered C Powder,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+181852,Men's Complete,no_title_match,,[],[],24,"[""additional_groups_not_matched_in_title""]"
+181871,Integra-Lean 150 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+181971,Vision Formula,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+182098,Bone Restore with Vitamin K2,single_group_candidate,Vitamin K (menaquinone),"[""Vitamin K (menaquinone)""]",[],8,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+182203,Alphamine Appletini,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+182226,CoEnzyme Q10 300 mg,single_group_candidate,Coenzyme Q-10,"[""Coenzyme Q-10""]",[],1,[]
+182388,MacuGuard Ocular Support with Saffron & Astaxanthin,multiple_group_candidates,,"[""Astaxanthin"", ""Saffron""]","[""Astaxanthin"", ""Saffron""]",10,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+182572,Genistein 125 mg,single_group_candidate,Genistein,"[""Genistein""]","[""Genistein""]",1,[]
+182776,Cissus,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+182847,Elite Casein Rich Chocolate,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+183189,Grow Peanut Butter Pie,no_title_match,,[],[],31,"[""additional_groups_not_matched_in_title""]"
+183229,Apothe-Cherry,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+183271,Selenium (Citrate),single_group_candidate,Selenium,"[""Selenium""]","[""Selenium""]",1,[]
+183647,100% Pure Creatine Monohydrate Unflavored,single_group_candidate,Creatine,"[""Creatine""]","[""Creatine""]",1,[]
+183853,Core Daily 1 for Women,no_title_match,,[],[],72,"[""additional_groups_not_matched_in_title""]"
+183935,P+ 100% Plant Protein Flex Vanilla Flavor,no_title_match,,[],[],14,"[""title_mentions_flavor"", ""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+184171,Bone Calcium Complex,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",17,"[""additional_groups_not_matched_in_title""]"
+184291,Ginkgo 50 160 mg,single_group_candidate,Ginkgo,"[""Ginkgo""]","[""Ginkgo""]",1,[]
+184356,Best-Rest Formula,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+184395,Soy Isoflavones,single_group_candidate,Soy,"[""Soy""]","[""Soy""]",1,[]
+184580,5-HTP (5-Hydroxytryptophan) 50 mg,single_group_candidate,5-HTP,"[""5-HTP""]","[""5-HTP""]",1,[]
+184651,AMPilean,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+184654,Krill-Plex,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+184668,Magnesium (Citrate),single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",1,[]
+184772,Spirulina & Chlorella,single_group_candidate,Chlorella,"[""Chlorella""]","[""Chlorella""]",2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+184848,Clinical Nutrients For Women,no_title_match,,[],[],50,"[""additional_groups_not_matched_in_title""]"
+185146,Super Mass Gainer Fudge Brownie,no_title_match,,[],[],18,"[""additional_groups_not_matched_in_title""]"
+185261,Nutrient 950,no_title_match,,[],[],30,"[""additional_groups_not_matched_in_title""]"
+187468,Phyto-4,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+187501,PureMelt B12 Folate,single_group_candidate,Vitamin B9 (Folate),"[""Vitamin B9 (Folate)""]",[],3,"[""additional_groups_not_matched_in_title""]"
+187540,Gymnema Sylvestre Leaf 400 mg,single_group_candidate,Gymnema,"[""Gymnema""]","[""Gymnema""]",1,[]
+187592,EPA/DHA Select,multiple_group_candidates,,"[""DHA (Docosahexaenoic Acid)"", ""EPA (Eicosapentaenoic Acid)""]",[],3,"[""additional_groups_not_matched_in_title""]"
+199525,AvoVida Avocado/Soy Unsaponifiables 100 mg,single_group_candidate,Avocado Soy Unsaponifiables,"[""Avocado Soy Unsaponifiables""]","[""Avocado Soy Unsaponifiables""]",4,"[""additional_groups_not_matched_in_title""]"
+199753,Neem,single_group_candidate,Neem,"[""Neem""]","[""Neem""]",1,[]
+199899,Oregano Spirits,single_group_candidate,oregano,"[""oregano""]","[""oregano""]",1,[]
+200070,L-Carnitine 500 mg,single_group_candidate,L-Carnitine,"[""L-Carnitine""]","[""L-Carnitine""]",1,[]
+200172,Swedish Bitters,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+200180,Classic Protein Chocolate,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+200466,Green Tea Triple Echinacea,single_group_candidate,Green Tea,"[""Green Tea""]","[""Green Tea""]",7,"[""additional_groups_not_matched_in_title""]"
+200878,B-Stress Formula with Eleuthero,single_group_candidate,Eleuthero,"[""Eleuthero""]","[""Eleuthero""]",13,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+201108,Proflavanol C 100,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+201136,Therems-M,no_title_match,,[],[],31,"[""additional_groups_not_matched_in_title""]"
+201353,Iron-Free Formula VM-75,no_title_match,,[],[],39,"[""title_has_possible_exclusion"", ""additional_groups_not_matched_in_title""]"
+201355,Boswellia 300 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+201440,Adrenal Support,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+201441,Gluta-Tren Orange Creme,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+201667,Vitamin D3 (Cholecalciferol) 125 mcg (5000 IU),single_group_candidate,Vitamin D,"[""Vitamin D""]",[],1,[]
+201721,Purely Probiotic Tropical Mango,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+201833,Flaxseed Oil 1000 mg,single_group_candidate,Flaxseed Oil,"[""Flaxseed Oil""]","[""Flaxseed Oil""]",2,"[""additional_groups_not_matched_in_title""]"
+202121,ZemBright MoodPlus,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+202219,Sambucus for Kids Gummies,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+202636,Glutamine Unflavored,single_group_candidate,Glutamine,"[""Glutamine""]","[""Glutamine""]",1,[]
+202647,One Daily Women's Multi Gold,no_title_match,,[],[],27,"[""additional_groups_not_matched_in_title""]"
+202740,Digestive Enzymes,no_title_match,,[],[],16,"[""additional_groups_not_matched_in_title""]"
+202977,TBMP,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+203003,Soy Isoflavones 50 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+203005,Full Spectrum Jujube Fruit 675 mg,single_group_candidate,Jujube,"[""Jujube""]","[""Jujube""]",1,[]
+203140,Benfotiamine 300 mg,single_group_candidate,Benfotiamine,"[""Benfotiamine""]","[""Benfotiamine""]",2,"[""additional_groups_not_matched_in_title""]"
+203143,Magnesium Lactate 84 mg,single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",1,[]
+203154,Sunflower Lecithin,single_group_candidate,lecithin,"[""lecithin""]","[""lecithin""]",5,"[""additional_groups_not_matched_in_title""]"
+203179,Quercetin 475 mg High Potency,single_group_candidate,Quercetin,"[""Quercetin""]","[""Quercetin""]",1,[]
+203227,Lactobacillus Gasseri Probiotic,single_group_candidate,Lactobacillus gasseri,"[""Lactobacillus gasseri""]","[""Lactobacillus gasseri""]",1,[]
+203250,Melatonin 10 mg Fast Dissolve Strawberry Flavor,single_group_candidate,Melatonin,"[""Melatonin""]","[""Melatonin""]",1,"[""title_mentions_flavor""]"
+203264,Daily Liver Formula Liquid Phyto-Caps,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+203580,DIM + BioPerine,multiple_group_candidates,,"[""Black Pepper"", ""Diindolylmethane""]",[],2,"[""title_has_possible_combination""]"
+203999,Cleanse & Detox,no_title_match,,[],[],10,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+204010,Pygeum Extract,single_group_candidate,Pygeum,"[""Pygeum""]","[""Pygeum""]",1,[]
+204099,"Vitamin B6, B12 plus Folic Acid Natural Raspberry Flavor",multiple_group_candidates,,"[""Folate"", ""Vitamin B6""]","[""Vitamin B6""]",3,"[""title_mentions_flavor"", ""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+204151,Trim Cafe,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+204588,Electrolyte/Energy Formula,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+204689,Blood Pressure Support,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+204743,Curcumin,single_group_candidate,Curcumin,"[""Curcumin""]","[""Curcumin""]",1,[]
+204760,Chelated Zinc 50 mg,single_group_candidate,Zinc,"[""Zinc""]","[""Zinc""]",1,[]
+204795,Adrenal Care,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+204985,R3Build Edge Strawberry Orange,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+205254,100% Pure Whey Protein Isolate Vanilla Flavor,no_title_match,,[],[],6,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+205553,Echinacea 200 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+205573,Pippali Powder,single_group_candidate,Indian Long Pepper,"[""Indian Long Pepper""]",[],1,[]
+205634,Licorice Root,single_group_candidate,Licorice,"[""Licorice""]","[""Licorice""]",1,[]
+205735,Melatonin,single_group_candidate,Melatonin,"[""Melatonin""]","[""Melatonin""]",1,[]
+205867,DIM 200,single_group_candidate,Diindolylmethane,"[""Diindolylmethane""]",[],4,"[""additional_groups_not_matched_in_title""]"
+205878,Lycopene 10 mg,single_group_candidate,Lycopene,"[""Lycopene""]","[""Lycopene""]",1,[]
+205926,PureForm for Him,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+206047,Glucosamine Sulphate 2KCl 1000 mg,single_group_candidate,Glucosamine Sulfate,"[""Glucosamine Sulfate""]",[],2,"[""additional_groups_not_matched_in_title""]"
+206054,Baby Probiotics 4 Billion Flavorless,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+206060,Omega-3 Fish Oil 1000 mg,multiple_group_candidates,,"[""Fish Oil"", ""Omega-3""]","[""Fish Oil"", ""Omega-3""]",5,"[""additional_groups_not_matched_in_title""]"
+206098,5-hour Energy Berry,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+206126,Rhodiola 500 mg,single_group_candidate,Rhodiola,"[""Rhodiola""]","[""Rhodiola""]",1,[]
+206509,N2Gout,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+206573,Glucosamine & Chondroitin,no_title_match,,[],[],3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+206575,ProBiotic Multi,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+206999,Acetyl-L-Carnitine 250 mg,single_group_candidate,Acetyl L-Carnitine,"[""Acetyl L-Carnitine""]","[""Acetyl L-Carnitine""]",1,[]
+207133,Glucosamine Daily Complex,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+207326,B Complex & Vitamin C 500 mg USP,single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",13,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+207476,PreNatal DHA,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+207537,Min-Chex,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+207589,Cal-Mag 2:1 Ratio,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+207849,Saccharomyces Boulardii,single_group_candidate,Saccharomyces boulardii,"[""Saccharomyces boulardii""]","[""Saccharomyces boulardii""]",1,[]
+207960,Collagen 1500,single_group_candidate,Collagen,"[""Collagen""]","[""Collagen""]",3,"[""additional_groups_not_matched_in_title""]"
+207975,MicroDefense w/Oregano,single_group_candidate,oregano,"[""oregano""]","[""oregano""]",5,"[""additional_groups_not_matched_in_title""]"
+208036,Chondroitin Sulfate 250 mg,single_group_candidate,Chondroitin Sulfate,"[""Chondroitin Sulfate""]","[""Chondroitin Sulfate""]",1,[]
+208102,Vitamin D3,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+208425,One Daily Men's 50+,no_title_match,,[],[],23,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+208596,Alpha Lipoic Acid,single_group_candidate,Alpha Lipoic Acid,"[""Alpha Lipoic Acid""]","[""Alpha Lipoic Acid""]",2,"[""additional_groups_not_matched_in_title""]"
+208655,PowerMaker,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+208665,Calcium-Magnesium with SynerPro Concentrate,multiple_group_candidates,,"[""Calcium"", ""Magnesium""]","[""Calcium"", ""Magnesium""]",17,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+208674,Lobelia,single_group_candidate,Lobelia,"[""Lobelia""]","[""Lobelia""]",1,[]
+208734,D3 125 mcg (5000 IU),no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+208920,"Vitamin D3 5,000 IU (125 mcg)",single_group_candidate,Vitamin D,"[""Vitamin D""]",[],1,[]
+209055,Vitamin D3 + K2 50 mcg & 90 mcg,single_group_candidate,Vitamin D,"[""Vitamin D""]",[],2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+209133,Nutra-Support Joint,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+209254,Niacin-Time 500 mg,single_group_candidate,Niacin,"[""Niacin""]","[""Niacin""]",1,[]
+209777,Chaste Tree,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+209892,Alpha,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+210172,Hawthorn Blend,single_group_candidate,Hawthorn,"[""Hawthorn""]","[""Hawthorn""]",1,[]
+210550,ISO100 Hydrolyzed Gourmet Chocolate,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+210981,Bio-Quercetin,single_group_candidate,Quercetin,"[""Quercetin""]","[""Quercetin""]",1,[]
+211181,Super Bio-Curcumin,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+211182,Oyster Shell Calcium 500 mg,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",1,[]
+211287,Vitex Berry,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+211308,Phos Choline,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+211417,Immortale for Women,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+212007,DHA,single_group_candidate,DHA (Docosahexaenoic Acid),"[""DHA (Docosahexaenoic Acid)""]",[],3,"[""additional_groups_not_matched_in_title""]"
+212096,L-Glutamine Powder,single_group_candidate,Glutamine,"[""Glutamine""]","[""Glutamine""]",1,[]
+212125,Glucosamine + Chondroitin,no_title_match,,[],[],4,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+212377,B12 1000 mcg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+213426,Adult's Probiotic 17 Billion Cells,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+213638,Niacin SR,single_group_candidate,Niacin,"[""Niacin""]","[""Niacin""]",1,[]
+213677,PM Packet,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+213821,Keto Shake Vanilla Caramel,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+214008,MagTech,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+214015,Fortify Optima Probiotic Adult 50+ 50 Billion,single_group_candidate,Proprietary Blend (non-nutrient/non-botanical),"[""Proprietary Blend (non-nutrient/non-botanical)""]",[],7,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+214081,Green Superfood The Original,no_title_match,,[],[],32,"[""additional_groups_not_matched_in_title""]"
+214250,Reduced L-Glutathione 50 mg,single_group_candidate,Gluthathione,"[""Gluthathione""]",[],1,[]
+214353,GTF Trivalent Chromium,single_group_candidate,Chromium,"[""Chromium""]","[""Chromium""]",1,[]
+214429,Arjuna Flow,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+214647,MSM (Methylsulfonylmethane) 500 mg,single_group_candidate,Methylsulfonylmethane,"[""Methylsulfonylmethane""]","[""Methylsulfonylmethane""]",1,[]
+214747,Organic Maca Magic,single_group_candidate,Maca,"[""Maca""]","[""Maca""]",3,"[""additional_groups_not_matched_in_title""]"
+214767,Aller-Calm,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+214963,100% Organic Milkmaid Tea,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+214969,Leucine Powder,single_group_candidate,Leucine,"[""Leucine""]","[""Leucine""]",1,[]
+215057,Digestive Formlula,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+215425,Calcium 125 mg,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",1,[]
+215741,Vitamin E Selenium,multiple_group_candidates,,"[""Selenium"", ""Vitamin E""]","[""Selenium"", ""Vitamin E""]",2,[]
+216098,Cardiogenics Intensive Care,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+216269,SeroSyn,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+216276,"MSM 1,000 mg",single_group_candidate,Methylsulfonylmethane,"[""Methylsulfonylmethane""]",[],1,[]
+216313,Glutathione Booster,single_group_candidate,Glutathione,"[""Glutathione""]","[""Glutathione""]",12,"[""additional_groups_not_matched_in_title""]"
+216722,Fit Drops Natural Hemp Flavor,no_title_match,,[],[],3,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+216784,Brahmi,single_group_candidate,Gotu Kola,"[""Gotu Kola""]",[],1,[]
+216801,Ginger-Burst,single_group_candidate,Ginger,"[""Ginger""]","[""Ginger""]",2,"[""additional_groups_not_matched_in_title""]"
+216809,Women's Longevity Rhythms,no_title_match,,[],[],45,"[""additional_groups_not_matched_in_title""]"
+217381,Magnesium Bisglycinate,single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",1,[]
+217392,Beta-Pepsin,single_group_candidate,Pepsin,"[""Pepsin""]","[""Pepsin""]",2,"[""additional_groups_not_matched_in_title""]"
+217497,Bio.Me Barrier,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+217529,Calcium Magnesium plus Boron,multiple_group_candidates,,"[""Boron"", ""Calcium"", ""Magnesium""]","[""Boron"", ""Calcium"", ""Magnesium""]",4,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+217668,L-Arginine Extra Strength,single_group_candidate,Arginine,"[""Arginine""]","[""Arginine""]",4,"[""additional_groups_not_matched_in_title""]"
+218082,Alpha Lipoic Acid 600 mg,single_group_candidate,Alpha Lipoic Acid,"[""Alpha Lipoic Acid""]","[""Alpha Lipoic Acid""]",1,[]
+218193,RegeneMax Liquid,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+218466,Guggul Gold 500 mg,single_group_candidate,Guggul,"[""Guggul""]","[""Guggul""]",1,[]
+218879,BE MINDFUL,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+219135,Amino hGH,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+219170,Premier Psyllium Fiber,single_group_candidate,Psyllium fiber,"[""Psyllium fiber""]","[""Psyllium fiber""]",11,"[""additional_groups_not_matched_in_title""]"
+219187,Sereniten Plus,no_title_match,,[],[],3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+219263,Sleep Solution Natural Raspberry-Lemonade Flavor,no_title_match,,[],[],4,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+219491,Manganese (Aspartate/Citrate),single_group_candidate,Manganese,"[""Manganese""]","[""Manganese""]",1,[]
+219505,Cat's Claw,single_group_candidate,Cat's Claw,"[""Cat's Claw""]","[""Cat's Claw""]",1,[]
+219584,Multivitamin EasySticks Natural Blueberry Flavor,single_group_candidate,Blueberry,"[""Blueberry""]","[""Blueberry""]",24,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+219841,FlorAdvanced,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+220232,Rapid Immune Boost,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+220724,Kava Kava,single_group_candidate,Kava kava,"[""Kava kava""]","[""Kava kava""]",1,[]
+220742,Kava Kava,single_group_candidate,Kava kava,"[""Kava kava""]","[""Kava kava""]",1,[]
+220778,Magnolia Bark,single_group_candidate,Magnolia,"[""Magnolia""]","[""Magnolia""]",1,[]
+220854,Liver Anti-Oxidant Extracts,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+220867,Adrenal Factors Stress Support,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+220911,Muira Puama,single_group_candidate,Muira Puama,"[""Muira Puama""]","[""Muira Puama""]",1,[]
+221009,DHEA Complex For Women,single_group_candidate,DHEA,"[""DHEA""]","[""DHEA""]",5,"[""additional_groups_not_matched_in_title""]"
+221328,Buffered Vitamin C 500 mg,single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",2,"[""additional_groups_not_matched_in_title""]"
+221552,Vinpocetine 10 mg,single_group_candidate,Vinpocetine,"[""Vinpocetine""]","[""Vinpocetine""]",2,"[""additional_groups_not_matched_in_title""]"
+223352,Multi-Nutrients 4 (with Copper & Iron),multiple_group_candidates,,"[""Copper"", ""Iron""]","[""Copper"", ""Iron""]",25,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+223495,Molybdenum 250 mcg,single_group_candidate,Molybdenum,"[""Molybdenum""]","[""Molybdenum""]",1,[]
+223591,Complete Omega Lemon,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+224628,CoQ-10 200 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+227913,Illumination,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+228033,Proven Whey Vanilla Ice Cream,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+228397,Micro Greens Organic Berry,no_title_match,,[],[],57,"[""additional_groups_not_matched_in_title""]"
+228456,Brainz Power,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+228772,Ripped Watermelon Lime,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+228788,C4 Ultimate Sour Batch Bros,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+228986,Elite Sour Gummy Flavor,no_title_match,,[],[],20,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+229058,BCAA Watermelon,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+229138,Renewable Energy. Beet & Pomegranate Flavor,multiple_group_candidates,,"[""Beet"", ""Pomegranate""]","[""Beet"", ""Pomegranate""]",18,"[""title_mentions_flavor"", ""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+229143,Sol Food.,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+229557,Xuan Bi Teapills,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+229624,"Ionic Potassium 19,800 PPM",single_group_candidate,Potassium,"[""Potassium""]","[""Potassium""]",1,[]
+229635,Ionic Selenium 70 PPM,single_group_candidate,Selenium,"[""Selenium""]","[""Selenium""]",1,[]
+229878,Goji Berry,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+229924,FertilAid for Men,no_title_match,,[],[],24,"[""additional_groups_not_matched_in_title""]"
+230023,Fortify Optima Women's Probiotic 50 Billion,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+230144,100% Whey Isolate Cocoa Pebbles,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+230159,PerfectAminoXP Powder Mixed Berry,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+230256,Biotin for Hair,single_group_candidate,Biotin,"[""Biotin""]","[""Biotin""]",10,"[""additional_groups_not_matched_in_title""]"
+230403,Ultra Preventive X,no_title_match,,[],[],56,"[""additional_groups_not_matched_in_title""]"
+230715,Omega-3+,no_title_match,,[],[],3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+230930,Evening Primrose Oil 1000 mg,single_group_candidate,evening primrose oil,"[""evening primrose oil""]","[""evening primrose oil""]",3,"[""additional_groups_not_matched_in_title""]"
+231031,Lion's Mane,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+231309,Hydration Fuel Fruit Punch,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+231353,Organic Pure Vision,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+232099,Chaga Mushroom Extract Capsules 500 mg,single_group_candidate,Chaga,"[""Chaga""]","[""Chaga""]",1,[]
+232101,Chaga Mushroom Extract,single_group_candidate,Chaga,"[""Chaga""]","[""Chaga""]",1,[]
+232429,Once-Daily Health Booster,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+232583,Breast Health Formula,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+232605,Super-Absorbable Co-Q10 (Ubiquinone) 50 mg with d-Limonene,multiple_group_candidates,,"[""Coenzyme Q-10"", ""Limonene""]","[""Limonene""]",2,"[""title_has_possible_combination""]"
+232641,Sytrinol Citrus Fruit & Malaysian Red Palm Oil Extract Softgels,no_title_match,,[],[],1,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+232708,Ageless Cell,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+232741,Curcumin Elite Turmeric Extract,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+233106,Gut Restore Advanced,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+233140,Tart Cherry Extract 2500 mg,single_group_candidate,Sour Cherry,"[""Sour Cherry""]",[],1,[]
+233305,Molecular H2,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+233499,Emulsified MCT Oil Vanilla Cream,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+233534,CalmEZ Brain Tonic,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+233733,Sleep Support,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+234425,Zhi Shi Sugar Free,single_group_candidate,Bitter orange,"[""Bitter orange""]",[],1,"[""title_has_possible_exclusion""]"
+234447,Shen Qu,single_group_candidate,Shen Qu,"[""Shen Qu""]","[""Shen Qu""]",1,[]
+235139,Thuja Alcohol Free,single_group_candidate,Thuja,"[""Thuja""]","[""Thuja""]",1,"[""title_has_possible_exclusion""]"
+235235,Sang Zhi,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+235251,N-Acetyl Glucosamine,single_group_candidate,N-Acetyl Glucosamine,"[""N-Acetyl Glucosamine""]","[""N-Acetyl Glucosamine""]",1,[]
+235312,Comfrey Alcohol Free,single_group_candidate,Comfrey,"[""Comfrey""]","[""Comfrey""]",1,"[""title_has_possible_exclusion""]"
+235632,ProFema,no_title_match,,[],[],57,"[""additional_groups_not_matched_in_title""]"
+236972,Menopause Support Complex,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+237068,Klean Focus,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+237096,Klean Hydration Natural Orange Flavor,no_title_match,,[],[],9,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+237195,Lipanase,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+237373,Bugleweed,single_group_candidate,bugleweed,"[""bugleweed""]","[""bugleweed""]",1,[]
+237543,Poppy,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+237549,Queen's Root,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+237600,Sea Cucumber (Cucumaria frondosa),single_group_candidate,Sea Cucumber,"[""Sea Cucumber""]","[""Sea Cucumber""]",1,[]
+237604,China Root,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+237646,Gou Teng,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+237676,Starwort,no_title_match,,[],[],0,[]
+237840,Wild Yam,single_group_candidate,Wild Yam,"[""Wild Yam""]","[""Wild Yam""]",1,[]
+238034,Heather Non-Alcohol,single_group_candidate,Heather,"[""Heather""]","[""Heather""]",1,[]
+238081,Akebia (Akebia trifoliata) Non-Alcohol,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+238215,Beet Root Non-Alcohol,single_group_candidate,Beet,"[""Beet""]","[""Beet""]",1,[]
+238266,Oriental Garlic Non-Alcohol,single_group_candidate,Garlic,"[""Garlic""]","[""Garlic""]",1,[]
+238276,Anastatica Non-Alcohol,no_title_match,,[],[],0,[]
+238473,Torreya Non-Alcohol,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+238565,Superfood Shake French Vanilla,no_title_match,,[],[],27,"[""additional_groups_not_matched_in_title""]"
+238737,Joint Support Supreme,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+238751,100% Whey Isolate Protein Chocolate Peppermint,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+238977,100% Pure Green Coffee Bean Extract,single_group_candidate,Green Coffee,"[""Green Coffee""]","[""Green Coffee""]",1,[]
+239009,Super Oxide Dismutase,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+239039,Phytisone,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+239292,Marshmallow Root,single_group_candidate,Marshmallow,"[""Marshmallow""]","[""Marshmallow""]",1,[]
+239501,Gold Label,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+239603,Women's,no_title_match,,[],[],16,"[""additional_groups_not_matched_in_title""]"
+239978,MacuGuard Ocular Support with Saffron,single_group_candidate,Saffron,"[""Saffron""]","[""Saffron""]",8,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+240044,Plant Derived Minerals,no_title_match,,[],[],0,[]
+240153,CurcuPlex CR,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+240374,OmegaPure 780 EC,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+240701,Digesta Guard Forte 10 Probiotic Capsules,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+240753,EPA/DHA Guard,multiple_group_candidates,,"[""DHA (Docosahexaenoic Acid)"", ""EPA (Eicosapentaenoic Acid)""]",[],4,"[""additional_groups_not_matched_in_title""]"
+240866,Marshmallow Root,single_group_candidate,Marshmallow,"[""Marshmallow""]","[""Marshmallow""]",1,[]
+240944,Pain Guard Forte,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+240994,Citrus Limonum,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+241203,Ginger,single_group_candidate,Ginger,"[""Ginger""]","[""Ginger""]",1,[]
+241611,CV Defense Immunity,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+241687,Serious Mass Strawberry,no_title_match,,[],[],30,"[""additional_groups_not_matched_in_title""]"
+241702,Pimp My Calcium,single_group_candidate,Calcium,"[""Calcium""]","[""Calcium""]",2,"[""additional_groups_not_matched_in_title""]"
+242001,Moistur-Eyes,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+242084,Blood Nutrients,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+242197,GABA Brain Food,single_group_candidate,GABA,"[""GABA""]","[""GABA""]",4,"[""additional_groups_not_matched_in_title""]"
+242485,Beard Flow,no_title_match,,[],[],27,"[""additional_groups_not_matched_in_title""]"
+242491,Pre-Workout Blue Raspberry Flavour,no_title_match,,[],[],11,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+242828,CX-2 Solution,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+242835,B12 MC Liquid,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+242873,Organic CBD Oil 30 mg Unflavored,single_group_candidate,Cannabidiol,"[""Cannabidiol""]",[],2,"[""additional_groups_not_matched_in_title""]"
+243433,Omega Gel,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+243450,PomeGreat Pomegranate,single_group_candidate,Pomegranate,"[""Pomegranate""]","[""Pomegranate""]",3,"[""additional_groups_not_matched_in_title""]"
+243559,Shilajit Fulvic Acid Complex 250 mg,single_group_candidate,Shilajit,"[""Shilajit""]","[""Shilajit""]",1,[]
+243694,Amino/Collagen Formula,single_group_candidate,Collagen,"[""Collagen""]","[""Collagen""]",18,"[""additional_groups_not_matched_in_title""]"
+243743,Superfood Greens Mocha Cocoa,single_group_candidate,cocoa,"[""cocoa""]","[""cocoa""]",46,"[""additional_groups_not_matched_in_title""]"
+243924,OmegaBerry,no_title_match,,[],[],19,"[""additional_groups_not_matched_in_title""]"
+244044,Organic Rice Bran Fiber,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+244183,Wild Oreganol Super Strength,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+244260,D-Mulsion 400 Natural Lemon Flavor,no_title_match,,[],[],1,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+244499,Formula 21,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+244535,Maca Plus Pygeum,multiple_group_candidates,,"[""Maca"", ""Pygeum""]","[""Maca"", ""Pygeum""]",2,"[""title_has_possible_combination""]"
+244630,Energy/Sports Formula,no_title_match,,[],[],41,"[""additional_groups_not_matched_in_title""]"
+244756,Bioflavonoid Complex,single_group_candidate,Flavonoid (mixture),"[""Flavonoid (mixture)""]",[],1,[]
+244775,Slippery Elm Powder,single_group_candidate,Slippery Elm,"[""Slippery Elm""]","[""Slippery Elm""]",1,[]
+245166,American Ginseng 648 mg,single_group_candidate,American Ginseng,"[""American Ginseng""]","[""American Ginseng""]",1,[]
+245532,Chelated Potassium Gluconate,single_group_candidate,Potassium,"[""Potassium""]","[""Potassium""]",1,[]
+246033,Adrenal Health,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+246140,Homocysteine Factors,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+246305,Cayenne 900 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+246785,Premium Apple Cider Vinegar Detox,single_group_candidate,Apple Cider Vinegar,"[""Apple Cider Vinegar""]","[""Apple Cider Vinegar""]",1,[]
+246818,Silbinol,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+246850,Vitamin C,single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",1,[]
+246885,5-HTP Select,single_group_candidate,5-HTP,"[""5-HTP""]","[""5-HTP""]",2,"[""additional_groups_not_matched_in_title""]"
+246974,Sleep,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+247480,Collagen Powder,single_group_candidate,Collagen,"[""Collagen""]","[""Collagen""]",2,"[""additional_groups_not_matched_in_title""]"
+247572,750 Full Spectrum CBD Oil Peppermint,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+248789,Optimized Zinc,single_group_candidate,Zinc,"[""Zinc""]","[""Zinc""]",6,"[""additional_groups_not_matched_in_title""]"
+248795,Ester-C 1000 mg with Citrus Bioflavonoids,single_group_candidate,Flavonoid (mixture),"[""Flavonoid (mixture)""]",[],11,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+249514,Testosterone Support,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+249699,ImmunActin Zinc Lozenges Delicious Wild Cherry,single_group_candidate,Zinc,"[""Zinc""]","[""Zinc""]",1,[]
+249743,Omega 3/6/9 Junior Natural Lemon Flavor,single_group_candidate,Omega-3,"[""Omega-3""]","[""Omega-3""]",11,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+250213,Natural Lutein 20 mg,single_group_candidate,Lutein,"[""Lutein""]","[""Lutein""]",2,"[""additional_groups_not_matched_in_title""]"
+250299,"1,000 mg Vitamin C Super Orange",single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",16,"[""additional_groups_not_matched_in_title""]"
+250503,Goji Berry Extract 500 mg,single_group_candidate,Lycium,"[""Lycium""]",[],1,[]
+250760,Let's Breathe! Kids,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+250986,"Sunvite Mega-Potency Vitamin D3 250 mcg (10,000 IU)",no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+251147,Triveratrol Gold,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+251326,Women's One Daily,no_title_match,,[],[],39,"[""additional_groups_not_matched_in_title""]"
+251449,Women's 50+ Multi,no_title_match,,[],[],34,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+251610,Gotu Kola Herb 950 mg,single_group_candidate,Gotu Kola,"[""Gotu Kola""]","[""Gotu Kola""]",1,[]
+251753,Organic Turmeric,single_group_candidate,Turmeric,"[""Turmeric""]","[""Turmeric""]",1,[]
+251803,Probiotic 30 Billion,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+252063,Hemo Guard Supreme 510 mg,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+252608,Chrysin,single_group_candidate,Chrysin,"[""Chrysin""]","[""Chrysin""]",1,[]
+252826,N-Acetyl L-Cysteine,single_group_candidate,N-Acetyl Cysteine,"[""N-Acetyl Cysteine""]",[],1,[]
+253045,Women's Advanced Multivitamin,no_title_match,,[],[],44,"[""additional_groups_not_matched_in_title""]"
+253132,Vitamin-D 5000 IU,single_group_candidate,Vitamin D,"[""Vitamin D""]","[""Vitamin D""]",1,[]
+253203,Vegan,no_title_match,,[],[],20,"[""additional_groups_not_matched_in_title""]"
+253283,Dandelion Extract,single_group_candidate,Dandelion,"[""Dandelion""]","[""Dandelion""]",1,[]
+253475,Glycerol Monostearate,single_group_candidate,Glycerol Monostearate,"[""Glycerol Monostearate""]","[""Glycerol Monostearate""]",1,[]
+253477,Eleuthero Powder (Siberian Ginseng),single_group_candidate,Eleuthero,"[""Eleuthero""]","[""Eleuthero""]",1,[]
+253552,Goldenseal Powder,single_group_candidate,Goldenseal,"[""Goldenseal""]","[""Goldenseal""]",1,[]
+253698,Corn Silk Extract,single_group_candidate,Corn,"[""Corn""]","[""Corn""]",1,[]
+253772,Guanabana Extract,single_group_candidate,Graviola,"[""Graviola""]",[],1,[]
+253798,Dragon Fruit Extract,single_group_candidate,Pitaya,"[""Pitaya""]",[],1,[]
+253996,Zeaxanthin 5%,single_group_candidate,Zeaxanthin,"[""Zeaxanthin""]","[""Zeaxanthin""]",1,[]
+254712,Holy Basil,single_group_candidate,Holy Basil,"[""Holy Basil""]","[""Holy Basil""]",1,[]
+254889,L-Valine,single_group_candidate,Valine,"[""Valine""]","[""Valine""]",1,[]
+254936,Vitamin B-12 Lozenge 1000 mcg Natural Cherry Flavor,no_title_match,,[],[],2,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+254937,Centrum Silver Women 50+,no_title_match,,[],[],27,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+255177,Red Yeast Rice CoQ-10,single_group_candidate,Red Yeast Rice,"[""Red Yeast Rice""]","[""Red Yeast Rice""]",3,"[""additional_groups_not_matched_in_title""]"
+255199,Chamomile,single_group_candidate,German Chamomile,"[""German Chamomile""]",[],1,[]
+255509,Liver Detox Tea,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+255523,Ultra Therm,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+255525,L-Lysine Beta Glucan 1000 mg,single_group_candidate,Lysine,"[""Lysine""]","[""Lysine""]",3,"[""additional_groups_not_matched_in_title""]"
+255578,Chromium Picolinate 1000 mcg,single_group_candidate,Chromium,"[""Chromium""]","[""Chromium""]",1,[]
+255598,Kava Kava Extract 1000 mg,single_group_candidate,Kava kava,"[""Kava kava""]","[""Kava kava""]",1,[]
+255611,Mega Stress,no_title_match,,[],[],18,"[""additional_groups_not_matched_in_title""]"
+255778,Arthaffect,no_title_match,,[],[],23,"[""additional_groups_not_matched_in_title""]"
+256246,Alka Pan,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+256379,Immuno-Shield All Season Wellness,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+256442,Ancient Probiotics Ultimate,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+256529,N.O.,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+256651,Selenium,single_group_candidate,Selenium,"[""Selenium""]","[""Selenium""]",1,[]
+256705,Flintstones Gummies + Immunity Support,no_title_match,,[],[],11,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+257032,Morning Buzz Blue Raspberry,no_title_match,,[],[],18,"[""additional_groups_not_matched_in_title""]"
+257151,Maximum Strength Colon Cleanse,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+257155,Garcinia Cambogia 2100 mg,single_group_candidate,Garcinia,"[""Garcinia""]","[""Garcinia""]",4,"[""additional_groups_not_matched_in_title""]"
+257238,Slumber-EZ,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+257271,Electrolyte Powder Orange Natural Flavor,no_title_match,,[],[],5,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+257330,Acerola Cherry Extract,single_group_candidate,Acerola,"[""Acerola""]","[""Acerola""]",1,[]
+257441,Citrus Bioflavonoids 500 mg,single_group_candidate,Flavonoid,"[""Flavonoid""]",[],1,[]
+257623,Nascent Iodine,single_group_candidate,Iodine,"[""Iodine""]","[""Iodine""]",1,[]
+257678,Horny Goat Weed Extract,single_group_candidate,Horny Goat Weed,"[""Horny Goat Weed""]","[""Horny Goat Weed""]",1,[]
+257842,Primasurge,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+258172,Super B Vitamin B Complex,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+258401,Tocomin SupraBio Tocotrienols 200 mg,single_group_candidate,Vitamin E (mixed tocotrienols),"[""Vitamin E (mixed tocotrienols)""]",[],7,"[""additional_groups_not_matched_in_title""]"
+258516,Amino Build SX-7 Revolution White Raspberry Freezie,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+258678,PMS Nutritional Support,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+259279,Eight Treasures,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+259804,Recovery Strawberry Margarita,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+259865,Bio.Me Oral,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+259992,Wheybolic Girl Scouts Lemon,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+260066,Super Celery Unflavored,single_group_candidate,celery,"[""celery""]","[""celery""]",4,"[""additional_groups_not_matched_in_title""]"
+260107,Vitamin D-3 (Cholecalciferol) 125 mcg (5000 IU),single_group_candidate,Vitamin D (cholecalciferol),"[""Vitamin D (cholecalciferol)""]",[],2,"[""additional_groups_not_matched_in_title""]"
+260191,Meltatonin 5 mg Gummies Strawberry Flavor,no_title_match,,[],[],2,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+260256,5-HTP Time Release 200 mg,single_group_candidate,5-HTP,"[""5-HTP""]","[""5-HTP""]",2,"[""additional_groups_not_matched_in_title""]"
+260474,Vitamin C 1000 mg Timed Release,single_group_candidate,Vitamin C,"[""Vitamin C""]","[""Vitamin C""]",2,"[""additional_groups_not_matched_in_title""]"
+260536,Triple Strength Lecithin Phosphatidyl Choline 420 mg,single_group_candidate,lecithin,"[""lecithin""]","[""lecithin""]",3,"[""additional_groups_not_matched_in_title""]"
+260680,Ultra Vita-Men,no_title_match,,[],[],46,"[""additional_groups_not_matched_in_title""]"
+260882,Chondroitin Sulfate 850 mg,single_group_candidate,Chondroitin Sulfate,"[""Chondroitin Sulfate""]","[""Chondroitin Sulfate""]",1,[]
+260946,Immuno Complex,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+261094,+Mind MindWorks,no_title_match,,[],[],8,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+261143,Green Coffee Bean Extract 400 mg,single_group_candidate,Green Coffee,"[""Green Coffee""]","[""Green Coffee""]",1,[]
+261412,Pro-Series Build Peach Mango,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+261493,Adrenal Forte,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+261563,5-MTHF Methyl Folatte,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+261760,Brain ACTIVE,no_title_match,,[],[],11,"[""additional_groups_not_matched_in_title""]"
+261772,Strontium,single_group_candidate,Strontium,"[""Strontium""]","[""Strontium""]",1,[]
+261853,Nitric Oxide Ultra (Capsules),no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+262084,DL-Phenylalanine 500 mg,single_group_candidate,DL-phenylalanine,"[""DL-phenylalanine""]","[""DL-phenylalanine""]",1,[]
+262721,Aloe Vera Gel,single_group_candidate,Aloe vera,"[""Aloe vera""]","[""Aloe vera""]",1,[]
+263389,Tri Start One,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+263688,Libi Xplode,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+263951,Magnesium Citrate 833 mg,single_group_candidate,Magnesium,"[""Magnesium""]","[""Magnesium""]",1,[]
+264120,Cordyceps,single_group_candidate,Cordyceps,"[""Cordyceps""]","[""Cordyceps""]",2,"[""additional_groups_not_matched_in_title""]"
+264149,Original Superfood,no_title_match,,[],[],16,"[""additional_groups_not_matched_in_title""]"
+264504,Phyto-Gen Spm-gen,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+264872,GastroThera,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+264905,Methyl B-12 2500 mcg Tropical Flavor,no_title_match,,[],[],1,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+265255,Ostera,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+265260,OmegaGenics EPA-DHA 2400 Natural Lemon Flavor,multiple_group_candidates,,"[""DHA (Docosahexaenoic Acid)"", ""EPA (Eicosapentaenoic Acid)""]",[],3,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+265262,ISONatural Chocolate,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+265333,E-Gems 400 IU (268 mg),no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+265343,Hooligan Extreme Pre-Workout Formula Pain Killer,no_title_match,,[],[],17,"[""additional_groups_not_matched_in_title""]"
+265518,Rested-AF Lemon Ginger,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+265532,Stressveda,no_title_match,,[],[],23,"[""additional_groups_not_matched_in_title""]"
+265652,MCT & Omega-3,no_title_match,,[],[],7,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+266018,Unique B-12,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+266053,6BG+,no_title_match,,[],[],18,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+266082,Formula 19,no_title_match,,[],[],19,"[""additional_groups_not_matched_in_title""]"
+266115,Marine Carotene,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+266151,Formula 42,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+266193,Resveratrol,single_group_candidate,Resveratrol,"[""Resveratrol""]","[""Resveratrol""]",5,"[""additional_groups_not_matched_in_title""]"
+266294,E-Plex-400,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+266554,SulforaClear,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+266625,Proteo-Zyme,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+266917,5-HTP,single_group_candidate,5-HTP,"[""5-HTP""]","[""5-HTP""]",3,"[""additional_groups_not_matched_in_title""]"
+266995,Turmeric Extract,single_group_candidate,Turmeric,"[""Turmeric""]","[""Turmeric""]",1,[]
+267219,Sytrinol 150 mg,no_title_match,,[],[],0,[]
+267403,Digestive Enzyme Advantage,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+267406,Advanced Phytonutrient Shield,no_title_match,,[],[],12,"[""additional_groups_not_matched_in_title""]"
+267456,MK-7,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+267468,Cayenne Powder 475 mg,single_group_candidate,Capsicum,"[""Capsicum""]",[],1,[]
+267589,Turmeric Root,single_group_candidate,Turmeric,"[""Turmeric""]","[""Turmeric""]",4,"[""additional_groups_not_matched_in_title""]"
+267649,Finest Pure Fish Oil Capsules,single_group_candidate,Fish Oil,"[""Fish Oil""]","[""Fish Oil""]",3,"[""additional_groups_not_matched_in_title""]"
+267771,White Grapefruit,single_group_candidate,Grapefruit,"[""Grapefruit""]","[""Grapefruit""]",1,[]
+267874,Psychotic Hellboy Fruit Punch,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+267997,Hip Knee & Joints,no_title_match,,[],[],3,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+268161,"Biotin 10,000 mcg",single_group_candidate,Biotin,"[""Biotin""]","[""Biotin""]",1,[]
+268211,Kid's Norwegian Cod Liver Oil Natural Green Apple Flavor,single_group_candidate,Fish Liver oil,"[""Fish Liver oil""]",[],8,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+268564,Dilate Lemon Drop,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+268693,Beef Organs,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+268706,NeuroHemp,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+268710,Krill Oil Soft Gels,single_group_candidate,Krill Oil,"[""Krill Oil""]","[""Krill Oil""]",6,"[""additional_groups_not_matched_in_title""]"
+268884,Ultra Test Testosterone Booster,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+269246,High Absorption CoQ10 100 mg with BioPerine,single_group_candidate,Black Pepper,"[""Black Pepper""]",[],2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+269273,Agmatine 1000 mg,single_group_candidate,Agmatine,"[""Agmatine""]","[""Agmatine""]",1,[]
+269382,Whey Protein Isolate Vanilla,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+269448,Chromium Picolinate 200 mcg,single_group_candidate,Chromium,"[""Chromium""]","[""Chromium""]",1,[]
+269537,PurePump Lemon,no_title_match,,[],[],16,"[""additional_groups_not_matched_in_title""]"
+270083,PRO Fruity Cereal,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+270249,Vitex Fruit Women's Health 400 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+270293,Calcium Magnesium & Zinc with Vitamin D3 Raspberry Lemonade,multiple_group_candidates,,"[""Calcium"", ""Magnesium"", ""Zinc""]","[""Calcium"", ""Magnesium"", ""Zinc""]",4,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+270330,Creatine Monohydrate 5 g Unflavored,single_group_candidate,Creatine,"[""Creatine""]","[""Creatine""]",1,[]
+270904,Blemish Blocker,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+271183,Abdominal Lean,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+271296,Moringa,single_group_candidate,Moringa,"[""Moringa""]","[""Moringa""]",1,[]
+271326,"Ferrous Sulfate Oral Solution, USP 300 mg",no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+271649,Power C Natural Orange Flavor,no_title_match,,[],[],2,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+271725,Men's Multi,no_title_match,,[],[],18,"[""additional_groups_not_matched_in_title""]"
+271793,B-12 1000 mcg Natural Raspberry Flavor,no_title_match,,[],[],1,"[""title_mentions_flavor"", ""additional_groups_not_matched_in_title""]"
+272075,Collagen 1500 mg Complex,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+272091,Joint Action,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+272141,EcoDrink Multivitamin Orange,no_title_match,,[],[],28,"[""additional_groups_not_matched_in_title""]"
+272323,Blood Pressure Factors,no_title_match,,[],[],14,"[""additional_groups_not_matched_in_title""]"
+272363,Motherwort,single_group_candidate,Motherwort,"[""Motherwort""]","[""Motherwort""]",1,[]
+272795,Whey Protein Isolate Creamy Vanilla,no_title_match,,[],[],8,"[""additional_groups_not_matched_in_title""]"
+272879,Moringa Leaf Liquid Extract,single_group_candidate,Moringa,"[""Moringa""]","[""Moringa""]",1,[]
+272895,Ligustrum Berry,single_group_candidate,Ligustrum,"[""Ligustrum""]","[""Ligustrum""]",1,[]
+273018,Waves of Whey Protein Lemon Sugar Cookie,no_title_match,,[],[],7,"[""additional_groups_not_matched_in_title""]"
+273026,Ginseng Complex 1000 mg,single_group_candidate,Ginseng,"[""Ginseng""]","[""Ginseng""]",6,"[""additional_groups_not_matched_in_title""]"
+273189,Yaeyama Chlorella 200 mg,single_group_candidate,Chlorella,"[""Chlorella""]","[""Chlorella""]",4,"[""additional_groups_not_matched_in_title""]"
+273770,CollagenUP Unflavored,no_title_match,,[],[],4,"[""additional_groups_not_matched_in_title""]"
+273903,Virattack,no_title_match,,[],[],5,"[""additional_groups_not_matched_in_title""]"
+273923,Kryp2Lean,no_title_match,,[],[],10,"[""additional_groups_not_matched_in_title""]"
+274103,Wellness Zinc Lozenges 23 mg Peach-Raspberry,single_group_candidate,Zinc,"[""Zinc""]","[""Zinc""]",4,"[""additional_groups_not_matched_in_title""]"
+274116,Red Yeast Rice with CoQ10,single_group_candidate,Red Yeast Rice,"[""Red Yeast Rice""]","[""Red Yeast Rice""]",2,"[""title_has_possible_combination"", ""additional_groups_not_matched_in_title""]"
+274353,EDTA Detox 1000 mg,single_group_candidate,EDTA,"[""EDTA""]","[""EDTA""]",1,[]
+274434,Pyrro-Cell,no_title_match,,[],[],3,"[""additional_groups_not_matched_in_title""]"
+274476,Znac,no_title_match,,[],[],17,"[""additional_groups_not_matched_in_title""]"
+274555,Coenzyme Q10 200 mg,no_title_match,,[],[],1,"[""additional_groups_not_matched_in_title""]"
+274984,Bee Pollen 1500 mg,single_group_candidate,Bee Pollen,"[""Bee Pollen""]","[""Bee Pollen""]",1,[]
+274990,L-Glutamine 1000 mg,single_group_candidate,Glutamine,"[""Glutamine""]","[""Glutamine""]",1,[]
+275059,Organic EveryDay Detox Dandelion,single_group_candidate,Dandelion,"[""Dandelion""]","[""Dandelion""]",4,"[""additional_groups_not_matched_in_title""]"
+275339,St. John's Wort Extract 300 mg,single_group_candidate,St. John's Wort,"[""St. John's Wort""]","[""St. John's Wort""]",1,[]
+275444,Pomegranate Extract 500 mg,single_group_candidate,Pomegranate,"[""Pomegranate""]","[""Pomegranate""]",3,"[""additional_groups_not_matched_in_title""]"
+275537,N-Acetyl Cysteine,single_group_candidate,N-Acetyl Cysteine,"[""N-Acetyl Cysteine""]","[""N-Acetyl Cysteine""]",1,[]
+275567,Grassfed Pure Marrow,no_title_match,,[],[],2,"[""additional_groups_not_matched_in_title""]"
+275758,Reishi 415 Capsules,single_group_candidate,Reishi,"[""Reishi""]","[""Reishi""]",1,[]
+275901,Collagen Beauty Capsules,single_group_candidate,Collagen,"[""Collagen""]","[""Collagen""]",10,"[""additional_groups_not_matched_in_title""]"
+275992,Super Cleanse,no_title_match,,[],[],15,"[""additional_groups_not_matched_in_title""]"
+276013,BioFit Max,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+276024,Brain C-13,no_title_match,,[],[],13,"[""additional_groups_not_matched_in_title""]"
+276482,Zymessence,no_title_match,,[],[],9,"[""additional_groups_not_matched_in_title""]"
+276703,Base Control,no_title_match,,[],[],23,"[""additional_groups_not_matched_in_title""]"
+276740,Keto Strong XP,no_title_match,,[],[],6,"[""additional_groups_not_matched_in_title""]"
+277101,Black Pepper,single_group_candidate,Black Pepper,"[""Black Pepper""]","[""Black Pepper""]",1,[]
+277412,Biotin 1000 mcg,single_group_candidate,Biotin,"[""Biotin""]","[""Biotin""]",1,[]
+277578,Ultra Cinnamon 1500 mg,single_group_candidate,Cinnamon,"[""Cinnamon""]","[""Cinnamon""]",3,"[""additional_groups_not_matched_in_title""]"
