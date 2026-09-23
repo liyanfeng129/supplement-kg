@@ -52,3 +52,23 @@ claim granularity; the final 15 have a different annotator. Verbatim grounding
 checks quotations, not semantic completeness. The manifest makes these
 differences explicit. Existing pipeline defaults still use `gold-100.jsonl`;
 select `gold-1000.jsonl` explicitly when evaluating against the expanded set.
+
+The current extraction renderer also has a text-only input derived from the
+same 1,000 raw labels. Rebuild it with
+`.venv/bin/python datasets/pilot/prepare_gold1000_inputs.py`; this writes
+`data/dsld/runs/gold1000-text-v2/raw/inputs.jsonl` with source paths and per-claim
+gold evidence traces outside the model passage. It removes metadata/type
+headers, restores all statement types, and includes recursive ingredient free
+text. All 4,281 gold quotations survive, with 23.0% fewer input characters.
+`gold-1000.input-pruning-audit.json` records the check and hashes. The original
+gold passages remain frozen; model accuracy on the new inputs has not been
+measured. See [the field audit](../../docs/dsld-gold1000-field-audit.md).
+
+To distinguish dropping whole fields from dropping just field names, run
+`.venv/bin/python datasets/pilot/compare_gold1000_inputs.py`. It uses the local
+GGUF vocabulary to count actual passage and complete-prompt tokens for each
+variant, without inference. Results are recorded in
+`gold-1000.token-pruning-audit.json`; every variant is checked for gold evidence
+retention. JSON keys such as `notes` were already absent from the old passages;
+statement-type prefixes contain metadata values, so removing them is a whole
+field omission.

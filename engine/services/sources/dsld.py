@@ -84,6 +84,8 @@ class Ingredient:
     # Sub-rows of a proprietary blend, kept nested so the blend structure
     # survives -- a flat list would lose which ingredients belong together.
     nested: list["Ingredient"] = field(default_factory=list)
+    notes: str | None = None
+    description: str | None = None
 
 
 @dataclass
@@ -468,6 +470,8 @@ def _parse_ingredient(row: dict) -> Ingredient:
         alternate_names=[a for a in (row.get("alternateNames") or []) if a],
         forms=[f for f in (row.get("forms") or []) if f],
         nested=[_parse_ingredient(n) for n in (row.get("nestedRows") or [])],
+        notes=row.get("notes") or None,
+        description=row.get("description") or None,
     )
 
 

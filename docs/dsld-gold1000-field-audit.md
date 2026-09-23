@@ -4,6 +4,97 @@ Checked all 1,000 gold labels against their frozen passages and original local D
 
 **Recommendation:** retain free-text statements across all types, retain free-text ingredient notes/descriptions (including nested rows), and remove operational metadata from the extraction prompt. Filter verified boilerplate by its actual content, not by statement type. The existing three-type exclusion is not safe on this larger sample. Keep the raw records and IDs for provenance.
 
+## Implemented extraction input (renderer version 2)
+
+`label_text()` now omits product/brand/type/claim/target-group/ingredient-name
+headers and statement-type prefixes. It retains statement bodies across **all**
+types, plus ingredient notes and descriptions at every nesting depth. Exact
+duplicate text is emitted once; `label_segments()` preserves every raw source
+path. IDs and product names remain in output metadata. Structured operational
+metadata, quantities and contact details were already outside the prompt.
+
+The former three-type exclusion is removed. There is no keyword allowlist or
+gold-dependent filtering at runtime: an absent gold quotation cannot establish
+that a block has no purpose/risk language. Other raw free text, such as
+`otheringredients.text` and contact text, remains outside this projection; this
+audit does not certify those fields as irrelevant. Raw labels and frozen gold
+files are unchanged.
+
+Rebuild the 1,000 inputs and verify every gold quotation against its raw source:
+
+```sh
+.venv/bin/python datasets/pilot/prepare_gold1000_inputs.py > datasets/pilot/gold-1000.input-pruning-audit.json
+```
+
+The script writes `data/dsld/runs/gold1000-text-v2/raw/inputs.jsonl`. Each record
+contains `dsld_id`, `name`, `passage`, `source_segments` with raw field paths,
+and `gold_evidence_paths` linking each purpose/risk entry index to those paths.
+Only `passage` is model input; the gold trace is audit metadata. The script
+fails before writing if any gold evidence is lost. Use the pipeline's
+`--records data/dsld/runs/gold1000-text-v2/raw/inputs.jsonl` option to select it;
+existing frozen input files are not automatically rerendered.
+
+The resulting **1,455,710 characters** retain all **4,281** gold quotations,
+down **23.0%** from 1,890,693 characters. This reduction is smaller than the
+39.2% frozen-passage ablation below because version 2 also restores omitted
+statement types and adds ingredient free text. The report records source/output
+hashes. No extraction model was rerun, so prediction quality remains unmeasured.
+
+## Field removal versus field-name removal
+
+Apply the selection to the structured label **before** joining retained text
+into a passage. `label_segments()` performs that selection; `label_text()`
+then joins only segment values with newlines. The audit's source paths and gold
+references stay outside the passage sent to the LLM.
+
+| Raw field | Action for the extraction passage |
+|---|---|
+| `statements[].notes` | Keep the value; omit the key `notes` and JSON wrappers. |
+| Ingredient `notes` / `description`, including nested rows | Keep the values; omit field names and structural wrappers. |
+| `statements[].type` | Drop the entire field, including its category value. A prefix such as `[Precautions re: All Other]` is the type **value**, not just a field name. |
+| Product/brand/type/claim/target-group/ingredient-name headers | Version 2 drops names **and values**. Names-only removal is a separate comparison that retains the context values. |
+| IDs, URLs, dates, source bookkeeping | Keep outside the model passage for joining and provenance. |
+
+Removing names alone can preserve useful context at lower token cost. Removing
+whole metadata fields saves more but can affect how a model interprets the
+remaining text. Neither requires deleting the source record. There is no
+per-label rule that drops a statement merely because no gold quotation matched
+it: the reference does not exhaustively annotate every raw field.
+
+Measure both choices with the actual configured local tokenizer:
+
+```sh
+.venv/bin/python datasets/pilot/compare_gold1000_inputs.py > datasets/pilot/gold-1000.token-pruning-audit.json
+```
+
+This comparison holds the frozen statement bodies constant while removing
+header names, whole metadata fields, and statement-type values separately. A
+final variant measures the current renderer, including its restored source
+text. It reports both passage tokens and complete prompt tokens (system text
+and chat formatting included), plus lost gold quotations for each variant.
+The default uses the pipeline's JSON extraction prompt; `--format lines`
+measures the other prompt format. Tokenization loads only the vocabulary and
+does not run extraction.
+
+Measured across 1,000 labels with the local GGUF tokenizer and the current
+JSON system prompt (whose hash is stored in the report):
+
+| Variant | Label tokens | Label-token reduction | Complete-prompt reduction |
+|---|---:|---:|---:|
+| Original frozen passages | 479,480 | — | — |
+| Remove header names only; retain values | 455,806 | 4.9% | 1.3% |
+| Drop entire metadata headers; retain statement types | 387,474 | 19.2% | 5.2% |
+| Drop statement-type fields; retain metadata headers | 366,818 | 23.5% | 6.4% |
+| Drop metadata headers and statement-type fields | 274,812 | 42.7% | 11.6% |
+| Current renderer, including restored source text | 363,331 | 24.2% | 6.6% |
+
+Every variant retains all 1,979 purpose and 2,302 risk quotations. The 42.7%
+variant applies only to the historically filtered passages; it omits the raw
+exceptions described below and should not replace the current renderer on
+token savings alone. Fixed system/chat overhead makes complete-prompt savings
+smaller than label-only savings. These are input token measurements, not output
+token counts, inference latency measurements or extraction quality scores.
+
 ## Where the gold evidence occurs
 
 Counts below are claim entries whose complete evidence appears in a raw statement of that type, after the same whitespace collapse used by the passage renderer. A claim can match multiple types, so columns must not be summed. Raw counts include duplicate statements that were deduplicated before annotation. Exact quotation matching can miss equivalent wording; it does not measure semantic completeness.
@@ -88,4 +179,4 @@ python3 datasets/pilot/audit_gold1000_fields.py > datasets/pilot/gold-1000.field
 
 The audit checks every frozen statement against the corresponding raw label, and every gold quotation against both. The JSON includes field/type counts, exclusive evidence counts, example quotations, input hashes, and verified raw exceptions. Both checks passed. The audit requires the local DSLD dump and makes no network/model calls.
 
-The reference is model-annotated, has prompt/cohort differences, and is drawn from the DSLD-only pilot rather than the entire archive. This analysis measures recorded evidence retention and supplies selected raw-content counterexamples; it is not a complete human adjudication of all free text. Production extraction, prompts and gold files were not changed.
+The reference is model-annotated, has prompt/cohort differences, and is drawn from the DSLD-only pilot rather than the entire archive. This analysis measures recorded evidence retention and supplies selected raw-content counterexamples; it is not a complete human adjudication of all free text. The original audit did not change production extraction; the subsequent renderer version 2 implementation is described above. Prompts and gold files remain unchanged.

@@ -1,0 +1,36 @@
+{
+  "renderer_version": 2,
+  "labels": 1000,
+  "retained_gold_claims": {
+    "purpose": 1979,
+    "risk": 2302
+  },
+  "lost_gold_claims": 0,
+  "frozen_passage_characters": 1890693,
+  "prepared_passage_characters": 1455710,
+  "character_reduction_fraction": 0.230065,
+  "empty_passages": 0,
+  "kept_text_fields": [
+    "statements[].notes",
+    "ingredientRows[].notes",
+    "ingredientRows[].description",
+    "recursive nestedRows free text"
+  ],
+  "removed_prompt_fields": [
+    "fullName",
+    "brandName",
+    "productType",
+    "physicalState",
+    "claims",
+    "targetGroups",
+    "ingredient names",
+    "statements[].type"
+  ],
+  "input_sha256": {
+    "gold-1000.jsonl": "6762ec54ee3196466f25be8871ab44c052dddf04d0b86da24c658132a8a29afd",
+    "gold-1000.sources.jsonl": "492aa86b122d910489fa993bd8ed15f24a60b1560d8290a5b84f35b4da11b8e1",
+    "raw_labels_concatenated_in_gold_order": "5da462b05d582b11731ccfcedb5e05c4ed6b419de18d89e9717fed694e33b4d1"
+  },
+  "output_sha256": "007eeb099508877a9f00c0114cf6bab3fd12f5422e642bffa5c6364a454b48aa",
+  "limits": "Exact recorded evidence retention, not semantic completeness or model accuracy. Other raw free text (e.g. contact text and otheringredients.text) remains outside this extraction projection and is not certified irrelevant. No model was rerun."
+}

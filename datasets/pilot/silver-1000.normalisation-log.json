@@ -1,0 +1,1440 @@
+{
+  "renormalised_text": [
+    {
+      "dsld_id": 26493,
+      "kind": "purpose",
+      "index": 0,
+      "from": "regular exercise and a healthy diet with enough Calcium help teen and young adult women, who are at high risk of osteoporosis later in life, maintain good bone health and may reduce their risk of osteoporosis",
+      "to": "regular exercise and a healthy diet with enough calcium help teen and young adult women, who are at high risk of osteoporosis later in life, maintain good bone health and may reduce their risk of osteoporosis"
+    },
+    {
+      "dsld_id": 31089,
+      "kind": "purpose",
+      "index": 0,
+      "from": "-Boosts performance in your next workout",
+      "to": "boosts performance in your next workout"
+    },
+    {
+      "dsld_id": 31089,
+      "kind": "purpose",
+      "index": 1,
+      "from": "-Turns off muscle protein breakdown",
+      "to": "turns off muscle protein breakdown"
+    },
+    {
+      "dsld_id": 31112,
+      "kind": "risk",
+      "index": 0,
+      "from": "this product contains niacin, which should be taken with food. If taken on an empty stomach, niacin may cause temporary flushing",
+      "to": "this product contains niacin, which should be taken with food. if taken on an empty stomach, niacin may cause temporary flushing"
+    },
+    {
+      "dsld_id": 31184,
+      "kind": "risk",
+      "index": 3,
+      "from": "do not exceed recommended dose. Do not take for more than eight (8) consecutive weeks",
+      "to": "do not exceed recommended dose. do not take for more than eight (8) consecutive weeks"
+    },
+    {
+      "dsld_id": 31265,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Fights osteoporosis",
+      "to": "fights osteoporosis"
+    },
+    {
+      "dsld_id": 31265,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Promotes good bone health, with clinically proven absorption",
+      "to": "promotes good bone health, with clinically proven absorption"
+    },
+    {
+      "dsld_id": 31265,
+      "kind": "purpose",
+      "index": 2,
+      "from": "Building strong bones helps keep you active and vital",
+      "to": "building strong bones helps keep you active and vital"
+    },
+    {
+      "dsld_id": 31670,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Supports Optimal Circulation and Oxygen Utilization",
+      "to": "supports optimal circulation and oxygen utilization"
+    },
+    {
+      "dsld_id": 31670,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Drives Nutrient Fueled ATP Production",
+      "to": "drives nutrient fueled ATP production"
+    },
+    {
+      "dsld_id": 31670,
+      "kind": "purpose",
+      "index": 2,
+      "from": "Replenishes Electrolytes Lost During Training",
+      "to": "replenishes electrolytes lost during training"
+    },
+    {
+      "dsld_id": 31670,
+      "kind": "purpose",
+      "index": 3,
+      "from": "Restores Fluid Balance",
+      "to": "restores fluid balance"
+    },
+    {
+      "dsld_id": 31670,
+      "kind": "risk",
+      "index": 4,
+      "from": "this product contains chemicals known to the State of California to cause cancer and birth defects or other reproductive harm",
+      "to": "this product contains chemicals known to the state of california to cause cancer and birth defects or other reproductive harm"
+    },
+    {
+      "dsld_id": 31958,
+      "kind": "risk",
+      "index": 7,
+      "from": "consult your physician prior to use if you have a medical condition, including but not limited to, heart, liver, kidney, or thyroid disease, psychiatric disorders, difficulty urinating, diabetes, high blood pressure, cardiac arrhythmia, recurrentheadaches, enlarged prostate or glaucoma. Discontinue 2 weeks prior to surgery or if you experience rapid heart beat, dizziness, severe headaches or shortness of breath",
+      "to": "consult your physician prior to use if you have a medical condition, including but not limited to, heart, liver, kidney, or thyroid disease, psychiatric disorders, difficulty urinating, diabetes, high blood pressure, cardiac arrhythmia, recurrentheadaches, enlarged prostate or glaucoma. discontinue 2 weeks prior to surgery or if you experience rapid heart beat, dizziness, severe headaches or shortness of breath"
+    },
+    {
+      "dsld_id": 31973,
+      "kind": "risk",
+      "index": 0,
+      "from": "This product should not be used by women, or men under the age of 18",
+      "to": "this product should not be used by women, or men under the age of 18"
+    },
+    {
+      "dsld_id": 31973,
+      "kind": "risk",
+      "index": 1,
+      "from": "Consult your doctor before use if you have a serious medical condition or use prescription medications",
+      "to": "consult your doctor before use if you have a serious medical condition or use prescription medications"
+    },
+    {
+      "dsld_id": 32220,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Support for Gastrointestinal System, Hepatic Function, and Cytokine Balance",
+      "to": "support for gastrointestinal system, hepatic function, and cytokine balance"
+    },
+    {
+      "dsld_id": 32220,
+      "kind": "risk",
+      "index": 0,
+      "from": "Consult your healthcare practitioner prior to use",
+      "to": "consult your healthcare practitioner prior to use"
+    },
+    {
+      "dsld_id": 32220,
+      "kind": "risk",
+      "index": 1,
+      "from": "Do not take if you are pregnant or lactating",
+      "to": "do not take if you are pregnant or lactating"
+    },
+    {
+      "dsld_id": 32471,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not use if full-bottle shrinkwrap is broken or missing.",
+      "to": "do not use if full-bottle shrinkwrap is broken or missing."
+    },
+    {
+      "dsld_id": 32530,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not use if you have or are being treated for prostate hypertrophy or cancer, heart, liver, cardiovascular, kidney or thyroid disease, high blood pressure, low hdl, taking antidepressants, MAO inhibitors, prescription drugs or any over the counter prescription drugs containing ephedrine or pseudoephedrine",
+      "to": "do not use if you have or are being treated for prostate hypertrophy or cancer, heart, liver, cardiovascular, kidney or thyroid disease, high blood pressure, low hdl, taking antidepressants, MAO inhibitors, prescription drugs or any over the counter prescription drugs containing ephedrine or pseudoephedrine"
+    },
+    {
+      "dsld_id": 32530,
+      "kind": "risk",
+      "index": 1,
+      "from": "Do not exceed suggested serving",
+      "to": "do not exceed suggested serving"
+    },
+    {
+      "dsld_id": 32530,
+      "kind": "risk",
+      "index": 2,
+      "from": "Do not use if you are pregnant or nursing",
+      "to": "do not use if you are pregnant or nursing"
+    },
+    {
+      "dsld_id": 32530,
+      "kind": "risk",
+      "index": 3,
+      "from": "Discontinue use and contact your health care provider if you experience rapid heartbeat, dizziness, sever headache, shortness of breath, or similar symptoms",
+      "to": "discontinue use and contact your health care provider if you experience rapid heartbeat, dizziness, sever headache, shortness of breath, or similar symptoms"
+    },
+    {
+      "dsld_id": 32530,
+      "kind": "risk",
+      "index": 4,
+      "from": "Always consult a physician prior to using any dietary supplement. Do not use of combine with other dietary supplements",
+      "to": "always consult a physician prior to using any dietary supplement. do not use of combine with other dietary supplements"
+    },
+    {
+      "dsld_id": 32593,
+      "kind": "risk",
+      "index": 0,
+      "from": "Consult a qualified midwife or physician before taking during pregnancy",
+      "to": "consult a qualified midwife or physician before taking during pregnancy"
+    },
+    {
+      "dsld_id": 32897,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Ganeden Labs BC30 probiotics provide DEEP2 30(TM) with digestion enhancements and immune supports",
+      "to": "ganeden labs BC30 probiotics provide DEEP2 30(TM) with digestion enhancements and immune supports"
+    },
+    {
+      "dsld_id": 33009,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Policosanol can support healthy immune function",
+      "to": "policosanol can support healthy immune function"
+    },
+    {
+      "dsld_id": 33009,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Policosanol can support cardiovascular health through these and other mechanisms",
+      "to": "policosanol can support cardiovascular health through these and other mechanisms"
+    },
+    {
+      "dsld_id": 33009,
+      "kind": "purpose",
+      "index": 2,
+      "from": "Cardiovascular Support",
+      "to": "cardiovascular support"
+    },
+    {
+      "dsld_id": 33437,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Maintains Cellular Health",
+      "to": "maintains cellular health"
+    },
+    {
+      "dsld_id": 33437,
+      "kind": "risk",
+      "index": 0,
+      "from": "Consult physician if pregnant/nursing, taking medication, or have a medical condition",
+      "to": "consult physician if pregnant/nursing, taking medication, or have a medical condition"
+    },
+    {
+      "dsld_id": 33437,
+      "kind": "risk",
+      "index": 1,
+      "from": "For adults only",
+      "to": "for adults only"
+    },
+    {
+      "dsld_id": 33523,
+      "kind": "risk",
+      "index": 0,
+      "from": "Use this product as a food supplement only. Do not use for weight reduction",
+      "to": "use this product as a food supplement only. do not use for weight reduction"
+    },
+    {
+      "dsld_id": 34053,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Supports Liver Health",
+      "to": "supports liver health"
+    },
+    {
+      "dsld_id": 34286,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not take this or any other supplement if you are pregnant or nursing, have high blood pressure or taking other prescription drugs",
+      "to": "do not take this or any other supplement if you are pregnant or nursing, have high blood pressure or taking other prescription drugs"
+    },
+    {
+      "dsld_id": 34286,
+      "kind": "risk",
+      "index": 1,
+      "from": "Always consult with a physician before taking any new dietary supplement",
+      "to": "always consult with a physician before taking any new dietary supplement"
+    },
+    {
+      "dsld_id": 34286,
+      "kind": "risk",
+      "index": 2,
+      "from": "Do not take this or any other supplement if you are pregnant or nursing.",
+      "to": "do not take this or any other supplement if you are pregnant or nursing."
+    },
+    {
+      "dsld_id": 34286,
+      "kind": "risk",
+      "index": 3,
+      "from": "Do not take if you have high blood pressure or any medical complications",
+      "to": "do not take if you have high blood pressure or any medical complications"
+    },
+    {
+      "dsld_id": 34312,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not use if safety seal is broken or missing",
+      "to": "do not use if safety seal is broken or missing"
+    },
+    {
+      "dsld_id": 34325,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant or lactating, consult a health care professional before using this product",
+      "to": "if you are pregnant or lactating, consult a health care professional before using this product"
+    },
+    {
+      "dsld_id": 34442,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant, may become pregnant, or breastfeeding, consult your health care professional before using this product",
+      "to": "if you are pregnant, may become pregnant, or breastfeeding, consult your health care professional before using this product"
+    },
+    {
+      "dsld_id": 34446,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant or lactating, consult a health care professional before using this product",
+      "to": "if you are pregnant or lactating, consult a health care professional before using this product"
+    },
+    {
+      "dsld_id": 34676,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Promotes Healthy Tissue Growth",
+      "to": "promotes healthy tissue growth"
+    },
+    {
+      "dsld_id": 34738,
+      "kind": "risk",
+      "index": 0,
+      "from": "Use only under the advice of your physician if you are pregnant or nursing a baby, taking prescription medication or have a medical condition",
+      "to": "use only under the advice of your physician if you are pregnant or nursing a baby, taking prescription medication or have a medical condition"
+    },
+    {
+      "dsld_id": 34774,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant or lactating, consult a health care professional before using this product",
+      "to": "if you are pregnant or lactating, consult a health care professional before using this product"
+    },
+    {
+      "dsld_id": 35008,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not take during pregnancy",
+      "to": "do not take during pregnancy"
+    },
+    {
+      "dsld_id": 35009,
+      "kind": "risk",
+      "index": 0,
+      "from": "Keep out of the reach of children",
+      "to": "keep out of the reach of children"
+    },
+    {
+      "dsld_id": 35013,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Supports Stamina & Energy",
+      "to": "supports stamina & energy"
+    },
+    {
+      "dsld_id": 35013,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not take during pregnancy",
+      "to": "do not take during pregnancy"
+    },
+    {
+      "dsld_id": 35204,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Calcium & Vitamin D3 helps maintain and support: ~Healthy bones and teeth ~Cardiovascular Health ~Healthy muscle contraction",
+      "to": "calcium & vitamin D3 helps maintain and support: ~Healthy bones and teeth ~Cardiovascular health ~Healthy muscle contraction"
+    },
+    {
+      "dsld_id": 35204,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Supports Healthy Bones",
+      "to": "supports healthy bones"
+    },
+    {
+      "dsld_id": 35204,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant, nursing or taking any medications, consult your doctor before use",
+      "to": "if you are pregnant, nursing or taking any medications, consult your doctor before use"
+    },
+    {
+      "dsld_id": 35350,
+      "kind": "risk",
+      "index": 0,
+      "from": "For adults only",
+      "to": "for adults only"
+    },
+    {
+      "dsld_id": 35350,
+      "kind": "risk",
+      "index": 1,
+      "from": "Consult physician if pregnant/ nursing, taking medication, or have a medical condition",
+      "to": "consult physician if pregnant/ nursing, taking medication, or have a medical condition"
+    },
+    {
+      "dsld_id": 35483,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Supports healthy hair, skin and nails",
+      "to": "supports healthy hair, skin and nails"
+    },
+    {
+      "dsld_id": 35483,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Supports the body's ability to rejuvenate skin",
+      "to": "supports the body's ability to rejuvenate skin"
+    },
+    {
+      "dsld_id": 35483,
+      "kind": "purpose",
+      "index": 2,
+      "from": "Supports balance of hair growth",
+      "to": "supports balance of hair growth"
+    },
+    {
+      "dsld_id": 35551,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Probiotic bacteria are critical for healthy digestion, help maintain the integrity of the intestinal lining, support proper intestinal motility and participate in the detoxification process",
+      "to": "probiotic bacteria are critical for healthy digestion, help maintain the integrity of the intestinal lining, support proper intestinal motility and participate in the detoxification process"
+    },
+    {
+      "dsld_id": 35551,
+      "kind": "risk",
+      "index": 0,
+      "from": "Consult physician if pregnant/nursing, taking medication, or have a medical condition",
+      "to": "consult physician if pregnant/nursing, taking medication, or have a medical condition"
+    },
+    {
+      "dsld_id": 35760,
+      "kind": "risk",
+      "index": 0,
+      "from": "If pregnant, consult your healthcare practitioner before using this product",
+      "to": "if pregnant, consult your healthcare practitioner before using this product"
+    },
+    {
+      "dsld_id": 36203,
+      "kind": "purpose",
+      "index": 0,
+      "from": "B-6 aids in the utilization of Amino Acids",
+      "to": "b-6 aids in the utilization of amino acids"
+    },
+    {
+      "dsld_id": 36203,
+      "kind": "risk",
+      "index": 0,
+      "from": "Phenylketonurics: contains phenylalanine",
+      "to": "phenylketonurics: contains phenylalanine"
+    },
+    {
+      "dsld_id": 36203,
+      "kind": "risk",
+      "index": 1,
+      "from": "If you are pregnant or nursing, taking medication or planning a surgery, consult your doctor before using this product",
+      "to": "if you are pregnant or nursing, taking medication or planning a surgery, consult your doctor before using this product"
+    },
+    {
+      "dsld_id": 36203,
+      "kind": "risk",
+      "index": 2,
+      "from": "If any adverse reactions occur, stop taking the product and consult your doctor",
+      "to": "if any adverse reactions occur, stop taking the product and consult your doctor"
+    },
+    {
+      "dsld_id": 36588,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Our plant-sourced lipase supports the healthy digestion of dietary fats",
+      "to": "our plant-sourced lipase supports the healthy digestion of dietary fats"
+    },
+    {
+      "dsld_id": 36588,
+      "kind": "purpose",
+      "index": 2,
+      "from": "Omega-3s are known to support cardiovascular and joint health, as well as healthy cognition",
+      "to": "omega-3s are known to support cardiovascular and joint health, as well as healthy cognition"
+    },
+    {
+      "dsld_id": 36588,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant, nursing, on medication or have any medical condition consult a qualified health care professional before using this product or any other dietary supplement",
+      "to": "if you are pregnant, nursing, on medication or have any medical condition consult a qualified health care professional before using this product or any other dietary supplement"
+    },
+    {
+      "dsld_id": 50030,
+      "kind": "purpose",
+      "index": 3,
+      "from": "mass* meal replacement* weight gain* recovery*",
+      "to": "mass* meal replacement* weight gain* recovery"
+    },
+    {
+      "dsld_id": 66421,
+      "kind": "risk",
+      "index": 1,
+      "from": "consult your health care practitioner before taking this product if you have a bleeding disorder or are taking any drug that affects blood coagulation or blood pressure such as heparin, warfarin (Coumadin), diuretics, ACE inhibitors, or beta blocks",
+      "to": "consult your health care practitioner before taking this product if you have a bleeding disorder or are taking any drug that affects blood coagulation or blood pressure such as heparin, warfarin (coumadin), diuretics, ACE inhibitors, or beta blocks"
+    },
+    {
+      "dsld_id": 73973,
+      "kind": "risk",
+      "index": 2,
+      "from": "consult your healthcare provider before using this product, especially if you are taking any prescription, over the counter medication, dietary supplement product, or if you have any pre-existing medical condition including but not limited to: high or low blood pressure, cardiac arrhythmia, stroke, heart, liver, kidney or thyroid disease, seizure disorder, psychiatric disease, diabetes, difficulty urinating due to prostate enlargement or if you are taking a MAOI (Monoamine Oxidase Inhibitor) or any other medication",
+      "to": "consult your healthcare provider before using this product, especially if you are taking any prescription, over the counter medication, dietary supplement product, or if you have any pre-existing medical condition including but not limited to: high or low blood pressure, cardiac arrhythmia, stroke, heart, liver, kidney or thyroid disease, seizure disorder, psychiatric disease, diabetes, difficulty urinating due to prostate enlargement or if you are taking a MAOI (monoamine oxidase inhibitor) or any other medication"
+    },
+    {
+      "dsld_id": 77783,
+      "kind": "risk",
+      "index": 1,
+      "from": "do not use if you have allergies to plants of the Asteraceae (Compositae) family including ragweed",
+      "to": "do not use if you have allergies to plants of the asteraceae (compositae) family including ragweed"
+    },
+    {
+      "dsld_id": 78123,
+      "kind": "risk",
+      "index": 3,
+      "from": "side effects from too much vitamin D include persisting nausea, vomiting, poor appetite, weight loss, frequent urination, depression, headache, drowsiness, or pain",
+      "to": "side effects from too much vitamin d include persisting nausea, vomiting, poor appetite, weight loss, frequent urination, depression, headache, drowsiness, or pain"
+    },
+    {
+      "dsld_id": 78141,
+      "kind": "purpose",
+      "index": 2,
+      "from": "supportive but not conclusive research shows consumption of EPA and DHA Omega-3 fatty acids may reduce the risk of coronary heart disease",
+      "to": "supportive but not conclusive research shows consumption of EPA and DHA omega-3 fatty acids may reduce the risk of coronary heart disease"
+    },
+    {
+      "dsld_id": 78420,
+      "kind": "purpose",
+      "index": 0,
+      "from": "echinacea root complex supports the immune system with a unique blend of Echinacea angustifolia and Echinacea purpurea",
+      "to": "echinacea root complex supports the immune system with a unique blend of echinacea angustifolia and echinacea purpurea"
+    },
+    {
+      "dsld_id": 78420,
+      "kind": "risk",
+      "index": 1,
+      "from": "persons with allergies to plants of the Asteraceae (Compositae) family including ragweed, should use this product with caution",
+      "to": "persons with allergies to plants of the asteraceae (compositae) family including ragweed, should use this product with caution"
+    },
+    {
+      "dsld_id": 78828,
+      "kind": "purpose",
+      "index": 1,
+      "from": "whole body nutrition for men and women to help support: Bones Cells Digestion Eyes Heart Hair/skin/nails Immunity Metabolism",
+      "to": "whole body nutrition for men and women to help support: bones cells digestion eyes heart hair/skin/nails immunity metabolism"
+    },
+    {
+      "dsld_id": 79091,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Vitamin D-3 helps maintain healthy calcium and phosphorus levels in the body for strong bones",
+      "to": "vitamin d-3 helps maintain healthy calcium and phosphorus levels in the body for strong bones"
+    },
+    {
+      "dsld_id": 79239,
+      "kind": "purpose",
+      "index": 0,
+      "from": "CLA Conjugated Linoleic Acid (CLA) is a naturally occurring fatty acid that fuels fat metabolism and enhances your diet",
+      "to": "CLA conjugated linoleic acid (CLA) is a naturally occurring fatty acid that fuels fat metabolism and enhances your diet"
+    },
+    {
+      "dsld_id": 80452,
+      "kind": "risk",
+      "index": 2,
+      "from": "this product contains a chemical known to the State of California to cause birth defects or other reproductive harm",
+      "to": "this product contains a chemical known to the state of california to cause birth defects or other reproductive harm"
+    },
+    {
+      "dsld_id": 81777,
+      "kind": "purpose",
+      "index": 1,
+      "from": "contains ingredients proven by The National Eye Institute's age-related eye disease study (Areds 1 & 2) to promote eye health",
+      "to": "contains ingredients proven by the national eye institute's age-related eye disease study (areds 1 & 2) to promote eye health"
+    },
+    {
+      "dsld_id": 82765,
+      "kind": "risk",
+      "index": 2,
+      "from": "before using this product, consult a licensed, qualified, health care professional, including but not limited to, if: you are taking antidepressants such as MAOI (Monoamine Oxidase Inhibitor) or SSRI, blood thinners, nonsteroidal anti-inflammatory drugs, pseudoephedrine, or you are taking any other dietary supplement, prescription drug or over-the-counter medication; or if, you suspect you have or have been treated for, diagnosed with or have a family history of, any medical condition, including but not limited to: high or low blood pressure, diabetes, glaucoma, anxiety, cardiovascular, psychiatric or seizure disorders, cardiac arrhythmia, stroke, heart, liver, kidney or thyroid disease, or difficulty urinating due to prostate enlargement",
+      "to": "before using this product, consult a licensed, qualified, health care professional, including but not limited to, if: you are taking antidepressants such as MAOI (monoamine oxidase inhibitor) or SSRI, blood thinners, nonsteroidal anti-inflammatory drugs, pseudoephedrine, or you are taking any other dietary supplement, prescription drug or over-the-counter medication; or if, you suspect you have or have been treated for, diagnosed with or have a family history of, any medical condition, including but not limited to: high or low blood pressure, diabetes, glaucoma, anxiety, cardiovascular, psychiatric or seizure disorders, cardiac arrhythmia, stroke, heart, liver, kidney or thyroid disease, or difficulty urinating due to prostate enlargement"
+    },
+    {
+      "dsld_id": 173848,
+      "kind": "risk",
+      "index": 0,
+      "from": "use this product as a food supplement only. Do not use for weight reduction",
+      "to": "use this product as a food supplement only. do not use for weight reduction"
+    },
+    {
+      "dsld_id": 173883,
+      "kind": "risk",
+      "index": 1,
+      "from": "in case of accidental overdose, call a doctor or Poison Control Center immediately",
+      "to": "in case of accidental overdose, call a doctor or poison control center immediately"
+    },
+    {
+      "dsld_id": 174699,
+      "kind": "risk",
+      "index": 0,
+      "from": "this product is intended as a dietary supplement only. Do not use as a sole source of nutrition",
+      "to": "this product is intended as a dietary supplement only. do not use as a sole source of nutrition"
+    },
+    {
+      "dsld_id": 175467,
+      "kind": "purpose",
+      "index": 0,
+      "from": "this product is designed to enhance fat loss when used in conjunction with a proper diet and training program, like Shortcut to Shred",
+      "to": "this product is designed to enhance fat loss when used in conjunction with a proper diet and training program, like shortcut to shred"
+    },
+    {
+      "dsld_id": 175467,
+      "kind": "risk",
+      "index": 3,
+      "from": "this product contains a chemical known to the State of California to cause cancer, birth defects or other reproductive harm",
+      "to": "this product contains a chemical known to the state of california to cause cancer, birth defects or other reproductive harm"
+    },
+    {
+      "dsld_id": 248589,
+      "kind": "risk",
+      "index": 0,
+      "from": "Consult with your doctor if you are pregnant or nursing.",
+      "to": "consult with your doctor if you are pregnant or nursing."
+    },
+    {
+      "dsld_id": 248799,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Thermogenic Fat & Calorie Burner Control Appetite & Reduce Bloating Cleanse & Detoxify",
+      "to": "thermogenic fat & calorie burner control appetite & reduce bloating cleanse & detoxify"
+    },
+    {
+      "dsld_id": 248799,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not use this product if you are pregnant, breastfeeding, have kidney or gallbladder disorder or disease.",
+      "to": "do not use this product if you are pregnant, breastfeeding, have kidney or gallbladder disorder or disease."
+    },
+    {
+      "dsld_id": 248799,
+      "kind": "risk",
+      "index": 1,
+      "from": "This product is not recommended for prolonged use.",
+      "to": "this product is not recommended for prolonged use."
+    },
+    {
+      "dsld_id": 248799,
+      "kind": "risk",
+      "index": 2,
+      "from": "If you experience minor nausea, diarrhea, dizziness or cramping, discontinue use of this product.",
+      "to": "if you experience minor nausea, diarrhea, dizziness or cramping, discontinue use of this product."
+    },
+    {
+      "dsld_id": 248844,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Supports immune health",
+      "to": "supports immune health"
+    },
+    {
+      "dsld_id": 248844,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant, nursing, or taking medication, have a medical condition or planning surgery, consult a doctor before using this product.",
+      "to": "if you are pregnant, nursing, or taking medication, have a medical condition or planning surgery, consult a doctor before using this product."
+    },
+    {
+      "dsld_id": 248844,
+      "kind": "risk",
+      "index": 1,
+      "from": "Stop using and consult a doctor if any adverse reactions occur.",
+      "to": "stop using and consult a doctor if any adverse reactions occur."
+    },
+    {
+      "dsld_id": 248913,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant or lactating, consult a healthcare before using this product.",
+      "to": "if you are pregnant or lactating, consult a healthcare before using this product."
+    },
+    {
+      "dsld_id": 248927,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Women's health support",
+      "to": "women's health support"
+    },
+    {
+      "dsld_id": 248927,
+      "kind": "risk",
+      "index": 0,
+      "from": "For adults only.",
+      "to": "for adults only."
+    },
+    {
+      "dsld_id": 248927,
+      "kind": "risk",
+      "index": 1,
+      "from": "Consult a physician if taking medication or have a medical condition.",
+      "to": "consult a physician if taking medication or have a medical condition."
+    },
+    {
+      "dsld_id": 248927,
+      "kind": "risk",
+      "index": 2,
+      "from": "This product should not be consumed during the first week of the menstrual period.",
+      "to": "this product should not be consumed during the first week of the menstrual period."
+    },
+    {
+      "dsld_id": 248927,
+      "kind": "risk",
+      "index": 3,
+      "from": "Not intended for pregnant or nursing women.",
+      "to": "not intended for pregnant or nursing women."
+    },
+    {
+      "dsld_id": 248975,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Nutritional support for free-radical defense and overall well-being.",
+      "to": "nutritional support for free-radical defense and overall well-being."
+    },
+    {
+      "dsld_id": 249385,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Supports new muscle",
+      "to": "supports new muscle"
+    },
+    {
+      "dsld_id": 249385,
+      "kind": "risk",
+      "index": 0,
+      "from": "Check with a qualified healthcare professional before using this product, or any dietary supplement, if you are under the age of 18 or if you have any known or suspected medical condition(s) and/or are taking any prescription or OTC medication(s).",
+      "to": "check with a qualified healthcare professional before using this product, or any dietary supplement, if you are under the age of 18 or if you have any known or suspected medical condition(s) and/or are taking any prescription or OTC medication(s)."
+    },
+    {
+      "dsld_id": 249668,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Supports energy, stamina, and performance",
+      "to": "supports energy, stamina, and performance"
+    },
+    {
+      "dsld_id": 249765,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Maintains healthy cholesterol levels",
+      "to": "maintains healthy cholesterol levels"
+    },
+    {
+      "dsld_id": 249765,
+      "kind": "risk",
+      "index": 0,
+      "from": "Immediately discontinue use if you experience any unexplained muscle pain or tenderness, especially if accompanied by flu-like symptoms.",
+      "to": "immediately discontinue use if you experience any unexplained muscle pain or tenderness, especially if accompanied by flu-like symptoms."
+    },
+    {
+      "dsld_id": 249765,
+      "kind": "risk",
+      "index": 2,
+      "from": "Do not use if you are pregnant, can become pregnant, or are nursing",
+      "to": "do not use if you are pregnant, can become pregnant, or are nursing"
+    },
+    {
+      "dsld_id": 249993,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Traditional formula for superior immune support",
+      "to": "traditional formula for superior immune support"
+    },
+    {
+      "dsld_id": 249993,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not exceed recommended dose.",
+      "to": "do not exceed recommended dose."
+    },
+    {
+      "dsld_id": 249993,
+      "kind": "risk",
+      "index": 2,
+      "from": "Do not give to children under 1 year of age.",
+      "to": "do not give to children under 1 year of age."
+    },
+    {
+      "dsld_id": 249993,
+      "kind": "risk",
+      "index": 3,
+      "from": "Bee products may cause an allergic reaction in some people.",
+      "to": "bee products may cause an allergic reaction in some people."
+    },
+    {
+      "dsld_id": 250062,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Immune Support",
+      "to": "immune support"
+    },
+    {
+      "dsld_id": 250062,
+      "kind": "risk",
+      "index": 0,
+      "from": "Not formulated for use in children.",
+      "to": "not formulated for use in children."
+    },
+    {
+      "dsld_id": 250062,
+      "kind": "risk",
+      "index": 2,
+      "from": "Contains: Fish (cod, pollack, haddock, hake, cusk, redfish, sole, flounder)",
+      "to": "contains: fish (cod, pollack, haddock, hake, cusk, redfish, sole, flounder)"
+    },
+    {
+      "dsld_id": 250176,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not drive or operate machinery while taking this product.",
+      "to": "do not drive or operate machinery while taking this product."
+    },
+    {
+      "dsld_id": 250176,
+      "kind": "risk",
+      "index": 1,
+      "from": "Do not exceed recommended dosage or give to children under 16 years of age.",
+      "to": "do not exceed recommended dosage or give to children under 16 years of age."
+    },
+    {
+      "dsld_id": 250176,
+      "kind": "risk",
+      "index": 2,
+      "from": "Pregnant or lactating women and persons using prescription drugs should consult their physician prior to using this product.",
+      "to": "pregnant or lactating women and persons using prescription drugs should consult their physician prior to using this product."
+    },
+    {
+      "dsld_id": 251049,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Supports Healthy thyroid function",
+      "to": "supports healthy thyroid function"
+    },
+    {
+      "dsld_id": 251049,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not exceed recommended dose.",
+      "to": "do not exceed recommended dose."
+    },
+    {
+      "dsld_id": 251049,
+      "kind": "risk",
+      "index": 1,
+      "from": "Pregnant or nursing mothers, children under 18, and individuals with a known medical condition should consult a physician before using this or any dietary supplement.",
+      "to": "pregnant or nursing mothers, children under 18, and individuals with a known medical condition should consult a physician before using this or any dietary supplement."
+    },
+    {
+      "dsld_id": 251133,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not take this or any other supplement if under the age of 18, pregnant or nursing a baby, or if you have any known or suspected medical conditions, and/or taking prescription drug(s) or OTC medication(s).",
+      "to": "do not take this or any other supplement if under the age of 18, pregnant or nursing a baby, or if you have any known or suspected medical conditions, and/or taking prescription drug(s) or OTC medication(s)."
+    },
+    {
+      "dsld_id": 251138,
+      "kind": "risk",
+      "index": 0,
+      "from": "People with seafood allergy, coagulopathy or taking anticoagulants should consult with their physician prior to taking dietary supplements.",
+      "to": "people with seafood allergy, coagulopathy or taking anticoagulants should consult with their physician prior to taking dietary supplements."
+    },
+    {
+      "dsld_id": 251138,
+      "kind": "risk",
+      "index": 1,
+      "from": "Do not take this or any supplement if under 18, pregnant or nursing, if you have any known or suspected medical conditions, and/or taking prescription drug(s) or OTC medication(s).",
+      "to": "do not take this or any supplement if under 18, pregnant or nursing, if you have any known or suspected medical conditions, and/or taking prescription drug(s) or OTC medication(s)."
+    },
+    {
+      "dsld_id": 251240,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Foundational GI support Liver/Detox",
+      "to": "foundational GI support Liver/Detox"
+    },
+    {
+      "dsld_id": 251240,
+      "kind": "risk",
+      "index": 0,
+      "from": "If pregnant, consult your health-care practitioner before using this product.",
+      "to": "if pregnant, consult your health-care practitioner before using this product."
+    },
+    {
+      "dsld_id": 251240,
+      "kind": "risk",
+      "index": 1,
+      "from": "Consuming this product can expose you to chemicals, including lead, which is known to the State of California to cause birth defects or other reproductive harm.",
+      "to": "consuming this product can expose you to chemicals, including lead, which is known to the state of california to cause birth defects or other reproductive harm."
+    },
+    {
+      "dsld_id": 251268,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Tribulus supports sexual and athletic performance in men.",
+      "to": "tribulus supports sexual and athletic performance in men."
+    },
+    {
+      "dsld_id": 251268,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Tribulus promotes cardiovascular and digestive functions.",
+      "to": "tribulus promotes cardiovascular and digestive functions."
+    },
+    {
+      "dsld_id": 251268,
+      "kind": "purpose",
+      "index": 2,
+      "from": "Supports lean muscle mass & strength gain",
+      "to": "supports lean muscle mass & strength gain"
+    },
+    {
+      "dsld_id": 251268,
+      "kind": "purpose",
+      "index": 3,
+      "from": "Promotes Men's reproductive health",
+      "to": "promotes men's reproductive health"
+    },
+    {
+      "dsld_id": 251268,
+      "kind": "risk",
+      "index": 0,
+      "from": "Not intended for use by pregnant or nursing women and children under the age of 18.",
+      "to": "not intended for use by pregnant or nursing women and children under the age of 18."
+    },
+    {
+      "dsld_id": 251268,
+      "kind": "risk",
+      "index": 1,
+      "from": "If you are taking any medication(s) or have any medical condition, consult your doctor before you use.",
+      "to": "if you are taking any medication(s) or have any medical condition, consult your doctor before you use."
+    },
+    {
+      "dsld_id": 251268,
+      "kind": "risk",
+      "index": 2,
+      "from": "Discontinue use and consult your doctor if any adverse reactions occur.",
+      "to": "discontinue use and consult your doctor if any adverse reactions occur."
+    },
+    {
+      "dsld_id": 251277,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Relaxation aid Calming and relaxing effect Helps you fall asleep fast & stay asleep all night Promotes cell health & regeneration",
+      "to": "relaxation aid calming and relaxing effect helps you fall asleep fast & stay asleep all night promotes cell health & regeneration"
+    },
+    {
+      "dsld_id": 251277,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant, nursing, taking any medications or have any medical condition, consult your doctor before use.",
+      "to": "if you are pregnant, nursing, taking any medications or have any medical condition, consult your doctor before use."
+    },
+    {
+      "dsld_id": 251277,
+      "kind": "risk",
+      "index": 1,
+      "from": "Discontinue use and consult your doctor if any adverse reactions occur.",
+      "to": "discontinue use and consult your doctor if any adverse reactions occur."
+    },
+    {
+      "dsld_id": 251277,
+      "kind": "risk",
+      "index": 2,
+      "from": "Excessive consumption may impair ability to drive a motor vehicle or operate heavy equipment.",
+      "to": "excessive consumption may impair ability to drive a motor vehicle or operate heavy equipment."
+    },
+    {
+      "dsld_id": 251277,
+      "kind": "risk",
+      "index": 3,
+      "from": "Not intended for use by persons under the age of 18.",
+      "to": "not intended for use by persons under the age of 18."
+    },
+    {
+      "dsld_id": 251332,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Supports healthy weight management",
+      "to": "supports healthy weight management"
+    },
+    {
+      "dsld_id": 251332,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not exceed recommended dose.",
+      "to": "do not exceed recommended dose."
+    },
+    {
+      "dsld_id": 251332,
+      "kind": "risk",
+      "index": 1,
+      "from": "Pregnant or nursing women, children under 18, and individuals with a known medical condition should consult a physician before using this or any dietary supplement.",
+      "to": "pregnant or nursing women, children under 18, and individuals with a known medical condition should consult a physician before using this or any dietary supplement."
+    },
+    {
+      "dsld_id": 251332,
+      "kind": "risk",
+      "index": 2,
+      "from": "This product can expose you to chemicals including lead, which is known to the State of California to cause cancer and birth defects or other reproductive harm.",
+      "to": "this product can expose you to chemicals including lead, which is known to the state of california to cause cancer and birth defects or other reproductive harm."
+    },
+    {
+      "dsld_id": 251395,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Supports cardiovascular health",
+      "to": "supports cardiovascular health"
+    },
+    {
+      "dsld_id": 251395,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant, nursing, taking any medication(s), planning any medical procedure or have any medical condition, consult your doctor before use.",
+      "to": "if you are pregnant, nursing, taking any medication(s), planning any medical procedure or have any medical condition, consult your doctor before use."
+    },
+    {
+      "dsld_id": 251395,
+      "kind": "risk",
+      "index": 1,
+      "from": "Discontinue use and consult your doctor if any adverse reactions occur.",
+      "to": "discontinue use and consult your doctor if any adverse reactions occur."
+    },
+    {
+      "dsld_id": 251683,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Resveratrol is used to support antioxidant activities in the body.",
+      "to": "resveratrol is used to support antioxidant activities in the body."
+    },
+    {
+      "dsld_id": 251683,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant, nursing, have a blood clotting disorder, or are taking any medications, consult a healthcare professional before use.",
+      "to": "if you are pregnant, nursing, have a blood clotting disorder, or are taking any medications, consult a healthcare professional before use."
+    },
+    {
+      "dsld_id": 251683,
+      "kind": "risk",
+      "index": 1,
+      "from": "Contains sulfites.",
+      "to": "contains sulfites."
+    },
+    {
+      "dsld_id": 251887,
+      "kind": "risk",
+      "index": 0,
+      "from": "Must be 18 and over to purchase or use this product.",
+      "to": "must be 18 and over to purchase or use this product."
+    },
+    {
+      "dsld_id": 251887,
+      "kind": "risk",
+      "index": 1,
+      "from": "Cannabidiol use while pregnant or breast feeding may be harmful.",
+      "to": "cannabidiol use while pregnant or breast feeding may be harmful."
+    },
+    {
+      "dsld_id": 251944,
+      "kind": "purpose",
+      "index": 0,
+      "from": "For leaky gut support and comfort.",
+      "to": "for leaky gut support and comfort."
+    },
+    {
+      "dsld_id": 251944,
+      "kind": "purpose",
+      "index": 1,
+      "from": "For gut permeability For digestive support Helps alleviate stomach discomfort",
+      "to": "for gut permeability for digestive support helps alleviate stomach discomfort"
+    },
+    {
+      "dsld_id": 252024,
+      "kind": "risk",
+      "index": 0,
+      "from": "Keep out of reach of children",
+      "to": "keep out of reach of children"
+    },
+    {
+      "dsld_id": 252451,
+      "kind": "risk",
+      "index": 0,
+      "from": "Always consult a physician before taking any dietary supplement.",
+      "to": "always consult a physician before taking any dietary supplement."
+    },
+    {
+      "dsld_id": 252720,
+      "kind": "risk",
+      "index": 0,
+      "from": "Always consult a physician before taking any dietary supplement.",
+      "to": "always consult a physician before taking any dietary supplement."
+    },
+    {
+      "dsld_id": 252764,
+      "kind": "risk",
+      "index": 0,
+      "from": "Always consult a physician before taking any dietary supplement.",
+      "to": "always consult a physician before taking any dietary supplement."
+    },
+    {
+      "dsld_id": 252780,
+      "kind": "risk",
+      "index": 0,
+      "from": "Always consult your physician before taking any dietary supplement.",
+      "to": "always consult your physician before taking any dietary supplement."
+    },
+    {
+      "dsld_id": 252848,
+      "kind": "risk",
+      "index": 0,
+      "from": "Always consult a physician before taking any dietary supplement.",
+      "to": "always consult a physician before taking any dietary supplement."
+    },
+    {
+      "dsld_id": 252928,
+      "kind": "risk",
+      "index": 0,
+      "from": "Always consult a physician before taking any dietary supplement.",
+      "to": "always consult a physician before taking any dietary supplement."
+    },
+    {
+      "dsld_id": 252994,
+      "kind": "purpose",
+      "index": 0,
+      "from": "May have antioxidant and antibacterial properties.",
+      "to": "may have antioxidant and antibacterial properties."
+    },
+    {
+      "dsld_id": 252994,
+      "kind": "risk",
+      "index": 0,
+      "from": "Consult a health care professional before using if you are pregnant, if you have any allergic reaction to trace minerals, or if you have any chronic or recurring symptoms or illness.",
+      "to": "consult a health care professional before using if you are pregnant, if you have any allergic reaction to trace minerals, or if you have any chronic or recurring symptoms or illness."
+    },
+    {
+      "dsld_id": 253134,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Enhanced viral defense",
+      "to": "enhanced viral defense"
+    },
+    {
+      "dsld_id": 253134,
+      "kind": "risk",
+      "index": 0,
+      "from": "Consult your healthcare professional before taking any dietary supplements.",
+      "to": "consult your healthcare professional before taking any dietary supplements."
+    },
+    {
+      "dsld_id": 253639,
+      "kind": "risk",
+      "index": 0,
+      "from": "This product is not intended for use by those with a serious medical condition or pregnant or lactating women.",
+      "to": "this product is not intended for use by those with a serious medical condition or pregnant or lactating women."
+    },
+    {
+      "dsld_id": 253639,
+      "kind": "risk",
+      "index": 1,
+      "from": "Consult your physician before use.",
+      "to": "consult your physician before use."
+    },
+    {
+      "dsld_id": 253884,
+      "kind": "risk",
+      "index": 0,
+      "from": "Always consult a physician before taking any dietary supplement.",
+      "to": "always consult a physician before taking any dietary supplement."
+    },
+    {
+      "dsld_id": 254028,
+      "kind": "risk",
+      "index": 0,
+      "from": "Do not exceed 1 gram daily.",
+      "to": "do not exceed 1 gram daily."
+    },
+    {
+      "dsld_id": 254028,
+      "kind": "risk",
+      "index": 1,
+      "from": "Always consult a physician before taking any dietary supplement.",
+      "to": "always consult a physician before taking any dietary supplement."
+    },
+    {
+      "dsld_id": 254093,
+      "kind": "risk",
+      "index": 0,
+      "from": "This product is not intended for use by those with a serious medical condition or pregnant or lactating women.",
+      "to": "this product is not intended for use by those with a serious medical condition or pregnant or lactating women."
+    },
+    {
+      "dsld_id": 254093,
+      "kind": "risk",
+      "index": 1,
+      "from": "Consult your physician before use.",
+      "to": "consult your physician before use."
+    },
+    {
+      "dsld_id": 254514,
+      "kind": "risk",
+      "index": 0,
+      "from": "Keep your licensed health care practitioner informed when using this product.",
+      "to": "keep your licensed health care practitioner informed when using this product."
+    },
+    {
+      "dsld_id": 255211,
+      "kind": "risk",
+      "index": 0,
+      "from": "Keep your licensed health care practitioner informed when using this product.",
+      "to": "keep your licensed health care practitioner informed when using this product."
+    },
+    {
+      "dsld_id": 255418,
+      "kind": "risk",
+      "index": 0,
+      "from": "Keep your licensed health care practitioner informed when using this product.",
+      "to": "keep your licensed health care practitioner informed when using this product."
+    },
+    {
+      "dsld_id": 255418,
+      "kind": "risk",
+      "index": 1,
+      "from": "Niacin may cause a temporary flushing reaction, may aggravate certain medical conditions, and may be contraindicated when certain medicines are used.",
+      "to": "niacin may cause a temporary flushing reaction, may aggravate certain medical conditions, and may be contraindicated when certain medicines are used."
+    },
+    {
+      "dsld_id": 255689,
+      "kind": "risk",
+      "index": 0,
+      "from": "Keep your licensed health care practitioner informed when using this product.",
+      "to": "keep your licensed health care practitioner informed when using this product."
+    },
+    {
+      "dsld_id": 255689,
+      "kind": "risk",
+      "index": 1,
+      "from": "Do not use if you are pregnant or nursing, have bile duct obstruction, gallstones, stomach ulcers or hyperacidity.",
+      "to": "do not use if you are pregnant or nursing, have bile duct obstruction, gallstones, stomach ulcers or hyperacidity."
+    },
+    {
+      "dsld_id": 255696,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you have a medical condition, are pregnant or taking medications, consult your health care professional before using this product.",
+      "to": "if you have a medical condition, are pregnant or taking medications, consult your health care professional before using this product."
+    },
+    {
+      "dsld_id": 255805,
+      "kind": "purpose",
+      "index": 2,
+      "from": "Supports healthy hair, skin & nails",
+      "to": "supports healthy hair, skin & nails"
+    },
+    {
+      "dsld_id": 255805,
+      "kind": "risk",
+      "index": 0,
+      "from": "Pregnant or lactating women, diabetics, hypoglycemics, and people with a known medical condition and/or taking any drugs should consult with a licensed physician prior to taking any dietary supplements.",
+      "to": "pregnant or lactating women, diabetics, hypoglycemics, and people with a known medical condition and/or taking any drugs should consult with a licensed physician prior to taking any dietary supplements."
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Ultimate thermogenic extreme energy & focus",
+      "to": "ultimate thermogenic extreme energy & focus"
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Double the weight loss",
+      "to": "double the weight loss"
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "risk",
+      "index": 0,
+      "from": "Not intended for use by persons under 18.",
+      "to": "not intended for use by persons under 18."
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "risk",
+      "index": 1,
+      "from": "Do not use if pregnant or nursing.",
+      "to": "do not use if pregnant or nursing."
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "risk",
+      "index": 2,
+      "from": "Discontinue use and consult a medical doctor if you experience unusual symptoms.",
+      "to": "discontinue use and consult a medical doctor if you experience unusual symptoms."
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "risk",
+      "index": 3,
+      "from": "Consult medical doctor before use if you have been treated for, diagnosed with or have a family history of any medical condition including (but not limited to) high blood pressure or heart problems, or if you are using any prescription or over-the-counter drug(s).",
+      "to": "consult medical doctor before use if you have been treated for, diagnosed with or have a family history of any medical condition including (but not limited to) high blood pressure or heart problems, or if you are using any prescription or over-the-counter drug(s)."
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "risk",
+      "index": 4,
+      "from": "Caffeine-sensitive individuals may experience symptoms including (but not limited to) restlessness, nervousness, tremors, anxiety, increased heart rate or difficulty sleeping.",
+      "to": "caffeine-sensitive individuals may experience symptoms including (but not limited to) restlessness, nervousness, tremors, anxiety, increased heart rate or difficulty sleeping."
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "risk",
+      "index": 5,
+      "from": "Do not combine with other sources of caffeine or stimulants.",
+      "to": "do not combine with other sources of caffeine or stimulants."
+    },
+    {
+      "dsld_id": 255865,
+      "kind": "risk",
+      "index": 6,
+      "from": "If you experience a skin rash or any other allergic reaction, discontinue use and consult a medical doctor.",
+      "to": "if you experience a skin rash or any other allergic reaction, discontinue use and consult a medical doctor."
+    },
+    {
+      "dsld_id": 255884,
+      "kind": "purpose",
+      "index": 0,
+      "from": "Evening Primrose Oil supports cardiovascular health, and immune functions.",
+      "to": "evening primrose oil supports cardiovascular health, and immune functions."
+    },
+    {
+      "dsld_id": 255884,
+      "kind": "purpose",
+      "index": 1,
+      "from": "Evening Primrose Oil supports women's health as it may help to ease symptoms of premenstrual syndrome & menopause.",
+      "to": "evening primrose oil supports women's health as it may help to ease symptoms of premenstrual syndrome & menopause."
+    },
+    {
+      "dsld_id": 255884,
+      "kind": "purpose",
+      "index": 2,
+      "from": "Supports cardiovascular & womens' health",
+      "to": "supports cardiovascular & womens' health"
+    },
+    {
+      "dsld_id": 255884,
+      "kind": "risk",
+      "index": 0,
+      "from": "If you are pregnant, nursing, taking any medication(s), or have any medical condition, consult your doctor before use.",
+      "to": "if you are pregnant, nursing, taking any medication(s), or have any medical condition, consult your doctor before use."
+    },
+    {
+      "dsld_id": 255884,
+      "kind": "risk",
+      "index": 1,
+      "from": "Discontinue use and consult your doctor if any adverse reactions occur.",
+      "to": "discontinue use and consult your doctor if any adverse reactions occur."
+    }
+  ],
+  "dropped_fallback_risk": [
+    {
+      "dsld_id": 42446,
+      "evidence": "Do not use if cap drop ring or inner seal is broken or missing."
+    },
+    {
+      "dsld_id": 43382,
+      "evidence": "Sealed for your protection. Do not use if seal is broken or missing."
+    },
+    {
+      "dsld_id": 43588,
+      "evidence": "Do not use if product appears to be tampered with or seal is broken."
+    },
+    {
+      "dsld_id": 43806,
+      "evidence": "Do not use if product appears to be tampered with or seal is broken."
+    },
+    {
+      "dsld_id": 43953,
+      "evidence": "WARNING: DO NOT USE IF SEAL IS BROKEN OR MISSING."
+    },
+    {
+      "dsld_id": 43960,
+      "evidence": "Do not use if safety seal on cap or printed inner seal is missing or broken."
+    },
+    {
+      "dsld_id": 44104,
+      "evidence": "Do not use if outer bottle seal is missing, torn or damaged in any way."
+    },
+    {
+      "dsld_id": 44322,
+      "evidence": "DO NOT USE IF OUTER BOTTLE SEAL IS MISSING, TORN OR DAMAGED IN ANY WAY."
+    },
+    {
+      "dsld_id": 54579,
+      "evidence": "Keep this product out of reach of children."
+    },
+    {
+      "dsld_id": 57391,
+      "evidence": "Keep this product out of reach of children."
+    },
+    {
+      "dsld_id": 57605,
+      "evidence": "Usage Warnings: Do not use if safety seal is broken."
+    },
+    {
+      "dsld_id": 57608,
+      "evidence": "Usage Warnings: Do not use if seal is broken."
+    },
+    {
+      "dsld_id": 58454,
+      "evidence": "Caution: Keep out of reach of children."
+    },
+    {
+      "dsld_id": 60172,
+      "evidence": "KEEP THIS PRODUCT OUT OF REACH OF CHILDREN."
+    },
+    {
+      "dsld_id": 64011,
+      "evidence": "Do not use if safety seal is broken."
+    },
+    {
+      "dsld_id": 70725,
+      "evidence": "Keep out of reach of children."
+    },
+    {
+      "dsld_id": 247278,
+      "evidence": "Keep out of reach of children."
+    },
+    {
+      "dsld_id": 256593,
+      "evidence": "Do not use if tamper evidence seal is broken."
+    },
+    {
+      "dsld_id": 263473,
+      "evidence": "Do not use if tamper seal is damaged."
+    }
+  ]
+}

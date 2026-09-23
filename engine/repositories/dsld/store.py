@@ -29,6 +29,12 @@ RUNS_ROOT = REPO_ROOT / "data" / "dsld" / "runs"
 ROWS_NAME = "purpose_risk.jsonl"
 MANIFEST_NAME = "purpose_risk.json"
 
+# Cleaned, flattened label text -- the extractor's input rather than its
+# output. It shares the run-dir convention so one directory can hold the
+# passages a run was given and the rows it produced, side by side.
+PASSAGES_NAME = "passages.jsonl"
+PASSAGES_MANIFEST_NAME = "passages.json"
+
 
 def run_id() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -57,12 +63,14 @@ def run_dir(rid: str | None = None, root: str | Path = RUNS_ROOT) -> Path:
     return d
 
 
-def rows_path(d: str | Path) -> Path:
-    return Path(d) / "raw" / ROWS_NAME
+def rows_path(d: str | Path, name: str = ROWS_NAME) -> Path:
+    """Where a run's rows live. `name` selects which artifact in the run."""
+    return Path(d) / "raw" / name
 
 
-def manifest_path(d: str | Path) -> Path:
-    return Path(d) / "manifests" / MANIFEST_NAME
+def manifest_path(d: str | Path, name: str = MANIFEST_NAME) -> Path:
+    """Where a run's manifest lives. `name` selects which artifact in the run."""
+    return Path(d) / "manifests" / name
 
 
 def read_rows(d: str | Path) -> list[dict]:
@@ -118,6 +126,26 @@ def write_manifest(d: str | Path, manifest: dict) -> Path:
 def read_manifest(d: str | Path) -> dict:
     p = manifest_path(d)
     return json.loads(p.read_text()) if p.exists() else {}
+
+
+def write_passages(d: str | Path, rows: list[dict], manifest: dict) -> dict[str, Path]:
+    """Save cleaned, flattened label text and the manifest describing it.
+
+    Written whole rather than appended: cleaning a label is cheap and
+    deterministic, so a interrupted run is re-cleaned rather than resumed, and
+    a half-written passage file has no reason to exist. Extraction rows, which
+    cost a model call each, keep their append-and-resume path.
+    """
+    rows_p = rows_path(d, PASSAGES_NAME)
+    rows_p.parent.mkdir(parents=True, exist_ok=True)
+    with rows_p.open("w") as fh:
+        for r in rows:
+            fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+    man_p = manifest_path(d, PASSAGES_MANIFEST_NAME)
+    man_p.parent.mkdir(parents=True, exist_ok=True)
+    man_p.write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
+    return {"rows": rows_p, "manifest": man_p}
 
 
 def load_runs(root: str | Path = RUNS_ROOT, pattern: str = "*"):

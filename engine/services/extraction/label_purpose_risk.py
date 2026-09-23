@@ -24,22 +24,10 @@ from engine.services.sources.dsld import Label
 
 MODEL = "claude-opus-5"
 
-# Statement types dropped before the label is sent to a model. Only these
-# three are verified safe across all 300 sampled labels: they are fixed
-# boilerplate (the DSHEA disclaimer, "Dietary Supplement", lot codes) and
-# carried zero benefit or risk language.
-#
-# Nothing else is dropped. An earlier version also dropped `Brand IP
-# Statement(s) re: (c), (TM), (SM)` and `Seals/Symbols`, plus allow-listed a
-# set of INFORMATIVE_PREFIXES. Both filters were wrong: Brand IP carries real
-# benefit claims in 21 of 300 sampled statements and is the *only* purpose
-# text on labels 1597, 38206 and 176329. DSLD's `type` vocabulary is too
-# coarse to filter on -- see docs/dsld-purpose-risk-findings.md section 5.
-SKIP_TYPES = {
-    "FDA Statement of Identity",
-    "FDA Disclaimer Statement",
-    "General: Product/Version Code",
-}
+# No type is safe to drop wholesale: gold-1000 raw-source review found
+# substantive text even under disclaimer, identity and product-code types.
+# Retained as an empty compatibility export for existing callers.
+SKIP_TYPES: set[str] = set()
 
 # The prompt text lives in `prompts/purpose_risk.md` and is read from there, not
 # duplicated here. It is the one editable file per prompt step that ADR 0001 §4
@@ -180,44 +168,43 @@ def _capped(confidence: int, entries: list[Entry]) -> int:
     return confidence
 
 
-def label_text(label: Label) -> str:
-    """Render the parts of a label an extractor should read.
+def label_segments(label: Label) -> list[dict]:
+    """Deduplicated extraction text with paths back to the raw DSLD record.
 
-    Ingredients are included because a purpose is sometimes only inferable
-    alongside them, and the claim-type list because "Structure/Function" tells
-    the model a benefit claim is present somewhere on the label.
+    Drop structured metadata and type/name headers from model input. Keep
+    free-text statements across all types and ingredient notes/descriptions:
+    zero gold matches does not certify an unannotated field as irrelevant.
+    Paths refer to the raw JSON, with duplicate locations retained together.
     """
-    lines = [f"PRODUCT: {label.full_name}"]
-    if label.brand_name:
-        lines.append(f"BRAND: {label.brand_name}")
-    if label.product_type:
-        lines.append(f"TYPE: {label.product_type} ({label.physical_state})")
-    if label.claims:
-        lines.append(f"CLAIM TYPES ON LABEL: {', '.join(label.claims)}")
-    if label.target_groups:
-        lines.append(f"TARGET GROUPS: {', '.join(label.target_groups)}")
+    segments: dict[str, dict] = {}
 
-    ings = [i.name for i in label.ingredients if i.name][:25]
-    if ings:
-        lines.append(f"INGREDIENTS: {', '.join(ings)}")
+    def add(text: str | None, path: str) -> None:
+        text = " ".join((text or "").split())
+        if text:
+            segment = segments.setdefault(text, {"text": text, "paths": []})
+            segment["paths"].append(path)
 
-    lines.append("\nLABEL STATEMENTS:")
-    # The `[type]` prefix is kept: it is unreliable as a filter but useful as a
-    # hint to a small model that a line came from `Precautions` rather than
-    # `General Statements`.
-    seen: set[str] = set()
-    for s in label.statements:
-        stype, notes = (s.get("type") or ""), (s.get("notes") or "")
-        notes = " ".join(notes.split())
-        if not notes or stype in SKIP_TYPES:
-            continue
-        # DSLD files the same text under several types on 2.4% of the corpus.
-        if notes in seen:
-            continue
-        seen.add(notes)
-        lines.append(f"[{stype}] {notes}")
+    for index, statement in enumerate(label.statements):
+        add(statement.get("notes"), f"statements[{index}].notes")
 
-    return "\n".join(lines)
+    def ingredients(rows, prefix):
+        for index, ingredient in enumerate(rows):
+            path = f"{prefix}[{index}]"
+            add(ingredient.notes, f"{path}.notes")
+            add(ingredient.description, f"{path}.description")
+            ingredients(ingredient.nested, f"{path}.nestedRows")
+
+    ingredients(label.ingredients, "ingredientRows")
+    return list(segments.values())
+
+
+def label_text(label: Label) -> str:
+    """Render only extraction text; identity and source paths stay outside it.
+
+    All gold-1000 quotations survive without metadata headers or statement
+    type prefixes. See docs/dsld-gold1000-field-audit.md for scope and limits.
+    """
+    return "\n".join(segment["text"] for segment in label_segments(label))
 
 
 def _client(api_key: str | None = None) -> anthropic.Anthropic:

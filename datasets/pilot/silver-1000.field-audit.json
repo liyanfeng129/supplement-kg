@@ -1,0 +1,2239 @@
+{
+  "method": "Case-sensitive evidence matching across every raw string leaf after whitespace collapse; frozen source segments independently verified against raw fields. Cross-segment quotations are mapped as ordered fragments, not reported as complete single-field matches. Counts include each claim once per contributing field/type, including cross-segment fragments; columns are not additive. Exclusive means no other field/type contributes to the quote. All indices and character offsets are zero-based; end offsets are exclusive.",
+  "labels": 1000,
+  "overlap_with_gold": 0,
+  "totals": {
+    "purpose_claims": 1456,
+    "risk_claims": 1863
+  },
+  "labels_with_claims": {
+    "purpose": 637,
+    "risk": 814
+  },
+  "validation": {
+    "frozen_hashes_verified": true,
+    "raw_draw_hash_verified": true,
+    "source_segments_verified": 18248,
+    "source_paths_verified": 18623,
+    "claims_traced": 3319,
+    "unmatched_claims": 0,
+    "complete_quote_in_single_raw_field": 3318,
+    "claims_requiring_whitespace_normalization": 268,
+    "cross_segment_claims": 1
+  },
+  "statement_types": {
+    "Brand IP Statement(s) re: (c), (TM), (SM)": {
+      "raw_labels": 457,
+      "raw_statements": 824,
+      "purpose_claims": 81,
+      "purpose_labels": 58,
+      "purpose_exclusive_claims": 81,
+      "risk_claims": 1,
+      "risk_labels": 1,
+      "risk_exclusive_claims": 1,
+      "examples": [
+        {
+          "dsld_id": 1235,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Zygest(R) Bromelain helps digest protein in the gastrointestinal tract.*"
+        },
+        {
+          "dsld_id": 1677,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Vitamin B-12 promotes healthy nerve function and energy production*"
+        },
+        {
+          "dsld_id": 3314,
+          "kind": "risk",
+          "index": 0,
+          "evidence": "There is enough drug in the package to seriously harm a child."
+        }
+      ]
+    },
+    "FDA Disclaimer Statement": {
+      "raw_labels": 762,
+      "raw_statements": 772,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "FDA Statement of Identity": {
+      "raw_labels": 936,
+      "raw_statements": 944,
+      "purpose_claims": 3,
+      "purpose_labels": 3,
+      "purpose_exclusive_claims": 2,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": [
+        {
+          "dsld_id": 12707,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "MONSTER MILK(TM) is designed to help you build bigger, stronger muscles while staying lean"
+        },
+        {
+          "dsld_id": 23627,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "A Dietary Supplement to Support Thyroid Function and Health"
+        },
+        {
+          "dsld_id": 58454,
+          "kind": "purpose",
+          "index": 4,
+          "evidence": "Dietary Supplement to support healthy sexual drive, function and pleasure in men*"
+        }
+      ]
+    },
+    "Formula re: Contains": {
+      "raw_labels": 647,
+      "raw_statements": 1242,
+      "purpose_claims": 229,
+      "purpose_labels": 149,
+      "purpose_exclusive_claims": 226,
+      "risk_claims": 17,
+      "risk_labels": 14,
+      "risk_exclusive_claims": 5,
+      "examples": [
+        {
+          "dsld_id": 2875,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "MET-Rx Hi-Test Amino liquid contains high concentrations of specific aminos, such as glycine, proline and hydroxyproline, to help build joint cartilage, support mobility and soothe overworked joints."
+        },
+        {
+          "dsld_id": 10674,
+          "kind": "risk",
+          "index": 3,
+          "evidence": "This product contains caffeine."
+        },
+        {
+          "dsld_id": 12936,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "Long term use may help to reduce cholesterol level, improve blood circulation and reduce heart related risks."
+        }
+      ]
+    },
+    "Formula re: Kosher": {
+      "raw_labels": 69,
+      "raw_statements": 72,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "Formula re: Type": {
+      "raw_labels": 77,
+      "raw_statements": 91,
+      "purpose_claims": 21,
+      "purpose_labels": 19,
+      "purpose_exclusive_claims": 18,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": [
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Supports Women’s Health*"
+        },
+        {
+          "dsld_id": 23652,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Our Prenatal with DHA is designed to meet the nutritional demands of a woman's body before, during and after pregnancy."
+        },
+        {
+          "dsld_id": 25099,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Designed to provide nutritional support during pregnancy"
+        }
+      ]
+    },
+    "Formulation re: Does NOT Contain": {
+      "raw_labels": 750,
+      "raw_statements": 1133,
+      "purpose_claims": 4,
+      "purpose_labels": 4,
+      "purpose_exclusive_claims": 3,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": [
+        {
+          "dsld_id": 54990,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Natrol Melatonin is a 100% vegetarian, drug-free sleep aid for relief of occasional sleeplessness."
+        },
+        {
+          "dsld_id": 75836,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "help you magnify calorie intake and gain weight fast"
+        },
+        {
+          "dsld_id": 78800,
+          "kind": "purpose",
+          "index": 2,
+          "evidence": "Anti-aromatase & anti-estrogen"
+        }
+      ]
+    },
+    "Formulation re: Organic": {
+      "raw_labels": 51,
+      "raw_statements": 78,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "Formulation re: Other": {
+      "raw_labels": 319,
+      "raw_statements": 707,
+      "purpose_claims": 323,
+      "purpose_labels": 184,
+      "purpose_exclusive_claims": 322,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": [
+        {
+          "dsld_id": 179568,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Supports healthy immune function"
+        },
+        {
+          "dsld_id": 179568,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "Supports healthy bones and muscle function"
+        },
+        {
+          "dsld_id": 179568,
+          "kind": "purpose",
+          "index": 2,
+          "evidence": "Helps support healthy blood pressure levels already in the normal range"
+        }
+      ]
+    },
+    "Formulation re: Vegetarian/Vegan": {
+      "raw_labels": 225,
+      "raw_statements": 249,
+      "purpose_claims": 3,
+      "purpose_labels": 3,
+      "purpose_exclusive_claims": 1,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": [
+        {
+          "dsld_id": 4402,
+          "kind": "purpose",
+          "index": 2,
+          "evidence": "A RICH SOURCE OF VITAMIN C PROVIDES ANTIOXIDANT AND IMMUNE SUPPORT*"
+        },
+        {
+          "dsld_id": 47746,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "NOW(R) Vitamin B-12 is appropriate for vegetarians/vegans (non-animal derived), who are at higher risk of developing Vitamin B-12 deficiency.*"
+        },
+        {
+          "dsld_id": 54990,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Natrol Melatonin is a 100% vegetarian, drug-free sleep aid for relief of occasional sleeplessness."
+        }
+      ]
+    },
+    "General Statements: All Other Content": {
+      "raw_labels": 849,
+      "raw_statements": 3112,
+      "purpose_claims": 787,
+      "purpose_labels": 376,
+      "purpose_exclusive_claims": 786,
+      "risk_claims": 8,
+      "risk_labels": 8,
+      "risk_exclusive_claims": 8,
+      "examples": [
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "Red Clover is a natural source of plant nutrients that help promote well-being for women.*"
+        },
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 2,
+          "evidence": "Red Clover Blossoms help support the physical changes which occur in a woman’s body over time.*"
+        },
+        {
+          "dsld_id": 1235,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "Enzymatic Digestive Care*"
+        }
+      ]
+    },
+    "General: Product/Version Code": {
+      "raw_labels": 477,
+      "raw_statements": 477,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "Precautions re: All Other": {
+      "raw_labels": 715,
+      "raw_statements": 1168,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 729,
+      "risk_labels": 415,
+      "risk_exclusive_claims": 704,
+      "examples": [
+        {
+          "dsld_id": 2142,
+          "kind": "risk",
+          "index": 1,
+          "evidence": "Do not exceed suggested serving."
+        },
+        {
+          "dsld_id": 2142,
+          "kind": "risk",
+          "index": 2,
+          "evidence": "Do not exceed 4 weeks of continuous use."
+        },
+        {
+          "dsld_id": 2142,
+          "kind": "risk",
+          "index": 3,
+          "evidence": "Possible side effects may include acne, hair loss, increased levels of estrogen, liver and kidney ailments."
+        }
+      ]
+    },
+    "Precautions re: Allergies": {
+      "raw_labels": 294,
+      "raw_statements": 323,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 86,
+      "risk_labels": 78,
+      "risk_exclusive_claims": 69,
+      "examples": [
+        {
+          "dsld_id": 10822,
+          "kind": "risk",
+          "index": 3,
+          "evidence": "Avoid this product if you are allergic to yeast."
+        },
+        {
+          "dsld_id": 12635,
+          "kind": "risk",
+          "index": 0,
+          "evidence": "Caution: Royal Jelly may cause an allergic reaction in some people."
+        },
+        {
+          "dsld_id": 15441,
+          "kind": "risk",
+          "index": 2,
+          "evidence": "Warning: Persons with a known allergy to shellfish should not use this product."
+        }
+      ]
+    },
+    "Precautions re: Children": {
+      "raw_labels": 786,
+      "raw_statements": 925,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 271,
+      "risk_labels": 217,
+      "risk_exclusive_claims": 184,
+      "examples": [
+        {
+          "dsld_id": 1677,
+          "kind": "risk",
+          "index": 0,
+          "evidence": "If pregnant, nursing or on medication, consult with your healthcare practitioner."
+        },
+        {
+          "dsld_id": 2875,
+          "kind": "risk",
+          "index": 2,
+          "evidence": "Not intended for use by persons under the age of 18."
+        },
+        {
+          "dsld_id": 7020,
+          "kind": "risk",
+          "index": 0,
+          "evidence": "Accidental overdose of iron-containing products is a leading cause of fatal poisoning in children under 6."
+        }
+      ]
+    },
+    "Precautions re: Pregnant or Nursing or Prescription Medications": {
+      "raw_labels": 697,
+      "raw_statements": 750,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 855,
+      "risk_labels": 697,
+      "risk_exclusive_claims": 759,
+      "examples": [
+        {
+          "dsld_id": 806,
+          "kind": "risk",
+          "index": 0,
+          "evidence": "Not intended for use by pregnant or nursing women."
+        },
+        {
+          "dsld_id": 806,
+          "kind": "risk",
+          "index": 1,
+          "evidence": "If you are taking any medications, consult your doctor before use."
+        },
+        {
+          "dsld_id": 806,
+          "kind": "risk",
+          "index": 2,
+          "evidence": "Discontinue use and consult your doctor if any adverse reactions occur."
+        }
+      ]
+    },
+    "Seals/Symbols": {
+      "raw_labels": 556,
+      "raw_statements": 959,
+      "purpose_claims": 3,
+      "purpose_labels": 3,
+      "purpose_exclusive_claims": 3,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": [
+        {
+          "dsld_id": 30461,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "100% Pure All Natural Formula SUPPORTS WEIGHT LOSS FOR ALL BODY TYPES"
+        },
+        {
+          "dsld_id": 42446,
+          "kind": "purpose",
+          "index": 2,
+          "evidence": "SEASONAL RESPIRATORY SUPPORT"
+        },
+        {
+          "dsld_id": 43806,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "DAILY SUPPORT FOR HEART HEALTH"
+        }
+      ]
+    },
+    "Storage": {
+      "raw_labels": 757,
+      "raw_statements": 786,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 1,
+      "risk_labels": 1,
+      "risk_exclusive_claims": 0,
+      "examples": [
+        {
+          "dsld_id": 25803,
+          "kind": "risk",
+          "index": 0,
+          "evidence": "Caution: Keep out of direct light and out of the reach of children."
+        }
+      ]
+    },
+    "Suggested/Recommended/Usage/Directions": {
+      "raw_labels": 986,
+      "raw_statements": 1114,
+      "purpose_claims": 8,
+      "purpose_labels": 7,
+      "purpose_exclusive_claims": 8,
+      "risk_claims": 23,
+      "risk_labels": 17,
+      "risk_exclusive_claims": 14,
+      "examples": [
+        {
+          "dsld_id": 6519,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Power-Packed Formula with 70g Protein, Over 1000 Calories and 10g BCAAs When Used As Directed 1"
+        },
+        {
+          "dsld_id": 6519,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "Mass-Tech(R) is scientifically developed to help you pack on slabs of mass fast.?"
+        },
+        {
+          "dsld_id": 11418,
+          "kind": "risk",
+          "index": 0,
+          "evidence": "Do not exceed recommended dosage."
+        }
+      ]
+    }
+  },
+  "raw_fields": {
+    "brandIpSymbol": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "brandName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "bundleName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "claims": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "entryDate": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "events": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "fullName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "hasOuterCarton": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "id": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "labelRelationships": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "netContents": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "nhanesId": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "offMarket": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "pdf": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "percentDvFootnote": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "physicalState": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "productType": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "productVersionCode": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "servingSizes": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "servingsPerContainer": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "src": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "statements": {
+      "present_labels": 1000,
+      "purpose_claims": 1456,
+      "purpose_labels": 637,
+      "purpose_exclusive_claims": 1456,
+      "risk_claims": 1863,
+      "risk_labels": 814,
+      "risk_exclusive_claims": 1863,
+      "examples": [
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Supports Women’s Health*"
+        },
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "Red Clover is a natural source of plant nutrients that help promote well-being for women.*"
+        },
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 2,
+          "evidence": "Red Clover Blossoms help support the physical changes which occur in a woman’s body over time.*"
+        }
+      ]
+    },
+    "targetGroups": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "thumbnail": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "upcSku": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "userGroups": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    }
+  },
+  "raw_text_fields": {
+    "brandIpSymbol": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "brandName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "bundleName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "claims[].langualCode": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "claims[].langualCodeDescription": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.city": {
+      "present_labels": 991,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.country": {
+      "present_labels": 987,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.email": {
+      "present_labels": 978,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.name": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.phoneNumber": {
+      "present_labels": 987,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.src": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.state": {
+      "present_labels": 991,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.streetAddress": {
+      "present_labels": 990,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.webAddress": {
+      "present_labels": 990,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].contactDetails.zipCode": {
+      "present_labels": 991,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].text": {
+      "present_labels": 830,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "contacts[].types[]": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "entryDate": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "events[].date": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "events[].type": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "fullName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].alternateNames[]": {
+      "present_labels": 380,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].category": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].description": {
+      "present_labels": 494,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].forms[].category": {
+      "present_labels": 543,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].forms[].ingredientGroup": {
+      "present_labels": 543,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].forms[].name": {
+      "present_labels": 543,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].forms[].prefix": {
+      "present_labels": 343,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].forms[].uniiCode": {
+      "present_labels": 370,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].ingredientGroup": {
+      "present_labels": 999,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].name": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].alternateNames[]": {
+      "present_labels": 109,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].category": {
+      "present_labels": 461,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].description": {
+      "present_labels": 222,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].forms[].category": {
+      "present_labels": 113,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].forms[].ingredientGroup": {
+      "present_labels": 113,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].forms[].name": {
+      "present_labels": 113,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].forms[].prefix": {
+      "present_labels": 52,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].forms[].uniiCode": {
+      "present_labels": 53,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].ingredientGroup": {
+      "present_labels": 461,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].name": {
+      "present_labels": 461,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].alternateNames[]": {
+      "present_labels": 26,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].category": {
+      "present_labels": 100,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].description": {
+      "present_labels": 54,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].forms[].category": {
+      "present_labels": 9,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].forms[].ingredientGroup": {
+      "present_labels": 9,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].forms[].name": {
+      "present_labels": 9,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].forms[].prefix": {
+      "present_labels": 4,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].forms[].uniiCode": {
+      "present_labels": 2,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].ingredientGroup": {
+      "present_labels": 100,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].name": {
+      "present_labels": 100,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].category": {
+      "present_labels": 2,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].description": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].forms[].category": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].forms[].ingredientGroup": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].forms[].name": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].forms[].uniiCode": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].ingredientGroup": {
+      "present_labels": 2,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].name": {
+      "present_labels": 2,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].nestedRows[].alternateNames[]": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].nestedRows[].category": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].nestedRows[].ingredientGroup": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].nestedRows[].name": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].nestedRows[].quantity[].operator": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].nestedRows[].quantity[].servingSizeUnit": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].nestedRows[].quantity[].unit": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].nestedRows[].uniiCode": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].notes": {
+      "present_labels": 2,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].quantity[].dailyValueTargetGroup[].footnote": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].quantity[].dailyValueTargetGroup[].name": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].quantity[].operator": {
+      "present_labels": 2,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].quantity[].servingSizeUnit": {
+      "present_labels": 2,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].quantity[].unit": {
+      "present_labels": 2,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].nestedRows[].uniiCode": {
+      "present_labels": 1,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].notes": {
+      "present_labels": 63,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].quantity[].dailyValueTargetGroup[].footnote": {
+      "present_labels": 25,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].quantity[].dailyValueTargetGroup[].name": {
+      "present_labels": 63,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].quantity[].dailyValueTargetGroup[].operator": {
+      "present_labels": 39,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].quantity[].operator": {
+      "present_labels": 100,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].quantity[].servingSizeUnit": {
+      "present_labels": 100,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].quantity[].unit": {
+      "present_labels": 100,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].nestedRows[].uniiCode": {
+      "present_labels": 67,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].notes": {
+      "present_labels": 316,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].quantity[].dailyValueTargetGroup[].footnote": {
+      "present_labels": 186,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].quantity[].dailyValueTargetGroup[].name": {
+      "present_labels": 239,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].quantity[].dailyValueTargetGroup[].operator": {
+      "present_labels": 107,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].quantity[].operator": {
+      "present_labels": 461,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].quantity[].servingSizeUnit": {
+      "present_labels": 461,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].quantity[].unit": {
+      "present_labels": 461,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].nestedRows[].uniiCode": {
+      "present_labels": 278,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].notes": {
+      "present_labels": 845,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].quantity[].dailyValueTargetGroup[].footnote": {
+      "present_labels": 782,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].quantity[].dailyValueTargetGroup[].name": {
+      "present_labels": 957,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].quantity[].dailyValueTargetGroup[].operator": {
+      "present_labels": 579,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].quantity[].operator": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].quantity[].servingSizeUnit": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].quantity[].unit": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "ingredientRows[].uniiCode": {
+      "present_labels": 630,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "labelRelationships[].type": {
+      "present_labels": 761,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "netContents[].display": {
+      "present_labels": 999,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "netContents[].unit": {
+      "present_labels": 999,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "nhanesId": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].alternateNames[]": {
+      "present_labels": 298,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].category": {
+      "present_labels": 953,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].forms[].category": {
+      "present_labels": 279,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].forms[].ingredientGroup": {
+      "present_labels": 279,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].forms[].name": {
+      "present_labels": 279,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].forms[].prefix": {
+      "present_labels": 69,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].forms[].uniiCode": {
+      "present_labels": 89,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].ingredientGroup": {
+      "present_labels": 953,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].name": {
+      "present_labels": 953,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.ingredients[].uniiCode": {
+      "present_labels": 533,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "otheringredients.text": {
+      "present_labels": 6,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "pdf": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "percentDvFootnote": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "physicalState.langualCode": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "physicalState.langualCodeDescription": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "productType.langualCode": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "productType.langualCodeDescription": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "productVersionCode": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "servingSizes[].notes": {
+      "present_labels": 419,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "servingSizes[].unit": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "servingsPerContainer": {
+      "present_labels": 777,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "src": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "statements[].notes": {
+      "present_labels": 1000,
+      "purpose_claims": 1456,
+      "purpose_labels": 637,
+      "purpose_exclusive_claims": 1456,
+      "risk_claims": 1863,
+      "risk_labels": 814,
+      "risk_exclusive_claims": 1863,
+      "examples": [
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 0,
+          "evidence": "Supports Women’s Health*"
+        },
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 1,
+          "evidence": "Red Clover is a natural source of plant nutrients that help promote well-being for women.*"
+        },
+        {
+          "dsld_id": 806,
+          "kind": "purpose",
+          "index": 2,
+          "evidence": "Red Clover Blossoms help support the physical changes which occur in a woman’s body over time.*"
+        }
+      ]
+    },
+    "statements[].type": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "targetGroups[]": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "thumbnail": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "upcSku": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "userGroups[].dailyValueTargetGroupName": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "userGroups[].langualCode": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    },
+    "userGroups[].langualCodeDescription": {
+      "present_labels": 1000,
+      "purpose_claims": 0,
+      "purpose_labels": 0,
+      "purpose_exclusive_claims": 0,
+      "risk_claims": 0,
+      "risk_labels": 0,
+      "risk_exclusive_claims": 0,
+      "examples": []
+    }
+  },
+  "cross_segment_examples": [
+    {
+      "dsld_id": 43806,
+      "name": "Alaska Wild Fish Oil Mega",
+      "kind": "purpose",
+      "index": 0,
+      "text": "omega-3 fatty acids help support healthy heart, joint, immune, skin, brain & memory and nervous systems",
+      "evidence": "~ Concentrated Fish Oil Omega-3 fatty acids\n~ Exclusive process to preserve whole oil Omega-3 concentrations ~ Omega-3 fatty acids help support healthy heart, joint, immune, skin, brain & memory and nervous systems",
+      "raw_file": "datasets/DSLD-full-database-JSON/043000-043999/43806.json",
+      "raw_sha256": "c12e6c91582e941fa05e352588c51e564d038415e9cc3e902b61dc19ff3490b8",
+      "status": "cross_segment",
+      "fields": [
+        "statements[].notes"
+      ],
+      "top_level_fields": [
+        "statements"
+      ],
+      "statement_types": [
+        "Formula re: Contains",
+        "General Statements: All Other Content"
+      ],
+      "raw_matches": [],
+      "passage_occurrences": [
+        {
+          "passage_start": 731,
+          "passage_end": 945,
+          "parts": [
+            {
+              "evidence_start": 0,
+              "evidence_end": 43,
+              "fragment": "~ Concentrated Fish Oil Omega-3 fatty acids",
+              "segment_start": 0,
+              "segment_end": 43,
+              "locations": [
+                {
+                  "path": "statements[11].notes",
+                  "field": "statements[].notes",
+                  "top_level_field": "statements",
+                  "statement_type": "Formula re: Contains",
+                  "raw_text": "~ Concentrated Fish Oil Omega-3 fatty acids",
+                  "normalized_text": "~ Concentrated Fish Oil Omega-3 fatty acids"
+                }
+              ]
+            },
+            {
+              "evidence_start": 44,
+              "evidence_end": 214,
+              "fragment": "~ Exclusive process to preserve whole oil Omega-3 concentrations ~ Omega-3 fatty acids help support healthy heart, joint, immune, skin, brain & memory and nervous systems",
+              "segment_start": 0,
+              "segment_end": 170,
+              "locations": [
+                {
+                  "path": "statements[12].notes",
+                  "field": "statements[].notes",
+                  "top_level_field": "statements",
+                  "statement_type": "General Statements: All Other Content",
+                  "raw_text": "~ Exclusive process to preserve whole oil Omega-3 concentrations \n~ Omega-3 fatty acids help support healthy heart, joint, immune, skin, brain & memory and nervous systems",
+                  "normalized_text": "~ Exclusive process to preserve whole oil Omega-3 concentrations ~ Omega-3 fatty acids help support healthy heart, joint, immune, skin, brain & memory and nervous systems"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "input_sha256": {
+    "datasets/pilot/silver-1000.jsonl": "0cbbc4f389a848d0bbb6786ef13105d4ca3d574d4561c7a16e6b5dd0fe73ecac",
+    "datasets/pilot/silver-1000.sources.jsonl": "edaae992136afc5625ed62273c18af43cab2862469dc1fd64bbd8ca1e24181d7",
+    "data/dsld/runs/silver1000-text-v2/raw/inputs.jsonl": "ae03fd7f2ee01291fe1208d8e80d8b4be93c282811c6ee081520c2b6c703a884",
+    "datasets/pilot/silver-1000.manifest.json": "3c50e014f277f40c22f78dbe0222d7654272a8f744436c1a8ddfe4cdd63890ea",
+    "data/dsld/runs/silver1000-text-v2/manifests/silver-1000.json": "33d88f9c30842a17546e6e71344a0b7a7ad51d23881e2f835a54df52151fcf0b"
+  },
+  "raw_labels_sha256_in_silver_order": "d997e628dbf81ddba0688bf61de9afd6597d2a5c1c0428acbb30da1e2fc6db8b",
+  "limits": "Traces the recorded evidence, not semantic completeness or extraction accuracy. Zero evidence matches do not establish that a field or statement type is irrelevant. No model calls, no source edits, no clinical assessment.",
+  "output_sha256": {
+    "silver-1000.field-trace.jsonl": "a35cca302a3853a8e016b861529998739eddf1c038f8998507793f6b09d92762",
+    "silver-1000.field-trace.csv": "be32b7f1caff26501d380c552dd2305e36f8ce0b1b6dc607662627c052780560"
+  }
+}

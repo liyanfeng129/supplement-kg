@@ -1,0 +1,62 @@
+{
+  "labels": 1000,
+  "tokenizer_model": "/var/tmp/ge74wan/hf_cache/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e",
+  "prompt_format": "json",
+  "prompt_sha256": "09b8586c6f99742aff0f3928075aed43dcab57372d1b2b4a705cf780d0aaa2c7",
+  "input_sha256": {
+    "gold-1000.jsonl": "6762ec54ee3196466f25be8871ab44c052dddf04d0b86da24c658132a8a29afd",
+    "gold-1000.sources.jsonl": "492aa86b122d910489fa993bd8ed15f24a60b1560d8290a5b84f35b4da11b8e1"
+  },
+  "variants": {
+    "frozen": {
+      "passage_tokens": 479480,
+      "full_prompt_tokens": 1771480,
+      "purpose_evidence_lost": 0,
+      "risk_evidence_lost": 0,
+      "passage_tokens_reduction_fraction": 0.0,
+      "full_prompt_tokens_reduction_fraction": 0.0
+    },
+    "remove_header_names_only": {
+      "passage_tokens": 455806,
+      "full_prompt_tokens": 1747806,
+      "purpose_evidence_lost": 0,
+      "risk_evidence_lost": 0,
+      "passage_tokens_reduction_fraction": 0.049374,
+      "full_prompt_tokens_reduction_fraction": 0.013364
+    },
+    "drop_metadata_fields": {
+      "passage_tokens": 387474,
+      "full_prompt_tokens": 1679474,
+      "purpose_evidence_lost": 0,
+      "risk_evidence_lost": 0,
+      "passage_tokens_reduction_fraction": 0.191887,
+      "full_prompt_tokens_reduction_fraction": 0.051937
+    },
+    "drop_statement_type_fields": {
+      "passage_tokens": 366818,
+      "full_prompt_tokens": 1658818,
+      "purpose_evidence_lost": 0,
+      "risk_evidence_lost": 0,
+      "passage_tokens_reduction_fraction": 0.234967,
+      "full_prompt_tokens_reduction_fraction": 0.063598
+    },
+    "drop_metadata_and_type_fields": {
+      "passage_tokens": 274812,
+      "full_prompt_tokens": 1566812,
+      "purpose_evidence_lost": 0,
+      "risk_evidence_lost": 0,
+      "passage_tokens_reduction_fraction": 0.426854,
+      "full_prompt_tokens_reduction_fraction": 0.115535
+    },
+    "current_renderer": {
+      "passage_tokens": 363331,
+      "full_prompt_tokens": 1655331,
+      "purpose_evidence_lost": 0,
+      "risk_evidence_lost": 0,
+      "passage_tokens_reduction_fraction": 0.24224,
+      "full_prompt_tokens_reduction_fraction": 0.065566
+    }
+  },
+  "method": "Local GGUF tokenizer, vocabulary only; no inference. Passage counts exclude BOS/chat/system tokens. Full prompt counts include the configured system prompt and chat template. Frozen variants retain the same statement bodies; current_renderer also restores excluded types and adds recursive ingredient free text.",
+  "limits": "Evidence retention does not measure extraction accuracy. Header-name removal retains metadata values; statement-type removal drops the type field's value too. JSON keys such as notes were already absent from frozen passages."
+}
