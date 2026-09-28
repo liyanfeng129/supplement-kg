@@ -1,0 +1,42 @@
+# Qwen hyperparameters: experiment inputs, so committed and diffable.
+#
+# Read by engine/models/qwen_model.py ([model], [sampling]) and
+# engine/controllers/qwen_controller.py ([controller]). An explicit constructor
+# argument beats anything here; a missing or malformed file falls back to the
+# hardcoded defaults in qwen_model.py rather than raising.
+
+[model]
+# The on-disk weights: an unextensioned blob in the HF cache (Unsloth
+# UD-Q4_K_XL). See DEFAULT_MODEL in engine/pipeline/config.py for provenance.
+model_path = "/var/tmp/ge74wan/hf_cache/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/3f227079003add2511437e5b1e94812e363385225bf6a9b47b0054a72bc8b01e"
+# The model hosts itself on llama.cpp's server, started and stopped by it.
+server_path = "/var/tmp/ge74wan/llama.cpp/build/bin/llama-server"
+# Requests in flight at once. Measured on 32 labels (lines format, load
+# excluded): 1 slot 74.6s, 2 57.1s, 4 53.7s, 6 55.6s, 8 56.2s -- four is where
+# it stops improving. See benchmarks/parallel_slots.py.
+n_parallel = 4
+# Tokens per slot: prompt + output budget + repair margin must fit. The longest
+# gold/silver passage is 2,709 tokens, ~4.3k rendered with the lines prompt;
+# plus 400 output fits in 5,120. A json run (2,000 output tokens) needs ~6,400.
+slot_ctx = 5120
+# Physical batch for prompt reading. 2,048 only pays with primed slots, which
+# the model does itself in plan(): alone it re-read 3x the prompt tokens.
+ubatch = 2048
+# Speculative decoding with the model's own MTP draft head, verified by the
+# full model. "none" turns it off. 3 drafted tokens: 5 was noise-level faster
+# for 1.2 GB more VRAM. Sweep: 101s defaults -> 65.5s with all of the above.
+speculative = "draft-mtp"
+draft_max = 3
+# Peak with the settings above was ~20.9 GB.
+min_vram_mib = 21500
+
+[sampling]
+seed = 0
+temperature = 0.0
+top_p = 1.0
+top_k = 0
+max_tokens = 2000
+enable_thinking = false
+
+[controller]
+max_attempts = 3
