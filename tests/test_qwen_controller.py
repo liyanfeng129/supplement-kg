@@ -1,16 +1,16 @@
 """QwenController runs every prompt to an outcome, batch by batch, retrying failures.
 
 What is pinned: the controller submits what the model's plan names, in its
-order, and re-submits only failures -- repaired to name the failing checks --
+order, and re-submits only failures -- repaired with the failed checks' messages --
 up to the budget; a prompt that never passes
 comes back `ok=False` with the reasons and does not stall the run; a prompt the
 plan calls too long is reported, never sent; outcomes line up with inputs by
 position; progress counts units, not attempts; and a model that cannot be
 readied stops the run before anything is sent.
 
-The model here is a `QwenModel` subclass that answers from a script -- no GPU,
-no server -- which keeps the controller's concrete dependency honest while
-still testable.
+The model here is a stand-in that answers from a script -- no GPU, no
+server. It is a `BaseModel`, not a `QwenModel` subclass: `QwenModel()` is one
+shared instance, so it cannot be subclassed per test.
 """
 
 from __future__ import annotations
@@ -19,11 +19,19 @@ import pytest
 
 from engine.controllers import qwen_controller as qc
 from engine.controllers.qwen_controller import Outcome, QwenController
-from engine.models.base_model import BaseModel, Generation, ModelUnavailable, Plan, Prompt, Usage
-from engine.models.qwen_model import QwenModel
+from engine.models.base_model import (
+    BaseModel,
+    Check,
+    Generation,
+    ModelUnavailable,
+    Plan,
+    Prompt,
+    Usage,
+)
+from engine import config
 
 
-class ScriptedQwen(QwenModel):
+class ScriptedQwen(BaseModel):
     """Answers each prompt with the next scripted text; records what it saw.
 
     Plans in input order and answers each `submit()` before returning (the
@@ -33,7 +41,6 @@ class ScriptedQwen(QwenModel):
     submit = BaseModel.submit
 
     def __init__(self, replies, fail_ready=None, too_long=()):
-        super().__init__(model_path="/scripted.gguf")
         self.replies = list(replies)
         self.fail_ready = fail_ready
         self.too_long = tuple(too_long)
@@ -59,12 +66,17 @@ class ScriptedQwen(QwenModel):
         )
 
 
-def is_json(generation: Generation) -> bool:
-    return generation.text.startswith("{")
+is_json = Check(
+    name="is_json",
+    passes=lambda _prompt, generation: generation.text.startswith("{"),
+    message="Answer in JSON.",
+)
 
-
-def has_claims(generation: Generation) -> bool:
-    return "claim" in generation.text
+has_claims = Check(
+    name="has_claims",
+    passes=lambda _prompt, generation: "claim" in generation.text,
+    message="Include a claim.",
+)
 
 
 def prompt(user: str = "extract") -> Prompt:
@@ -84,7 +96,7 @@ def test_a_passing_first_answer_is_one_attempt():
     )
 
 
-def test_a_failed_check_is_named_in_the_re_sent_prompt():
+def test_a_failed_check_s_message_is_in_the_re_sent_prompt():
     model = ScriptedQwen(["no json here", '{"claim": 1}'])
 
     [outcome] = QwenController(model).handle([prompt("extract")], checks=[is_json])
@@ -92,28 +104,29 @@ def test_a_failed_check_is_named_in_the_re_sent_prompt():
     assert outcome.ok and outcome.attempts == 2
     retry = model.seen[1]
     assert retry.user.startswith("extract")
-    assert "is_json" in retry.user
+    assert "- Answer in JSON." in retry.user
+    assert "is_json" not in retry.user  # the name is for people, not the model
     assert retry.system == "sys"
 
 
-def test_the_repair_names_only_the_checks_that_failed():
+def test_the_repair_carries_only_the_checks_that_failed():
     model = ScriptedQwen(['{"x": 1}', '{"claim": 1}'])
 
     QwenController(model).handle([prompt()], checks=[is_json, has_claims])
 
-    assert "has_claims" in model.seen[1].user
-    assert "is_json" not in model.seen[1].user
+    assert has_claims.message in model.seen[1].user
+    assert is_json.message not in model.seen[1].user
 
 
 def test_each_repair_starts_from_the_original_prompt():
-    """Repairs must not pile up: attempt 3 names attempt 2's failures only."""
+    """Repairs must not pile up: attempt 3 carries attempt 2's failures only."""
     model = ScriptedQwen(["plain", '{"x": 1}', '{"claim": 1}'])
 
     QwenController(model).handle([prompt()], checks=[is_json, has_claims])
 
     third = model.seen[2].user
-    assert "has_claims" in third
-    assert "is_json" not in third
+    assert has_claims.message in third
+    assert is_json.message not in third
 
 
 def test_it_gives_up_after_the_budget_and_says_why():
@@ -150,20 +163,19 @@ def test_without_checks_every_answer_passes():
     assert outcome.ok and outcome.attempts == 1
 
 
-def test_a_check_may_carry_its_own_name():
-    class Named:
-        name = "grounded"
-
-        def __call__(self, _generation):
-            return False
-
-    model = ScriptedQwen(["x"])
-
-    [outcome] = QwenController(model, max_attempts=1).handle(
-        [prompt()], checks=[Named()]
+def test_a_check_sees_the_original_prompt_on_every_attempt():
+    """A rule about the input must judge the input, not a repaired copy."""
+    seen: list[str] = []
+    grounded = Check(
+        name="grounded",
+        passes=lambda p, _generation: seen.append(p.user) or False,
+        message="Copy from the label.",
     )
+    model = ScriptedQwen(["x", "y"])
 
-    assert outcome.failed == ["grounded"]
+    QwenController(model, max_attempts=2).handle([prompt("the label")], checks=[grounded])
+
+    assert seen == ["the label", "the label"]
 
 
 def test_outcomes_line_up_with_prompts_by_position():
@@ -238,15 +250,15 @@ def test_the_budget_comes_from_the_committed_file():
 
 
 def test_a_budget_from_a_missing_file_falls_back(monkeypatch, tmp_path):
-    monkeypatch.setattr(qc, "DEFAULTS_PATH", tmp_path / "absent.toml")
+    monkeypatch.setattr(config, "QWEN_CONFIG_PATH", tmp_path / "absent.toml")
 
     assert QwenController(ScriptedQwen([])).max_attempts == 3
 
 
 def test_a_budget_that_is_not_an_integer_falls_back(monkeypatch, tmp_path):
-    config = tmp_path / "qwen.toml"
-    config.write_text('[controller]\nmax_attempts = "3"\n')
-    monkeypatch.setattr(qc, "DEFAULTS_PATH", config)
+    config_file = tmp_path / "qwen.toml"
+    config_file.write_text('[controller]\nmax_attempts = "3"\n')
+    monkeypatch.setattr(config, "QWEN_CONFIG_PATH", config_file)
 
     assert QwenController(ScriptedQwen([])).max_attempts == 3
 

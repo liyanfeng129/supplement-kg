@@ -46,13 +46,6 @@ class Usage:
     def total_tokens(self) -> int:
         return self.prompt_tokens + self.completion_tokens
 
-    def to_dict(self) -> dict:
-        return {
-            "prompt_tokens": self.prompt_tokens,
-            "completion_tokens": self.completion_tokens,
-            "total_tokens": self.total_tokens,
-        }
-
 
 @dataclass(frozen=True)
 class Prompt:
@@ -100,10 +93,6 @@ class Progress:
     total: int
     detail: str = ""
 
-    @property
-    def fraction(self) -> float:
-        return self.done / self.total if self.total else 0.0
-
 
 @dataclass(frozen=True)
 class Generation:
@@ -123,13 +112,24 @@ class Generation:
     usage: Usage = field(default_factory=Usage)
     stop_reason: str = ""
 
-    def to_dict(self) -> dict:
-        return {
-            "text": self.text,
-            "latency_ms": self.latency_ms,
-            "usage": self.usage.to_dict(),
-            "stop_reason": self.stop_reason,
-        }
+
+@dataclass(frozen=True)
+class Check:
+    """One rule an answer must follow, and what to tell the model when it does not.
+
+    Atomic: one rule per check, so a failed answer is told exactly which rules
+    it broke and nothing else. `passes` gets the prompt as well as the
+    generation because some rules are about the input -- "every claim is copied
+    from the label" needs the label.
+
+    `message` is written *to the model*: on a failure it is appended to the
+    retried prompt as an instruction. `name` is written for people -- logs and
+    `Outcome.failed` -- and the model never sees it.
+    """
+
+    name: str
+    passes: Callable[[Prompt, Generation], bool]
+    message: str
 
 
 @dataclass(frozen=True)

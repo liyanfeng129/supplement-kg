@@ -20,7 +20,8 @@ n_parallel = 4
 # plus 400 output fits in 5,120. A json run (2,000 output tokens) needs ~6,400.
 slot_ctx = 5120
 # Physical batch for prompt reading. 2,048 only pays with primed slots, which
-# the model does itself in plan(): alone it re-read 3x the prompt tokens.
+# the model does itself in cache_shared_prefix(): alone it re-read 3x the
+# prompt tokens.
 ubatch = 2048
 # Speculative decoding with the model's own MTP draft head, verified by the
 # full model. "none" turns it off. 3 drafted tokens: 5 was noise-level faster
@@ -40,3 +41,6 @@ enable_thinking = false
 
 [controller]
 max_attempts = 3
+# Prompts submitted but not yet settled. Must exceed [model].n_parallel so a freed
+# slot always finds one queued; 2x is plenty, more only holds memory.
+in_flight = 8

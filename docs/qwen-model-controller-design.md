@@ -220,10 +220,10 @@ Three, to be amended in the ADR rather than left contradicted:
 
 ## Deferred
 
-- **The concrete `Check` shape.** It depends on what output format the prompt asks
-  for, which is a prompt-engineering question not yet run. The controller only needs
-  *runs against a generation* and *has a name*, so `checks` stays loosely typed until
-  the format settles.
+- ~~**The concrete `Check` shape.**~~ Settled 2026-09-24: `Check(name, passes(prompt,
+  generation), message)` in `models/base_model.py`. Checks are atomic and live with
+  their prompt (`repositories/prompts/<id>/checks.py`, read by `prompts/loader.py`);
+  the repair appends each failed check's `message`, and `name` is for logs only.
 - **`fake_model.py` and `fake_controller.py`.** Stubs for testing a service that does
   not exist yet. They come back when the service does — and that is when the concrete
   `QwenModel` import above will want revisiting.
@@ -286,7 +286,7 @@ nothing called it. An async caller runs `handle` on a worker thread:
 used; that is now superseded, on the measurement above, and those documents
 still need amending. The model's interface grows from three verbs to five.
 
-## Responsibilities, as built (2026-09-23)
+## Responsibilities, as built (2026-09-23, row 20 added the same day)
 
 What each layer does in the code today. Planned or unassigned work is not
 listed here.
@@ -311,4 +311,58 @@ listed here.
 | 16 | Progress | Tokens and latency for each answer | Done/total, speed, time left, as a log line and a callback |
 | 17 | Result shape | One answer per prompt | One outcome per prompt, in input order |
 | 18 | Cleanup | `close()` cancels queued work; the server dies with its Python process | Cancels what it submitted if `handle` exits early |
-| 19 | Logging | The server's log file | Retries, give-ups, progress |
+| 19 | Logging | The server's log file; a warning when a settings change restarts the server | Retries, give-ups, progress |
+| 20 | One instance | `QwenModel()` always returns the one model; a settings change is refused mid-run and restarts the server when idle | Is handed that model |
+
+## Amendment, 2026-09-23: one shared model, and code you read top to bottom
+
+Settled by interview after the build above.
+
+**`QwenModel` is a singleton.** `QwenModel(...)` is served by `__new__` and
+returns the one model in the process; there is no `__init__`, because Python
+would re-run it on every call and reset the shared model. A setting left as
+`None` keeps its current value. A different setting is:
+
+| model state | what happens |
+|---|---|
+| prompts running or queued | `RuntimeError`: settings cannot change mid-run |
+| server up, idle | warning logged, server stopped, restarted with the new settings on the next `ready()` |
+| server never started | the new settings are simply taken |
+
+`close()` lets go of the model, so the next `QwenModel()` builds a fresh one
+from the file. A closed model may call `ready()` again only if no other has
+been built since. Two models can therefore never hold the card from one
+process; another process is still caught by the free-VRAM check.
+
+**Public surface is the five verbs.** `ready`, `generate`, `plan`, `submit`,
+`close`. Everything else in `qwen_model.py` is private. Reading
+`configs/qwen.toml` moved to `engine/config.py` (`read_toml`,
+`QWEN_CONFIG_PATH`), shared by the model and the controller.
+
+**Helpers only where they save a jump.** A helper stays if it is used several
+times and sits next to its uses (`free_vram_mib` and `die_with_parent` are
+local to `ready()`), or is used across the class (`_request`, `_render`,
+`_unavailable_message`). Everything else is written where it is used:
+`ready()` reads as seven numbered steps, `plan()` as three. `Usage.to_dict`,
+`Generation.to_dict` and `Progress.fraction` had no callers and were removed.
+
+**Tests call only the public verbs**, faking `nvidia-smi`, the server process
+and its HTTP API underneath. The controller's scripted model is now a
+`BaseModel`, since the singleton cannot be subclassed per test.
+
+## Measurements behind the code
+
+The numbers the code comments used to carry. Run ids are under
+`data/benchmarks/`; apparatus `benchmarks/parallel_slots.py`.
+
+| decision in the code | measured | run |
+|---|---|---|
+| `llama-server`, not in-process `llama_cpp` | 32 labels: 99.5s in-process vs 74.6s one server slot | `parallel-20260923T145320Z` |
+| 4 slots | 32 labels: 1 slot 74.6s, 2 57.1s, **4 53.7s**, 6 55.6s, 8 56.2s -- prompt reading already runs at full width, so more slots only queue | `parallel-20260923T145320Z` |
+| continuous pool, no batch barrier | 73.5s batched vs 73.9s one at a time vs 53.7s pool | `parallel-20260923T152816Z` |
+| MTP speculative decoding, 3 drafted tokens | 64 labels: 101-105s defaults -> 77s; 5 drafted tokens 2.5% faster (noise) for 1.2 GB more VRAM | sweep `parallel-20260923T154114Z`, `-155732Z` |
+| `-ub 2048` + primed slots | 77s -> 65.5s; prompt tokens read per label 1,460 -> 444. Without priming, 2,048 was slower (129s) | sweep `parallel-20260923T154114Z`, `-155732Z` |
+| `--no-kv-unified` | `--kv-unified` changed nothing; per-slot context makes `plan()`'s fit check exact | sweep `parallel-20260923T154114Z`, `-155732Z` |
+| input order, not longest-first | longest-first read 32,371 prompt tokens vs 25,317: its first requests missed the cached system prompt | -- |
+| `min_vram_mib = 21500` | peak ~20.9 GB at 4 slots x 5,120 tokens with the settings above | -- |
+| JSON schema costs ~4x decode | grammar sampler vs free sampling | -- |

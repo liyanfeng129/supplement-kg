@@ -13,12 +13,12 @@ the model's business -- the controller never learns a slot count, and never
 waits on a batch: a slot that frees is refilled at once, which measured 1.38x
 over one at a time where batch-by-batch measured 1.01x.
 
-**Validation with retry lives here**, because the loop does. The service
-supplies checks; the controller runs them against each generation as it
-arrives and re-submits a failure at once -- repaired to name the failing
-checks -- until it passes or the budget is spent. It can do that without
-understanding any check, because a check carries a name: *check X failed* is
-composable from the name alone. The prompt asks for a format and the controller
+**Validation with retry lives here**, because the loop does. The checks come
+with the prompt (see `repositories/prompts/`); the controller runs them
+against each generation as it arrives and re-submits a failure at once --
+repaired with each failed check's message -- until it passes or the budget is
+spent. It can do that without understanding any check, because a check carries
+its own message to the model. The prompt asks for a format and the controller
 verifies it -- a prompt asking nicely is not a guarantee.
 
 **Progress is counted here, measured below.** The model reports tokens per
@@ -26,10 +26,10 @@ generation; the controller turns completed units and the wall clock into
 done-of-total, throughput and an ETA. Wall clock rather than summed latency,
 because concurrent generations overlap: four at 6s each is 6s, not 24.
 
-A *check* is, for now, any callable taking a `Generation` and returning truthy
-when the generation passes. Its name is its `name` attribute if it has one,
-else its `__name__`. The concrete shape waits on the output format the prompt
-settles on. A check that raises is a bug in the check and propagates.
+A check is a `Check` (see `models/base_model.py`): a name, a `passes(prompt,
+generation)` test, and a message. It is run against the *original* prompt, so
+a rule about the input sees the input, not a repaired copy. A check that raises
+is a bug in the check and propagates.
 """
 
 from __future__ import annotations
@@ -39,9 +39,11 @@ import time
 from concurrent.futures import FIRST_COMPLETED, Future, wait
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, Callable, Iterable, Sequence
+from typing import Iterable, Sequence
 
+from engine import config
 from engine.models.base_model import (
+    Check,
     Generation,
     ModelUnavailable,
     Plan,
@@ -49,7 +51,7 @@ from engine.models.base_model import (
     ProgressFn,
     Prompt,
 )
-from engine.models.qwen_model import DEFAULTS_PATH, QwenModel, read_config
+from engine.models.qwen_model import QwenModel
 
 log = logging.getLogger(__name__)
 
@@ -58,8 +60,6 @@ _FALLBACK_MAX_ATTEMPTS = 3
 
 # The failure name given to a prompt the model's plan says cannot run.
 TOO_LONG = "fits_context"
-
-Check = Callable[[Generation], Any]
 
 
 def _now() -> float:
@@ -89,18 +89,13 @@ class Outcome:
     failed: list[str]  # names from the final attempt
 
 
-def check_name(check: Check) -> str:
-    """What a check is called in a repair and in the give-up log."""
-    return getattr(check, "name", None) or getattr(check, "__name__", repr(check))
-
-
 def load_max_attempts(path: Path | None = None) -> int:
     """`[controller].max_attempts` from the TOML, or the fallback.
 
     A value that is not an integer falls back like a missing one: a broken
     config file must not raise at construction.
     """
-    table = read_config(path or DEFAULTS_PATH).get("controller")
+    table = config.read_toml(path or config.QWEN_CONFIG_PATH).get("controller")
     value = table.get("max_attempts") if isinstance(table, dict) else None
     if isinstance(value, int) and not isinstance(value, bool):
         return value
@@ -184,15 +179,16 @@ class _Run:
         """Check one answer: finish the unit, or return the repair to re-submit."""
         self.attempts[i] += 1
         n, budget = self.attempts[i], self.controller.max_attempts
-        failed = [check_name(c) for c in self.checks if not c(generation)]
-        self.meter.attempt(Attempt(generation=generation, failed=failed))
+        failed = [c for c in self.checks if not c.passes(self.prompts[i], generation)]
+        names = [c.name for c in failed]
+        self.meter.attempt(Attempt(generation=generation, failed=names))
 
         if failed and n < budget:
-            log.info("prompt %d attempt %d/%d failed %s; retrying", i, n, budget, failed)
+            log.info("prompt %d attempt %d/%d failed %s; retrying", i, n, budget, names)
             return self.controller._repair(self.prompts[i], failed)
         if failed:
-            log.warning("prompt %d: giving up after %d attempts; last failed %s", i, n, failed)
-        self._finish(i, Outcome(generation=generation, ok=not failed, attempts=n, failed=failed))
+            log.warning("prompt %d: giving up after %d attempts; last failed %s", i, n, names)
+        self._finish(i, Outcome(generation=generation, ok=not failed, attempts=n, failed=names))
         return None
 
     def result(self) -> list[Outcome]:
@@ -258,11 +254,11 @@ class QwenController:
 
     # --- internals ----------------------------------------------------------
 
-    def _repair(self, prompt: Prompt, failed: list[str]) -> Prompt:
-        """Append which named checks failed to the user turn."""
-        names = ", ".join(failed)
+    def _repair(self, prompt: Prompt, failed: list[Check]) -> Prompt:
+        """Append each failed check's message to the user turn."""
+        rules = "\n".join(f"- {c.message}" for c in failed)
         note = (
-            f"\n\nYour previous answer failed these checks: {names}. "
+            f"\n\nYour previous answer broke these rules:\n{rules}\n"
             "Answer again, following the instructions exactly."
         )
         return replace(prompt, user=prompt.user + note)

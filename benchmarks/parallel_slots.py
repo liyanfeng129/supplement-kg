@@ -58,6 +58,7 @@ import difflib
 import json
 import os
 import random
+import re
 import shlex
 import socket
 import statistics
@@ -77,15 +78,52 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
 from engine.models.base_model import Prompt  # noqa: E402
-from engine.models.qwen_model import (  # noqa: E402
-    HELLO_PROMPT,
-    QwenModel,
-    gpu_holders,
-    incoherence,
-)
+from engine.models.qwen_model import QwenModel  # noqa: E402
 from engine.pipeline import lines  # noqa: E402
 from engine.pipeline.validate import grounding_rate, validate  # noqa: E402
 from engine.services.extraction.label_purpose_risk import SCHEMA  # noqa: E402
+
+# The model's own hello check, copied: it is private to `QwenModel.ready()`,
+# and this apparatus runs its servers without the model.
+HELLO_PROMPT = Prompt(
+    system="You are a helpful assistant. Reply with one short sentence in English.",
+    user="Hello",
+    max_tokens=32,
+)
+
+
+def incoherence(text: str) -> str | None:
+    """Why `text` is not a coherent greeting, or None if it is."""
+    stripped = text.strip()
+    if not stripped:
+        return "the reply was empty"
+    if len(stripped) > 400:
+        return f"the reply was too long for a greeting ({len(stripped)} chars)"
+    words = re.findall(r"[A-Za-z]{2,}", stripped)
+    visible = sum(1 for c in stripped if not c.isspace())
+    if not words or sum(len(w) for w in words) / visible < 0.5:
+        return "the reply had no words in it, or too few to be language"
+    return None
+
+
+def gpu_holders() -> list[dict]:
+    """Processes currently holding GPU memory, via nvidia-smi."""
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-compute-apps=pid,process_name,used_gpu_memory", "--format=csv,noheader,nounits"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return []
+    holders = []
+    for line in out.stdout.strip().splitlines() if out.returncode == 0 else []:
+        parts = [f.strip() for f in line.split(",")]
+        if len(parts) >= 3 and parts[0]:
+            holders.append({"pid": parts[0], "name": parts[1], "used_mib": parts[2]})
+    return holders
+
 
 LLAMA_SERVER = Path("/var/tmp/ge74wan/llama.cpp/build/bin/llama-server")
 DEFAULT_INPUTS = REPO_ROOT / "data/dsld/runs/silver1000-text-v2/raw/inputs.jsonl"

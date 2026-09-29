@@ -1,20 +1,26 @@
-"""Environment-backed settings.
+"""Settings: secrets from `.env`, model hyperparameters from `configs/`.
 
 Importing this module loads `.env` from the repo root, so `os.getenv` works
 the same in a notebook, a script, and a test without each one wiring dotenv
 itself. Real values live in `.env` (gitignored); `.env.example` documents the
 keys.
+
+Hyperparameters are experiment inputs, so they are committed as TOML under
+`configs/` rather than kept in `.env`: a run's settings are then diffable and
+quotable. `read_toml` is how the model and its controller both read them.
 """
 
 from __future__ import annotations
 
 import os
+import tomllib
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ENV_PATH = REPO_ROOT / ".env"
+QWEN_CONFIG_PATH = REPO_ROOT / "configs" / "qwen.toml"
 
 # override=False: an explicitly exported shell var beats the file, which is
 # what you want on a cluster or in CI where secrets arrive as real env vars.
@@ -31,6 +37,19 @@ def get(name: str, default: str | None = None) -> str | None:
     if val is not None:
         val = val.strip()
     return val or default
+
+
+def read_toml(path: Path) -> dict:
+    """The parsed TOML, or {} when the file is missing or malformed.
+
+    Never raises: constructing a model must stay free, and a broken file
+    falls back to each reader's hardcoded defaults.
+    """
+    try:
+        with open(path, "rb") as f:
+            return tomllib.load(f)
+    except (OSError, tomllib.TOMLDecodeError):
+        return {}
 
 
 def require(name: str) -> str:
