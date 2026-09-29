@@ -17,8 +17,7 @@ tuned number (4 slots, speculative decoding, 2,048-token batches, primed
 slots, input order) was chosen by measurement: see
 `docs/qwen-model-controller-design.md`, "Measurements behind the code".
 
-Public: `ready`, `generate`, `plan`, `submit`, `close`. Everything else is
-private.
+Public: `ready`, `generate`, `fits`, `cache_shared_prefix`, `submit`, `close`. Everything else is private.
 """
 
 from __future__ import annotations
@@ -45,7 +44,6 @@ from engine.models.base_model import (
     BaseModel,
     Generation,
     ModelUnavailable,
-    Plan,
     Prompt,
     Usage,
 )
@@ -364,7 +362,7 @@ class QwenModel(BaseModel):
             "-m", str(self.model_path),
             "-ngl", "999",
             "-np", str(self.n_parallel),
-            # Split evenly, so every slot holds `slot_ctx` and `plan()`'s fit
+            # Split evenly, so every slot holds `slot_ctx` and `fits()`'s
             # check is exact rather than a hope about a shared pool.
             "-c", str(self.n_parallel * self.slot_ctx),
             "--no-kv-unified",
@@ -568,40 +566,34 @@ class QwenModel(BaseModel):
         future.add_done_callback(finished)
         return future
 
-    def plan(self, prompts: Sequence[Prompt]) -> Plan:
-        """Measure a work set and prepare the slots for it.
+    def fits(self, prompt: Prompt) -> bool:
+        """Can this prompt, its output budget and the repair margin fit one slot?
 
-        1. Count each prompt in this model's own tokens.
-        2. Set aside any prompt that cannot fit a slot, so it never fails mid-run.
-        3. Warm the cache: every slot reads the start all prompts share, once.
-
-        The order is kept as given (longest-first was measured slower).
+        One `/tokenize` call, counted in this model's own tokens. llama-server
+        answers it on the HTTP thread that received it, from the vocabulary
+        alone -- no slot, no GPU -- so it does not wait behind generations and
+        is safe to ask just before each submit.
         """
         self.ready()
-        rendered = [self._render(p) for p in prompts]
+        size = len(self._request("/tokenize", {"content": self._render(prompt)}).get("tokens") or [])
+        return size + (prompt.max_tokens or self.max_tokens) + _REPAIR_MARGIN <= self.slot_ctx
 
-        # 1. Count tokens, eight requests at a time.
-        with ThreadPoolExecutor(max_workers=8) as pool:
-            sizes = list(
-                pool.map(
-                    lambda text: len(self._request("/tokenize", {"content": text}).get("tokens") or []),
-                    rendered,
-                )
-            )
+    def cache_shared_prefix(self, sample: Sequence[Prompt]) -> None:
+        """Make every slot read the start all prompts share, once, and keep it.
 
-        # 2. A prompt fits if it, its output budget and the repair margin fit one slot.
-        fits, too_long = [], []
-        for i, (prompt, size) in enumerate(zip(prompts, sizes)):
-            need = size + (prompt.max_tokens or self.max_tokens) + _REPAIR_MARGIN
-            (fits if need <= self.slot_ctx else too_long).append(i)
+        Every prompt of a run starts with the same system turn (~1,600 of
+        ~2,000 tokens); a slot that has read it once reads only the rest. The
+        start is worked out from `sample` -- a stream never holds the whole
+        set, and every prompt shares the system turn, so its first few are
+        enough. Skipped if the slots already hold this prefix.
+        """
+        self.ready()
+        rendered = [self._render(p) for p in sample]
 
-        # 3. Warm the cache. Every prompt of a run starts with the same system
-        # turn (~1,600 of ~2,000 tokens); a slot that has read it once reads
-        # only the rest. Skipped if the slots already hold this prefix.
-        
-        common = os.path.commonprefix([rendered[i] for i in fits]) if len(fits) >= 2 else ""
-        #This finds the longest string that all the prompts that fit start with. 
-        # It compares characters, not tokens. With fewer than two prompts there's nothing shared, so it uses "".
+        # The longest string all the samples start with, in characters, cut at
+        # the end of a turn so it tokenises exactly as it does inside each
+        # prompt. With fewer than two there is nothing shared.
+        common = os.path.commonprefix(rendered) if len(rendered) >= 2 else ""
         end = common.rfind(_TURN_END)
         prefix = common[: end + len(_TURN_END)] if end >= 0 else ""
         if prefix and prefix != self._primed:
@@ -610,8 +602,6 @@ class QwenModel(BaseModel):
             with ThreadPoolExecutor(max_workers=n) as pool:  # all at once: one per slot
                 list(pool.map(lambda _: self._request("/completion", body), range(n)))
             self._primed = prefix
-
-        return Plan(order=tuple(fits), too_long=tuple(too_long))
 
     # --- talking to the server ----------------------------------------------
 

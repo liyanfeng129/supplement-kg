@@ -5,13 +5,24 @@ drives -- it imports `QwenModel` concretely, the one-controller-per-model rule
 made literal -- and nothing about what the prompts are for. A future
 `claude_controller` pairs with `claude_model` the same way.
 
-**The model measures the work; the controller drives it.** The controller
-hands the model the whole set and gets back a `Plan`: the prompts it can run,
-in order, and the ones it cannot run at all. It then submits every runnable
-prompt and handles each answer the moment it finishes. How many run at once is
-the model's business -- the controller never learns a slot count, and never
-waits on a batch: a slot that frees is refilled at once, which measured 1.38x
-over one at a time where batch-by-batch measured 1.01x.
+**The model is the bottleneck; its queue must never be empty while work
+remains.** `stream` pulls prompts lazily from the caller and keeps a fixed
+number of them outstanding -- `in_flight`, more than the model runs at once --
+so a slot that frees always finds a prompt already queued. Each settled
+prompt hands back its outcome and makes room for one more pull. How many run
+at once is the model's business: the controller never learns a slot count,
+and never waits on a batch -- a slot that frees is refilled at once, which
+measured 1.38x over one at a time where batch-by-batch measured 1.01x.
+
+**One queue, and it is the model's.** A submitted prompt lives in the model's
+pool. The controller keeps only a record per outstanding prompt -- the caller's
+key, the prompt (a retry is built from it) and its attempts so far -- and
+`in_flight` bounds how many records it keeps, which is how it bounds what it
+pulls.
+
+**Fit is checked per prompt, just before submitting.** The model says whether
+a prompt fits a slot; one that does not is handed back at once as a
+`fits_context` outcome and never reaches the model.
 
 **Validation with retry lives here**, because the loop does. The checks come
 with the prompt (see `repositories/prompts/`); the controller runs them
@@ -34,19 +45,19 @@ is a bug in the check and propagates.
 
 from __future__ import annotations
 
+import itertools
 import logging
 import time
 from concurrent.futures import FIRST_COMPLETED, Future, wait
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Hashable, Iterable, Iterator, Sequence, TypeVar
 
 from engine import config
 from engine.models.base_model import (
     Check,
     Generation,
     ModelUnavailable,
-    Plan,
     Progress,
     ProgressFn,
     Prompt,
@@ -58,8 +69,14 @@ log = logging.getLogger(__name__)
 # Used when `configs/qwen.toml` has no `[controller].max_attempts`.
 _FALLBACK_MAX_ATTEMPTS = 3
 
-# The failure name given to a prompt the model's plan says cannot run.
+# Used when `configs/qwen.toml` has no `[controller].in_flight`.
+_FALLBACK_IN_FLIGHT = 8
+
+# The failure name given to a prompt the model says cannot fit a slot.
 TOO_LONG = "fits_context"
+
+# The caller's key for one unit of work. Opaque to the controller.
+K = TypeVar("K", bound=Hashable)
 
 
 def _now() -> float:
@@ -79,8 +96,8 @@ class Outcome:
     """The end state of one unit of work, however many attempts it took.
 
     A bare `Generation` cannot say why a unit was given up on; this can.
-    Outcomes come back index-aligned with the prompts, so a service maps them
-    to its records by position.
+    `stream` hands each back with the caller's key; `handle` returns them
+    index-aligned with the prompts.
     """
 
     generation: Generation  # the last one, passing or not
@@ -115,12 +132,14 @@ class _Meter:
     """Accumulates one run's facts into the `Progress` it reports.
 
     The clock starts when the meter is built -- after the model is ready and
-    the plan is made -- so a 40s load never inflates the ETA.
+    its cache is warm -- so a 40s load never inflates the ETA. Without a
+    total there is no ETA, only done count and throughput.
     """
 
-    def __init__(self, total: int):
+    def __init__(self, total: int | None):
         self.total = total
         self.done = 0
+        self.too_long = 0
         self.tokens = 0
         self.completion_tokens = 0
         self.started = _now()
@@ -136,77 +155,24 @@ class _Meter:
         parts = [f"{self.tokens} tok"]
         if elapsed > 0:
             parts.append(f"{self.completion_tokens / elapsed:.1f} tok/s")
-        remaining = self.total - self.done
+        if self.too_long:
+            parts.append(f"{self.too_long} too long")
+        remaining = None if self.total is None else self.total - self.done
         if remaining:
             parts.append(f"eta {_duration(elapsed / self.done * remaining)}")
         return Progress(done=self.done, total=self.total, detail=" · ".join(parts))
 
 
-class _Run:
-    """One run's bookkeeping: checks, budget, repair, outcomes, progress.
-
-    Kept apart from `handle`'s loop so the rules read without the waiting:
-    `handle` submits what `start()` and `settle()` ask for, and nothing here
-    knows how answers arrive.
-    """
-
-    def __init__(self, controller: "QwenController", prompts, checks, plan: Plan, on_progress):
-        self.controller = controller
-        self.prompts = prompts
-        self.checks = checks
-        self.plan = plan
-        self.on_progress = on_progress
-        self.outcomes: list[Outcome | None] = [None] * len(prompts)
-        self.attempts = [0] * len(prompts)
-        self.meter = _Meter(len(prompts))
-
-    def start(self) -> list[tuple[int, Prompt]]:
-        """Report what cannot run; return what to submit first, in plan order."""
-        for i in self.plan.too_long:
-            log.warning("prompt %d does not fit the model's context; not sent", i)
-            self._finish(
-                i,
-                Outcome(
-                    generation=Generation(text="", latency_ms=0, stop_reason="too_long"),
-                    ok=False,
-                    attempts=0,
-                    failed=[TOO_LONG],
-                ),
-            )
-        return [(i, self.prompts[i]) for i in self.plan.order]
-
-    def settle(self, i: int, generation: Generation) -> Prompt | None:
-        """Check one answer: finish the unit, or return the repair to re-submit."""
-        self.attempts[i] += 1
-        n, budget = self.attempts[i], self.controller.max_attempts
-        failed = [c for c in self.checks if not c.passes(self.prompts[i], generation)]
-        names = [c.name for c in failed]
-        self.meter.attempt(Attempt(generation=generation, failed=names))
-
-        if failed and n < budget:
-            log.info("prompt %d attempt %d/%d failed %s; retrying", i, n, budget, names)
-            return self.controller._repair(self.prompts[i], failed)
-        if failed:
-            log.warning("prompt %d: giving up after %d attempts; last failed %s", i, n, names)
-        self._finish(i, Outcome(generation=generation, ok=not failed, attempts=n, failed=names))
-        return None
-
-    def result(self) -> list[Outcome]:
-        missing = [i for i, o in enumerate(self.outcomes) if o is None]
-        if missing:
-            raise RuntimeError(f"the model's plan left prompts {missing} unassigned")
-        return self.outcomes  # type: ignore[return-value]
-
-    def _finish(self, i: int, outcome: Outcome) -> None:
-        self.outcomes[i] = outcome
-        self.controller._report(self.meter.unit_done(), self.on_progress)
-
-
 class QwenController:
     """Holds one model and runs prompts through it to outcomes."""
 
-    def __init__(self, model: QwenModel, max_attempts: int | None = None):
-        """Holds one model. Budget from configs/qwen.toml unless overridden."""
+    def __init__(
+        self,
+        model: QwenModel,
+        max_attempts: int | None = None,
+        in_flight: int | None = None,
+    ):
+        """Holds one model. Budget and in-flight count from configs/qwen.toml unless overridden."""
         self.model = model
         self.max_attempts = (
             load_max_attempts() if max_attempts is None else max_attempts
@@ -214,7 +180,112 @@ class QwenController:
         if self.max_attempts < 1:
             raise ValueError(f"max_attempts must be at least 1, got {self.max_attempts}")
 
+        # `[controller].in_flight`, falling back like `max_attempts` does on a
+        # missing or non-integer value.
+        table = config.read_toml(config.QWEN_CONFIG_PATH).get("controller")
+        value = table.get("in_flight") if isinstance(table, dict) else None
+        if not isinstance(value, int) or isinstance(value, bool):
+            value = _FALLBACK_IN_FLIGHT
+        self.in_flight = value if in_flight is None else in_flight
+        if self.in_flight < 1:
+            raise ValueError(f"in_flight must be at least 1, got {self.in_flight}")
+
     # --- surface ------------------------------------------------------------
+
+    def stream(
+        self,
+        work: Iterable[tuple[K, Prompt]],
+        checks: Iterable[Check] = (),
+        total: int | None = None,
+        on_progress: ProgressFn | None = None,
+    ) -> Iterator[tuple[K, Outcome]]:
+        """Run each `(key, prompt)` to an outcome, yielding `(key, outcome)` as each settles.
+
+        `work` is pulled lazily: at most `in_flight` prompts are outstanding,
+        and one more is pulled each time one settles. Outcomes come out in
+        completion order; the key is what maps them back. `total`, when
+        given, is the denominator for progress and the ETA.
+
+        Whatever the caller does between two `next()` calls runs on this
+        loop's thread, while the model works through its queue -- keep it
+        cheap. Stopping early (a `break`, an exception, Ctrl-C) cancels the
+        prompts still queued; they have no outcome, so a resumed run re-runs
+        them.
+        """
+        work = iter(work)
+        checks = list(checks)
+
+        # 1. Ready the model and warm its cache from the first prompts, once.
+        first = list(itertools.islice(work, self.in_flight)) # slice off the first `in_flight` prompts to warm the cache and check fit.
+        if not first:
+            return
+        self._ready(total)
+        self.model.cache_shared_prefix([p for _, p in first]) 
+        work = itertools.chain(first, work) 
+
+        meter = _Meter(total)
+        # future -> (key, original prompt, attempts so far). Insertion order is
+        # submit order, so settling the oldest finished future first keeps a
+        # run deterministic when several finish together.
+        outstanding: dict[Future, tuple[K, Prompt, int]] = {}
+        exhausted = False
+        try:
+            while True:
+                # 2. Top up to `in_flight`, checking each prompt fits before it
+                # is sent. One that does not is handed back at once and never
+                # counts as outstanding, so the next one is pulled in its place.
+                while not exhausted and len(outstanding) < self.in_flight:
+                    item = next(work, None)
+                    if item is None:
+                        exhausted = True
+                        break
+                    key, prompt = item
+                    if not self.model.fits(prompt):
+                        log.warning("prompt %r does not fit the model's context; not sent", key)
+                        meter.too_long += 1
+                        self._report(meter.unit_done(), on_progress)
+                        yield key, Outcome(
+                            generation=Generation(text="", latency_ms=0, stop_reason="too_long"),
+                            ok=False,
+                            attempts=0,
+                            failed=[TOO_LONG],
+                        )
+                        continue
+                    outstanding[self.model.submit(prompt)] = (key, prompt, 0) # 0 means first attempt, not yet tried
+
+                # 3. Done when the work is used up and nothing is outstanding.
+                # we have in_flight number of outstandings
+                if not outstanding:
+                    return
+
+                # 4. Settle the oldest finished prompt: retry it, or hand it back.
+                done, _ = wait(outstanding, return_when=FIRST_COMPLETED)
+                future = next(f for f in outstanding if f in done)
+                key, prompt, n = outstanding.pop(future)
+                generation = future.result()
+                n += 1
+                failed = [c for c in checks if not c.passes(prompt, generation)]
+                names = [c.name for c in failed]
+                meter.attempt(Attempt(generation=generation, failed=names))
+
+                # A retry is not checked for fit again: the repair margin is
+                # already inside the model's slot, so the original's check covers it.
+                if failed and n < self.max_attempts:
+                    log.info(
+                        "prompt %r attempt %d/%d failed %s; retrying",
+                        key, n, self.max_attempts, names,
+                    )
+                    outstanding[self.model.submit(self._repair(prompt, failed))] = (key, prompt, n)
+                    continue
+                if failed:
+                    log.warning(
+                        "prompt %r: giving up after %d attempts; last failed %s", key, n, names
+                    )
+                self._report(meter.unit_done(), on_progress)
+                yield key, Outcome(generation=generation, ok=not failed, attempts=n, failed=names)
+        finally:
+            for future in outstanding:
+                future.cancel()
 
     def handle(
         self,
@@ -222,35 +293,22 @@ class QwenController:
         checks: Iterable[Check] = (),
         on_progress: ProgressFn | None = None,
     ) -> list[Outcome]:
-        """Run every prompt to an outcome, as many at once as the model allows.
+        """Run every prompt to an outcome; outcomes come back in input order.
 
-        Blocking. There is no async twin: how many run at once is the model's
-        decision, so an async version would add no parallelism. An async
-        caller runs this on a worker thread --
+        `stream` over a list already in memory, for tests, notebooks and small
+        sets. Blocking. There is no async twin: how many run at once is the
+        model's decision, so an async version would add no parallelism. An
+        async caller runs this on a worker thread --
         `await asyncio.to_thread(controller.handle, prompts, checks)` --
         with progress then reported from that thread.
         """
-        prompts, checks = list(prompts), list(checks)
-        if not prompts:
-            return []
-
-        self._ready(len(prompts))
-        run = _Run(self, prompts, checks, self.model.plan(prompts), on_progress)
-        pending: dict[Future, int] = {}
-        try:
-            for i, prompt in run.start():
-                pending[self.model.submit(prompt)] = i
-            while pending:
-                done, _ = wait(pending, return_when=FIRST_COMPLETED)
-                for future in done:
-                    i = pending.pop(future)
-                    retry = run.settle(i, future.result())
-                    if retry is not None:
-                        pending[self.model.submit(retry)] = i
-        finally:
-            for future in pending:
-                future.cancel()
-        return run.result()
+        prompts = list(prompts)
+        outcomes: list[Outcome | None] = [None] * len(prompts)
+        for i, outcome in self.stream(
+            enumerate(prompts), checks, total=len(prompts), on_progress=on_progress
+        ):
+            outcomes[i] = outcome
+        return outcomes  # type: ignore[return-value]
 
     # --- internals ----------------------------------------------------------
 
@@ -263,18 +321,20 @@ class QwenController:
         )
         return replace(prompt, user=prompt.user + note)
 
-    def _ready(self, n_prompts: int) -> None:
+    def _ready(self, n_prompts: int | None) -> None:
         """model.ready(), translating ModelUnavailable into a readable failure."""
         try:
             self.model.ready()
         except ModelUnavailable as exc:
+            which = "the" if n_prompts is None else f"the {n_prompts}"
             raise ModelUnavailable(
-                f"The model could not be readied, so none of the {n_prompts} "
+                f"The model could not be readied, so none of {which} "
                 f"prompts were run.\n\n{exc}"
             ) from exc
 
     @staticmethod
     def _report(progress: Progress, on_progress: ProgressFn | None) -> None:
-        log.info("%d/%d %s", progress.done, progress.total, progress.detail)
+        of = "" if progress.total is None else f"/{progress.total}"
+        log.info("%d%s %s", progress.done, of, progress.detail)
         if on_progress:
             on_progress(progress)

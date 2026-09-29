@@ -1,12 +1,14 @@
-"""QwenController runs every prompt to an outcome, batch by batch, retrying failures.
+"""QwenController runs every prompt to an outcome, keeping the model fed, retrying failures.
 
-What is pinned: the controller submits what the model's plan names, in its
-order, and re-submits only failures -- repaired with the failed checks' messages --
-up to the budget; a prompt that never passes
-comes back `ok=False` with the reasons and does not stall the run; a prompt the
-plan calls too long is reported, never sent; outcomes line up with inputs by
-position; progress counts units, not attempts; and a model that cannot be
-readied stops the run before anything is sent.
+What is pinned: `stream` pulls work lazily and keeps at most `in_flight`
+prompts outstanding, handing each outcome back with the caller's key as it
+settles; it re-submits only failures -- repaired with the failed checks'
+messages -- up to the budget; a prompt that never passes comes back
+`ok=False` with the reasons and does not stall the run; a prompt the model
+says does not fit is reported, never sent; stopping early cancels what is
+queued. `handle` is `stream` over a list, with outcomes back in input order;
+progress counts units, not attempts; and a model that cannot be readied stops
+the run before anything is sent.
 
 The model here is a stand-in that answers from a script -- no GPU, no
 server. It is a `BaseModel`, not a `QwenModel` subclass: `QwenModel()` is one
@@ -14,6 +16,10 @@ shared instance, so it cannot be subclassed per test.
 """
 
 from __future__ import annotations
+
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
@@ -24,7 +30,6 @@ from engine.models.base_model import (
     Check,
     Generation,
     ModelUnavailable,
-    Plan,
     Prompt,
     Usage,
 )
@@ -34,8 +39,9 @@ from engine import config
 class ScriptedQwen(BaseModel):
     """Answers each prompt with the next scripted text; records what it saw.
 
-    Plans in input order and answers each `submit()` before returning (the
-    base model's default), so the script is consumed deterministically.
+    Answers each `submit()` before returning (the base model's default), so
+    the script is consumed in submit order. A prompt whose user text is in
+    `too_long` does not fit.
     """
 
     submit = BaseModel.submit
@@ -43,8 +49,9 @@ class ScriptedQwen(BaseModel):
     def __init__(self, replies, fail_ready=None, too_long=()):
         self.replies = list(replies)
         self.fail_ready = fail_ready
-        self.too_long = tuple(too_long)
+        self.too_long = set(too_long)
         self.seen: list[Prompt] = []
+        self.samples: list[list[Prompt]] = []
         self.readied = 0
 
     def ready(self) -> None:
@@ -52,9 +59,11 @@ class ScriptedQwen(BaseModel):
         if self.fail_ready:
             raise ModelUnavailable(self.fail_ready)
 
-    def plan(self, prompts):
-        order = tuple(i for i in range(len(prompts)) if i not in self.too_long)
-        return Plan(order=order, too_long=self.too_long)
+    def fits(self, prompt: Prompt) -> bool:
+        return prompt.user not in self.too_long
+
+    def cache_shared_prefix(self, sample) -> None:
+        self.samples.append(list(sample))
 
     def generate(self, prompt: Prompt) -> Generation:
         self.seen.append(prompt)
@@ -186,19 +195,15 @@ def test_outcomes_line_up_with_prompts_by_position():
     assert [o.generation.text for o in outcomes] == ["first", "second", "third"]
 
 
-# --- the model's plan -------------------------------------------------------
+# --- submitting and fitting -------------------------------------------------
 
 
-def test_prompts_are_submitted_in_the_models_plan_order():
-    class Reversed(ScriptedQwen):
-        def plan(self, prompts):
-            return Plan(order=tuple(reversed(range(len(prompts)))))
-
-    model = Reversed(["x", "y", "z"])
+def test_prompts_are_submitted_in_input_order():
+    model = ScriptedQwen(["x", "y", "z"])
 
     QwenController(model).handle([prompt("0"), prompt("1"), prompt("2")])
 
-    assert [p.user for p in model.seen] == ["2", "1", "0"]
+    assert [p.user for p in model.seen] == ["0", "1", "2"]
 
 
 def test_only_failures_are_re_submitted():
@@ -210,36 +215,127 @@ def test_only_failures_are_re_submitted():
     assert [p.user.split("\n")[0] for p in model.seen] == ["one", "two", "two"]
 
 
-def test_outcomes_follow_the_prompts_even_when_the_plan_reorders_them():
-    class LongestFirst(ScriptedQwen):
-        def plan(self, prompts):
-            return Plan(order=(2, 0, 1))
-
-    model = LongestFirst(["for 2", "for 0", "for 1"])
-
-    outcomes = QwenController(model).handle([prompt(), prompt(), prompt()])
-
-    assert [o.generation.text for o in outcomes] == ["for 0", "for 1", "for 2"]
-
-
-def test_a_prompt_the_plan_calls_too_long_is_reported_not_sent():
-    model = ScriptedQwen(["a", "c"], too_long=[1])
+def test_a_prompt_that_does_not_fit_is_reported_not_sent():
+    model = ScriptedQwen(["a", "c"], too_long=["1"])
 
     outcomes = QwenController(model).handle([prompt("0"), prompt("1"), prompt("2")])
 
     assert [o.ok for o in outcomes] == [True, False, True]
     assert outcomes[1].failed == [qc.TOO_LONG]
     assert outcomes[1].attempts == 0
-    assert len(model.seen) == 2
+    assert outcomes[1].generation.stop_reason == "too_long"
+    assert [p.user for p in model.seen] == ["0", "2"]
 
 
-def test_a_plan_that_drops_a_prompt_is_an_error():
-    class Forgetful(ScriptedQwen):
-        def plan(self, prompts):
-            return Plan(order=(0,))
+def test_the_shared_prefix_is_cached_once_from_the_first_in_flight_prompts():
+    model = ScriptedQwen(["a", "b", "c", "d", "e"])
 
-    with pytest.raises(RuntimeError, match="unassigned"):
-        QwenController(Forgetful(["a"])).handle([prompt(), prompt()])
+    QwenController(model, in_flight=3).handle([prompt(str(i)) for i in range(5)])
+
+    assert [[p.user for p in s] for s in model.samples] == [["0", "1", "2"]]
+
+
+def test_outcomes_come_back_in_input_order_whatever_order_they_finish_in():
+    """Acceptance 4: `handle` via `stream` still lines outcomes up by position."""
+    model = SlowFirst(delays={"slow": 0.2, "fast": 0.0})
+
+    outcomes = QwenController(model).handle([prompt("slow"), prompt("fast")])
+
+    assert [o.generation.text for o in outcomes] == ["slow", "fast"]
+    assert model.finished == ["fast", "slow"]
+
+
+# --- streaming --------------------------------------------------------------
+
+
+def test_stream_hands_back_the_callers_key_with_each_outcome():
+    model = ScriptedQwen(["for a", "for b"])
+
+    out = list(QwenController(model).stream([("id-a", prompt()), (("id", 2), prompt())]))
+
+    assert [(key, o.generation.text) for key, o in out] == [("id-a", "for a"), (("id", 2), "for b")]
+
+
+def test_stream_yields_in_completion_order():
+    model = SlowFirst(delays={"slow": 0.2, "fast": 0.0})
+
+    out = list(QwenController(model).stream([(1, prompt("slow")), (2, prompt("fast"))]))
+
+    assert [key for key, _ in out] == [2, 1]
+
+
+def test_stream_pulls_only_in_flight_prompts_before_the_first_outcome():
+    """The rest of the work stays unread until a settled prompt makes room."""
+    pulled = []
+
+    def work():
+        for i in range(10):
+            pulled.append(i)
+            yield i, prompt(str(i))
+
+    stream = QwenController(ScriptedQwen(["x"] * 10), in_flight=3).stream(work())
+
+    next(stream)
+    assert pulled == [0, 1, 2]
+
+    next(stream)
+    assert pulled == [0, 1, 2, 3]  # one settled, one pulled to replace it
+
+    assert len(list(stream)) == 8
+
+
+def test_a_prompt_that_does_not_fit_is_replaced_at_once():
+    """Never submitted, so it frees no slot and takes none: the next is pulled."""
+    model = ScriptedQwen(["a", "b"], too_long=["long"])
+
+    out = list(
+        QwenController(model, in_flight=1).stream(
+            [(0, prompt("short")), (1, prompt("long")), (2, prompt("other"))]
+        )
+    )
+
+    assert {key: o.failed for key, o in out} == {0: [], 1: [qc.TOO_LONG], 2: []}
+    assert [p.user for p in model.seen] == ["short", "other"]
+
+
+def test_stopping_early_cancels_what_is_still_queued():
+    """The consumer walks away: queued prompts must not keep the GPU busy."""
+    model = SlowFirst(delays={}, workers=1, default_delay=0.05)
+
+    stream = QwenController(model, in_flight=4).stream((i, prompt(str(i))) for i in range(8))
+    next(stream)
+    stream.close()
+
+    assert any(f.cancelled() for f in model.futures)
+
+
+def test_an_empty_stream_does_not_load_the_model():
+    model = ScriptedQwen([])
+
+    assert list(QwenController(model).stream(iter([]))) == []
+    assert model.readied == 0
+
+
+# --- in_flight --------------------------------------------------------------
+
+
+def test_in_flight_comes_from_the_committed_file():
+    assert QwenController(ScriptedQwen([])).in_flight == 8
+
+
+def test_in_flight_from_a_missing_file_falls_back(monkeypatch, tmp_path):
+    monkeypatch.setattr(config, "QWEN_CONFIG_PATH", tmp_path / "absent.toml")
+
+    assert QwenController(ScriptedQwen([])).in_flight == 8
+
+
+def test_an_explicit_in_flight_wins():
+    assert QwenController(ScriptedQwen([]), in_flight=2).in_flight == 2
+
+
+def test_in_flight_below_one_is_refused():
+    with pytest.raises(ValueError, match="in_flight"):
+        QwenController(ScriptedQwen([]), in_flight=0)
 
 
 # --- the budget -------------------------------------------------------------
@@ -332,7 +428,56 @@ def test_progress_detail_reports_tokens_and_what_is_left(monkeypatch):
     assert "eta" not in last
 
 
+def test_progress_without_a_total_reports_no_eta():
+    seen = []
+
+    list(QwenController(ScriptedQwen(["a", "b"])).stream(
+        [(0, prompt()), (1, prompt())], on_progress=seen.append
+    ))
+
+    assert [(p.done, p.total) for p in seen] == [(1, None), (2, None)]
+    assert all("eta" not in p.detail for p in seen)
+
+
+def test_progress_keeps_a_running_count_of_prompts_that_do_not_fit():
+    """Found one by one now, so a bad rate must show while the run is going."""
+    seen = []
+
+    QwenController(ScriptedQwen(["a"], too_long=["long"])).handle(
+        [prompt("long"), prompt("short")], on_progress=seen.append
+    )
+
+    assert "1 too long" in seen[-1].detail
+
+
 # --- helpers ----------------------------------------------------------------
+
+
+class SlowFirst(BaseModel):
+    """Runs prompts on real worker threads, each sleeping as long as its user text says.
+
+    Answers with the user text, so an outcome names its prompt. Keeps every
+    future it hands out and the order generations finished in.
+    """
+
+    def __init__(self, delays, workers=2, default_delay=0.0):
+        self.delays = delays
+        self.default_delay = default_delay
+        self.pool = ThreadPoolExecutor(max_workers=workers)
+        self.futures = []
+        self.finished: list[str] = []
+        self._lock = threading.Lock()
+
+    def generate(self, prompt: Prompt) -> Generation:
+        time.sleep(self.delays.get(prompt.user, self.default_delay))
+        with self._lock:
+            self.finished.append(prompt.user)
+        return Generation(text=prompt.user, latency_ms=1)
+
+    def submit(self, prompt: Prompt):
+        future = self.pool.submit(self.generate, prompt)
+        self.futures.append(future)
+        return future
 
 
 def model_generation(text: str) -> Generation:

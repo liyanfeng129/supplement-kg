@@ -20,6 +20,8 @@ that record re-run, costing one record rather than corrupting a run.
 from __future__ import annotations
 
 import json
+import os
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -115,6 +117,64 @@ def repair(d: str | Path) -> int:
         for r in rows:
             fh.write(json.dumps(r, ensure_ascii=False) + "\n")
     return len(rows)
+
+
+class Sink:
+    """Where a streaming run's rows go: buffered, then appended in batches.
+
+    `add` costs a list append and two comparisons, so it is safe on the loop
+    that feeds the model. A row reaches disk when `flush_every` rows have
+    queued up or `flush_seconds` have passed since the last flush -- whichever
+    comes first -- and a crash loses only what is still in the buffer, which
+    resume re-runs.
+
+    `flush` appends and fsyncs; it never rewrites, so the torn-trailing-line
+    rule in `read_rows` still covers a crash mid-flush. Opening a sink on an
+    existing run repairs it once first, for the reason `repair` exists.
+
+    A context manager, so `close()` runs on a normal exit, on an exception and
+    on Ctrl-C. Flushes run on the caller's thread: a local append of 64 rows
+    takes milliseconds against seconds per generation.
+    """
+
+    def __init__(self, run: str | Path, flush_every: int = 64, flush_seconds: float = 30.0):
+        self.path = rows_path(run)
+        self.flush_every = flush_every
+        self.flush_seconds = flush_seconds
+        self._buffer: list[dict] = []
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        repair(run)
+        self._last_flush = time.monotonic()
+
+    def add(self, row: dict) -> None:
+        """Buffer one row; flush if either threshold is reached."""
+        self._buffer.append(row)
+        if (
+            len(self._buffer) >= self.flush_every
+            or time.monotonic() - self._last_flush >= self.flush_seconds
+        ):
+            self.flush()
+
+    def flush(self) -> None:
+        """Append every buffered row to the run's rows file and fsync it."""
+        if self._buffer:
+            with self.path.open("a") as fh:
+                for r in self._buffer:
+                    fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+                fh.flush()
+                os.fsync(fh.fileno())
+            self._buffer = []
+        self._last_flush = time.monotonic()
+
+    def close(self) -> None:
+        """Flush what is left. Idempotent."""
+        self.flush()
+
+    def __enter__(self) -> "Sink":
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self.close()
 
 
 def write_manifest(d: str | Path, manifest: dict) -> Path:

@@ -70,6 +70,9 @@ for tests and for a caller that has genuinely rewritten a source.
 **Resume lives here**, because resume is a question about what is left to read:
 the store knows which ids are done, so the loader consults it and hands back
 only the rest. A caller that wants everything simply does not pass a run.
+`pending(run, ...)` is the streaming form: the same selection and resume, but
+labels are read one at a time as the run pulls them, so a corpus larger than
+memory can be run.
 
 **A selection is returned, not a bare list.** The old loader returned records
 and printed the counts it had dropped, which meant a notebook calling it either
@@ -222,6 +225,34 @@ class Selection:
             more = f" (+{len(self.missing_ids) - 5})" if len(self.missing_ids) > 5 else ""
             parts.append(f"{len(self.missing_ids)} requested id(s) not in source: {shown}{more}")
         return "; ".join(parts)
+
+
+@dataclass(frozen=True)
+class Pending:
+    """Labels a streaming run still has to do, read one at a time as it pulls them.
+
+    What `Selection` is to `load`, for a corpus too large to hold: the same
+    account of what was left out, but `ids` instead of labels. Iterating reads
+    one cleaned, flattened `Label` per step from `source`, seeking straight to
+    its line, so memory holds the ids and where each line starts -- never the
+    labels. The passages are read as stored and never re-rendered, for the
+    reason `load_flattened` gives.
+
+    `total` is the denominator for progress: labels still to do.
+    """
+
+    ids: list[int]
+    offsets: dict[int, int]  # id -> byte offset of its line in `source`
+    total: int
+    n_already_done: int = 0
+    missing_ids: list[int] = field(default_factory=list)
+    source: Path | None = None
+
+    def __iter__(self):
+        with Path(self.source).open("rb") as fh:  # type: ignore[arg-type]
+            for i in self.ids:
+                fh.seek(self.offsets[i])
+                yield Label.from_dict(json.loads(fh.readline()))
 
 
 class DsldLoader:
@@ -533,6 +564,84 @@ class DsldLoader:
             source=src,
         )
 
+    def pending(
+        self,
+        run: str | Path,
+        path: str | Path | None = None,
+        ids: list[int] | None = None,
+        limit: int | None = None,
+        order: str | None = None,
+        seed: int | None = None,
+    ) -> Pending:
+        """What `run` still has to do, as a lazy iterator of labels.
+
+        Takes `load`'s selection arguments and means the same by them: ids
+        absent from the source are reported, `order` defaults to "file" for
+        the whole corpus and "sorted" for named ids, and `limit` applies after
+        resume. `run` is the run directory; the ids its rows already hold are
+        left out and counted. A new run simply has none.
+
+        The id list is worked out up front -- ids are small -- by one pass
+        over the file that parses each line for its id and remembers where it
+        starts. No `Label` is built and `load_flattened`'s whole-file cache is
+        not touched; labels are read one per step when the run pulls them.
+        """
+        src = Path(path or DEFAULT_RECORDS)
+        if not src.exists():
+            raise FileNotFoundError(
+                f"no label records at {src.resolve()}. The pilot passages are gitignored "
+                f"(raw/ is not committed); re-run the pilot or point --records elsewhere."
+            )
+
+        # 1. Every id in the file, in file order, with where its line starts.
+        offsets: dict[int, int] = {}
+        with src.open("rb") as fh:
+            n = 0
+            while True:
+                offset = fh.tell()
+                line = fh.readline()
+                if not line:
+                    break
+                n += 1
+                if not line.strip():
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(f"{src}:{n}: {exc}") from exc
+                try:
+                    offsets[int(record["dsld_id"])] = offset
+                except (KeyError, TypeError, ValueError) as exc:
+                    raise ValueError(f"{src}:{n}: not a usable label record") from exc
+
+        # 2. Select and order, as `load` does.
+        missing: list[int] = []
+        if ids is None:
+            todo = _ordered(list(offsets), order or "file", seed, key=int)
+        else:
+            wanted = [int(i) for i in ids]
+            missing = [i for i in wanted if i not in offsets]
+            todo = _ordered([i for i in wanted if i in offsets], order or "sorted", seed, key=int)
+
+        # 3. Resume: leave out what the run already holds.
+        done = store.done_ids(run)
+        before = len(todo)
+        todo = [i for i in todo if i not in done]
+        n_done = before - len(todo)
+
+        # 4. Limit last, so it counts labels that will actually run.
+        if limit is not None:
+            todo = todo[:limit]
+
+        return Pending(
+            ids=todo,
+            offsets={i: offsets[i] for i in todo},
+            total=len(todo),
+            n_already_done=n_done,
+            missing_ids=missing,
+            source=src,
+        )
+
 
 def _read_jsonl(src: Path) -> list[dict]:
     """Parse a JSONL file, naming the line number of a bad record.
@@ -617,6 +726,18 @@ def load(
     return loader().load(
         path, ids=ids, limit=limit, resume_from=resume_from, order=order, seed=seed
     )
+
+
+def pending(
+    run: str | Path,
+    path: str | Path | None = None,
+    ids: list[int] | None = None,
+    limit: int | None = None,
+    order: str | None = None,
+    seed: int | None = None,
+) -> Pending:
+    """What a run still has to do, read lazily. See `DsldLoader.pending`."""
+    return loader().pending(run, path, ids=ids, limit=limit, order=order, seed=seed)
 
 
 def read_all(path: str | Path | None = None) -> list[Label]:

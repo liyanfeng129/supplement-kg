@@ -183,8 +183,8 @@ def fits(self, prompt: Prompt) -> bool                           # one /tokenize
   measured here; acceptance item 6 checks it.
 - `slot_ctx` is already fixed in config (5,120), not derived from the largest prompt.
   So a per-prompt fit check gives the same answer the whole-set plan gave.
-- `plan` stays, implemented as `fits` over each prompt followed by `cache_shared_prefix`, so `handle`
-  and existing tests keep their contract.
+- `plan` and its `Plan` result are removed. `handle` runs through `stream`, which
+  calls `fits` and `cache_shared_prefix` itself, so nothing called `plan` any more.
 
 `submit` does not change: its unbounded queue is where the headroom sits.
 

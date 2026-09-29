@@ -86,11 +86,12 @@ class Progress:
 
     `done` and `total` count whole units of work, not tokens: at seconds per
     unit the useful granularity is the unit, and token streaming costs the
-    runtime's fast path to report something nobody reads.
+    runtime's fast path to report something nobody reads. `total` is None
+    when the run streams work of unknown size; there is then no ETA.
     """
 
     done: int
-    total: int
+    total: int | None
     detail: str = ""
 
 
@@ -132,25 +133,6 @@ class Check:
     message: str
 
 
-@dataclass(frozen=True)
-class Plan:
-    """How a model will run a work set, decided by the model after measuring it.
-
-    The controller hands a model the whole set; the model answers with this.
-    `order` holds the indices it can run, in the order to submit them.
-    `too_long` are indices it cannot run at all -- a prompt that does not fit
-    its context -- stated up front rather than discovered as a failure halfway
-    through a run.
-
-    How many run at once is deliberately absent: that is the model's to
-    enforce inside `submit()`, and a controller that knew it would be
-    scheduling around one hosting strategy.
-    """
-
-    order: tuple[int, ...]
-    too_long: tuple[int, ...] = ()
-
-
 ProgressFn = Callable[[Progress], None]
 
 
@@ -166,16 +148,18 @@ class ModelUnavailable(RuntimeError):
 class BaseModel(ABC):
     """The interface every model implements.
 
-    Three verbs, plus two for work sets. `ready()` makes the model usable and
-    is idempotent, so a caller may assert readiness without tracking whether
-    it already did. `generate()` answers one prompt. `close()` releases
-    whatever `ready()` took. `plan()` measures a work set and says what can
-    run and in what order; `submit()` queues one prompt and returns a future.
+    Three verbs, plus three for work sets. `ready()` makes the model usable
+    and is idempotent, so a caller may assert readiness without tracking
+    whether it already did. `generate()` answers one prompt. `close()`
+    releases whatever `ready()` took. `fits()` says whether one prompt can run
+    at all; `cache_shared_prefix()` prepares the model for prompts like a
+    sample of them; `submit()` queues one prompt and returns a future.
 
-    A caller submits a whole set and takes answers as they finish, so a model
-    that runs several prompts at once keeps every slot busy -- a slot frees,
-    the next queued prompt takes it. The defaults run one prompt at a time, so
-    a model with no concurrency implements only `generate()`.
+    A caller keeps more prompts submitted than the model runs at once and
+    takes answers as they finish, so a model that runs several prompts at once
+    keeps every slot busy -- a slot frees, the next queued prompt takes it.
+    The defaults run one prompt at a time and accept every prompt, so a model
+    with no concurrency implements only `generate()`.
 
     Loading belongs in `ready()` rather than `__init__` so that constructing a
     model is free: a CLI can build one to read its configuration, and a test
@@ -191,9 +175,12 @@ class BaseModel(ABC):
     def generate(self, prompt: Prompt) -> Generation:
         """Answer one prompt."""
 
-    def plan(self, prompts: Sequence[Prompt]) -> Plan:
-        """Measure a work set: what can run, and in what order to submit it."""
-        return Plan(order=tuple(range(len(prompts))))
+    def fits(self, prompt: Prompt) -> bool:
+        """Can this prompt run at all? The default has no limit to check."""
+        return True
+
+    def cache_shared_prefix(self, sample: Sequence[Prompt]) -> None:
+        """Prepare for prompts like `sample`. The default has nothing to cache."""
 
     def submit(self, prompt: Prompt) -> Future[Generation]:
         """Queue one prompt; the future resolves to its generation.

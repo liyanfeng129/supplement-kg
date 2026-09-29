@@ -5,8 +5,9 @@ refused mid-run and restarts the server when idle; settings come from
 `configs/qwen.toml` with explicit arguments winning and a broken file falling
 back; `ready()` refuses a card without room, a load that did not reach the
 GPU, and a model that answers "Hello" in garbage -- stopping the server each
-time; `plan()` measures a work set, names what cannot fit a slot and primes
-the slots; `submit()` keeps `n_parallel` prompts in flight and never more.
+time; `fits()` checks one prompt against a slot with one `/tokenize` call;
+`cache_shared_prefix()` primes the slots from a sample; `submit()` keeps
+`n_parallel` prompts in flight and never more.
 
 Only public functions are called. No GPU and no server: underneath the model,
 `nvidia-smi` (`subprocess.run`), the server process (`subprocess.Popen`) and
@@ -28,7 +29,7 @@ import pytest
 
 from engine import config
 from engine.models import qwen_model as qm
-from engine.models.base_model import ModelUnavailable, Plan, Prompt
+from engine.models.base_model import ModelUnavailable, Prompt
 from engine.models.qwen_model import QwenModel
 
 
@@ -505,76 +506,78 @@ def test_close_cancels_what_is_still_queued(machine):
     assert any(f.cancelled() for f in futures)
 
 
-# --- planning ---------------------------------------------------------------
+# --- fitting ----------------------------------------------------------------
 
 
 def prompt_of(n_words: int, max_tokens: int = 400) -> Prompt:
     return Prompt(system="s", user=" ".join(["w"] * n_words), max_tokens=max_tokens)
 
 
-def test_plan_keeps_the_given_order(machine):
-    """Longest-first was measured worse: it defeated the system-prompt cache."""
-    prompts = [prompt_of(n) for n in (10, 50, 30, 20, 40, 60)]
-
-    assert machine.model.plan(prompts) == Plan(order=(0, 1, 2, 3, 4, 5), too_long=())
-
-
-def test_plan_sets_aside_what_cannot_fit_a_slot(machine):
+def test_fits_checks_one_prompt_against_a_slot(machine):
     """Prompt + output budget + repair margin must fit, or it is never sent."""
-    fits = prompt_of(100, max_tokens=400)
-    overflows = prompt_of(4800, max_tokens=400)  # 4800 + 400 + 64 > 5120
-
-    plan = machine.model.plan([fits, overflows])
-
-    assert plan.order == (0,)
-    assert plan.too_long == (1,)
+    assert machine.model.fits(prompt_of(100, max_tokens=400))
+    assert not machine.model.fits(prompt_of(4800, max_tokens=400))  # 4800 + 400 + 64 > 5120
 
 
 def test_the_output_budget_counts_toward_the_fit(machine):
-    short_answer = prompt_of(3100, max_tokens=400)
-    long_answer = prompt_of(3100, max_tokens=2000)  # 3100 + 2000 + 64 > 5120
-
-    assert machine.model.plan([short_answer, long_answer]).too_long == (1,)
+    assert machine.model.fits(prompt_of(3100, max_tokens=400))
+    assert not machine.model.fits(prompt_of(3100, max_tokens=2000))  # 3100 + 2000 + 64 > 5120
 
 
-# --- priming ----------------------------------------------------------------
+def test_fits_asks_the_server_once_and_generates_nothing(machine, monkeypatch):
+    machine.model.ready()
+    calls = []
+    real = machine.urlopen
+    monkeypatch.setattr(
+        qm.urllib.request,
+        "urlopen",
+        lambda req, timeout=None: calls.append(urllib.parse.urlparse(req.full_url).path)
+        or real(req, timeout),
+    )
+
+    machine.model.fits(prompt_of(10))
+
+    assert calls == ["/tokenize"]
 
 
-def primes_sent_by(machine, prompts) -> list[dict]:
-    """The completion bodies one `plan()` sends to warm the slots."""
+# --- caching the shared prefix ----------------------------------------------
+
+
+def primes_sent_by(machine, sample) -> list[dict]:
+    """The completion bodies one `cache_shared_prefix()` sends to warm the slots."""
     before = len(machine.bodies)
-    machine.model.plan(prompts)
+    machine.model.cache_shared_prefix(sample)
     return machine.bodies[before:]
 
 
-def test_plan_primes_every_slot_with_the_shared_system_turn(machine):
+def test_every_slot_caches_the_shared_system_turn(machine):
     """Cut after the last full turn, so it tokenises as inside each prompt."""
     machine.model.ready()
-    primes = primes_sent_by(machine, [Prompt(system="sys", user=f"label {i}") for i in range(6)])
+    primes = primes_sent_by(machine, [Prompt(system="sys", user=f"label {i}") for i in range(3)])
 
     assert len(primes) == 4  # one per slot
     assert all(b["prompt"] == "<|im_start|>system\nsys<|im_end|>\n" for b in primes)
     assert all(b["n_predict"] == 1 for b in primes)
 
 
-def test_nothing_is_primed_for_a_single_prompt_or_different_systems(machine):
+def test_nothing_is_cached_for_a_single_prompt_or_different_systems(machine):
     machine.model.ready()
 
     assert primes_sent_by(machine, [Prompt(system="sys", user="only")]) == []
     assert primes_sent_by(machine, [Prompt(system="A", user="x"), Prompt(system="B", user="x")]) == []
 
 
-def test_a_second_plan_for_the_same_prefix_does_not_prime_again(machine):
-    prompts = [Prompt(system="sys", user=f"label {i}") for i in range(6)]
-    machine.model.plan(prompts)
+def test_a_prefix_the_slots_already_hold_is_not_sent_again(machine):
+    sample = [Prompt(system="sys", user=f"label {i}") for i in range(3)]
+    machine.model.cache_shared_prefix(sample)
 
-    assert primes_sent_by(machine, prompts[:3]) == []
+    assert primes_sent_by(machine, sample) == []
 
 
-def test_a_restarted_server_is_primed_afresh(machine):
-    prompts = [Prompt(system="sys", user=f"label {i}") for i in range(6)]
-    machine.model.plan(prompts)
+def test_a_restarted_server_caches_the_prefix_afresh(machine):
+    sample = [Prompt(system="sys", user=f"label {i}") for i in range(3)]
+    machine.model.cache_shared_prefix(sample)
     machine.model.close()
     machine.model.ready()
 
-    assert len(primes_sent_by(machine, prompts)) == 4
+    assert len(primes_sent_by(machine, sample)) == 4

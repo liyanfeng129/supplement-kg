@@ -560,3 +560,78 @@ def test_n_together_with_ids_is_refused(dump):
 def test_load_raw_with_neither_ids_nor_n_is_refused(dump):
     with pytest.raises(ValueError, match="needs an id"):
         loader.load_raw(root=dump)
+
+
+# --- pending: the lazy, resumable selection a streaming run reads -----------
+
+
+def test_pending_yields_the_same_labels_as_load(records, tmp_path):
+    """The same frozen passages, in the same default file order."""
+    run = _run_with(tmp_path, [])
+
+    todo = loader.pending(run, records)
+
+    assert list(todo) == list(loader.load(records))
+    assert todo.total == 3
+
+
+def test_pending_leaves_out_what_the_run_already_holds(records, tmp_path):
+    run = _run_with(tmp_path, [709, 885])
+
+    todo = loader.pending(run, records)
+
+    assert [lab.dsld_id for lab in todo] == [889]
+    assert todo.total == 1
+    assert todo.n_already_done == 2
+
+
+def test_pending_reports_unknown_ids_and_sorts_named_ones(records, tmp_path):
+    run = _run_with(tmp_path, [])
+
+    todo = loader.pending(run, records, ids=[889, 99999, 709])
+
+    assert [lab.dsld_id for lab in todo] == [709, 889]
+    assert todo.missing_ids == [99999]
+    assert todo.source == records
+
+
+def test_pending_takes_the_same_orders_as_load(records, tmp_path):
+    run = _run_with(tmp_path, [])
+
+    for kwargs in ({"ids": [889, 709], "order": "given"}, {"order": "random", "seed": 7}):
+        assert [lab.dsld_id for lab in loader.pending(run, records, **kwargs)] == loader.load(
+            records, **kwargs
+        ).ids
+
+
+def test_pending_applies_limit_after_resume(records, tmp_path):
+    run = _run_with(tmp_path, [709])
+
+    todo = loader.pending(run, records, limit=1)
+
+    assert [lab.dsld_id for lab in todo] == [885]
+    assert todo.total == 1
+
+
+def test_pending_reads_one_label_per_step(records, tmp_path, monkeypatch):
+    """Memory holds the ids, not the labels: a label is built when it is pulled."""
+    run = _run_with(tmp_path, [])
+    built = []
+    real = Label.from_dict
+    monkeypatch.setattr(Label, "from_dict", lambda record: built.append(record) or real(record))
+
+    todo = iter(loader.pending(run, records))
+    assert built == []
+
+    next(todo)
+    assert len(built) == 1
+
+
+def test_pending_does_not_fill_the_whole_file_cache(records, tmp_path, monkeypatch):
+    """A full-corpus run must not hold every label via `load_flattened`."""
+    run = _run_with(tmp_path, [])
+    monkeypatch.setattr(
+        loader.DsldLoader, "load_flattened", lambda *a, **k: pytest.fail("read the whole file")
+    )
+
+    assert len(list(loader.pending(run, records))) == 3
