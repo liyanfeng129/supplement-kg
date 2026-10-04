@@ -40,7 +40,8 @@ class ScriptedQwen(BaseModel):
     """Answers each prompt with the next scripted text; records what it saw.
 
     Answers each `submit()` before returning (the base model's default), so
-    the script is consumed in submit order. A prompt whose user text is in
+    the script is consumed in submit order. A reply that is an exception is
+    raised instead, as a failed request. A prompt whose user text is in
     `too_long` does not fit.
     """
 
@@ -53,6 +54,10 @@ class ScriptedQwen(BaseModel):
         self.seen: list[Prompt] = []
         self.samples: list[list[Prompt]] = []
         self.readied = 0
+        self.closed = 0
+
+    def close(self) -> None:
+        self.closed += 1
 
     def ready(self) -> None:
         self.readied += 1
@@ -67,8 +72,11 @@ class ScriptedQwen(BaseModel):
 
     def generate(self, prompt: Prompt) -> Generation:
         self.seen.append(prompt)
+        reply = self.replies.pop(0)
+        if isinstance(reply, BaseException):
+            raise reply
         return Generation(
-            text=self.replies.pop(0),
+            text=reply,
             latency_ms=1000,
             usage=Usage(prompt_tokens=10, completion_tokens=20),
             stop_reason="stop",
@@ -448,6 +456,108 @@ def test_progress_keeps_a_running_count_of_prompts_that_do_not_fit():
     )
 
     assert "1 too long" in seen[-1].detail
+
+
+def test_a_resumed_run_reports_the_whole_run_and_this_session():
+    seen = []
+
+    list(QwenController(ScriptedQwen(["a", "b"])).stream(
+        [(0, prompt()), (1, prompt())], total=2, n_already_done=40, on_progress=seen.append
+    ))
+
+    assert [(p.done, p.total) for p in seen] == [(41, 42), (42, 42)]
+    assert "this session 1/2" in seen[0].detail
+
+
+def test_the_eta_follows_the_recent_rate_not_the_whole_run_average(monkeypatch):
+    """A slowdown must show within minutes, not be averaged away over days."""
+    ticks = iter([0, 1, 2, 3, 4, 14, 24, 34, 44, 54, 64])  # the meter's start, then one per unit
+    monkeypatch.setattr(qc, "_now", lambda: float(next(ticks)))
+    monkeypatch.setattr(qc, "_ETA_WINDOW", 3)
+    seen = []
+
+    QwenController(ScriptedQwen(["x"] * 10)).handle([prompt()] * 10, on_progress=seen.append)
+
+    # After 7 units at t=34: the last 3 took 30s, so 3 left is 30s. The
+    # whole-run average (34s / 7) would say 15s.
+    assert "eta 30s" in seen[6].detail
+
+
+# --- owning the model -------------------------------------------------------
+
+
+def test_without_a_model_the_controller_creates_the_qwen_model():
+    from engine.models.qwen_model import QwenModel
+
+    controller = QwenController()
+    try:
+        assert controller.model is QwenModel()
+    finally:
+        controller.close()
+    assert QwenModel() is not controller.model  # closed: the next call builds afresh
+
+
+def test_close_closes_the_model():
+    model = ScriptedQwen([])
+
+    QwenController(model).close()
+
+    assert model.closed == 1
+
+
+# --- failed requests --------------------------------------------------------
+
+
+def test_a_failed_request_is_retried_as_it_was():
+    """No repair note: the answer was never seen, so there is no rule to cite."""
+    model = ScriptedQwen([RuntimeError("socket reset"), '{"claim": 1}'])
+
+    [outcome] = QwenController(model).handle([prompt("extract")], checks=[is_json])
+
+    assert outcome.ok and outcome.attempts == 2
+    assert [p.user for p in model.seen] == ["extract", "extract"]
+
+
+def test_a_request_that_keeps_failing_is_an_error_outcome_and_the_stream_goes_on():
+    model = ScriptedQwen([RuntimeError("a"), RuntimeError("b"), "fine"])
+
+    out = list(QwenController(model, max_attempts=2, in_flight=1).stream(
+        [(0, prompt("one")), (1, prompt("two"))]
+    ))
+
+    (k0, failed), (k1, fine) = out
+    assert (k0, failed.ok, failed.attempts, failed.failed) == (0, False, 2, [qc.ERROR])
+    assert failed.generation.stop_reason == "error"
+    assert (k1, fine.ok) == (1, True)
+
+
+def test_model_unavailable_from_a_request_ends_the_stream():
+    model = ScriptedQwen([ModelUnavailable("llama-server exited"), "never"])
+
+    with pytest.raises(ModelUnavailable, match="exited"):
+        list(QwenController(model).stream([(0, prompt()), (1, prompt())]))
+
+
+# --- parsing ----------------------------------------------------------------
+
+
+def test_ok_answers_are_parsed_and_failed_ones_are_not():
+    model = ScriptedQwen(['{"claim": 1}', "bad", "bad"], too_long=["long"])
+    parse = lambda text: {"text": text}  # noqa: E731
+
+    out = dict(QwenController(model, max_attempts=2).stream(
+        [(0, prompt("one")), (1, prompt("two")), (2, prompt("long"))], [is_json], parse
+    ))
+
+    assert out[0].parsed == {"text": '{"claim": 1}'}
+    assert out[1].parsed is None and not out[1].ok
+    assert out[2].parsed is None
+
+
+def test_without_a_parser_nothing_is_parsed():
+    [outcome] = QwenController(ScriptedQwen(["x"])).handle([prompt()])
+
+    assert outcome.parsed is None
 
 
 # --- helpers ----------------------------------------------------------------

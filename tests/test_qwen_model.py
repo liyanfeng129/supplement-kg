@@ -159,6 +159,8 @@ class FakeMachine:
         self.free_mib = lambda: 5_000 if self.running() else 24_000
         self.health_failures = 0  # /health answers 503 this many times first
         self.server_log = ""  # written to the log by a server that exits at once
+        self.completion_error = None  # raised by /completion for every prompt but the hello
+        self.health_down = False  # /health refuses the connection
         self._lock = threading.Lock()
         self._in_flight = 0
         self.in_flight_peak = 0
@@ -186,6 +188,8 @@ class FakeMachine:
         path = urllib.parse.urlparse(req.full_url).path
         body = json.loads(req.data) if req.data else None
         if path == "/health":
+            if self.health_down:
+                raise urllib.error.URLError(ConnectionRefusedError(111, "Connection refused"))
             if self.health_failures:
                 self.health_failures -= 1
                 raise urllib.error.HTTPError(req.full_url, 503, "Loading", None, io.BytesIO(b"Loading model"))
@@ -201,6 +205,8 @@ class FakeMachine:
         with self._lock:
             self._in_flight -= 1
         is_hello = "<|im_start|>user\nHello<|im_end|>" in body["prompt"]
+        if self.completion_error is not None and not is_hello:
+            raise self.completion_error
         return FakeReply(
             {
                 "content": self.hello if is_hello else "P: supports sleep | 4",
@@ -504,6 +510,63 @@ def test_close_cancels_what_is_still_queued(machine):
     machine.model.close()
 
     assert any(f.cancelled() for f in futures)
+
+
+# --- a failed request: this prompt's, or the server's? ----------------------
+
+
+def http_error(code: int, detail: str) -> urllib.error.HTTPError:
+    return urllib.error.HTTPError("http://x/completion", code, "err", None, io.BytesIO(detail.encode()))
+
+
+def test_a_failed_request_on_a_live_server_is_that_request_s_error(machine):
+    """The controller retries it; the run goes on."""
+    machine.model.ready()
+    machine.completion_error = http_error(500, "the request was malformed")
+
+    with pytest.raises(qm.ServerError, match="malformed"):
+        machine.model.generate(Prompt(system="s", user="label"))
+
+
+def test_a_failed_request_on_an_exited_server_is_model_unavailable(machine):
+    machine.model.ready()
+    machine.spawned[0].returncode = -11
+    machine.completion_error = urllib.error.URLError(ConnectionRefusedError(111, "refused"))
+
+    with pytest.raises(ModelUnavailable, match="exited with code -11"):
+        machine.model.generate(Prompt(system="s", user="label"))
+
+
+def test_a_failed_request_with_health_down_is_model_unavailable(machine):
+    machine.model.ready()
+    machine.completion_error = urllib.error.URLError(ConnectionRefusedError(111, "refused"))
+    machine.health_down = True
+
+    with pytest.raises(ModelUnavailable, match="/health"):
+        machine.model.submit(Prompt(system="s", user="label")).result()
+
+
+@pytest.mark.parametrize("detail", ["CUDA error: an illegal memory access", "failed: out of memory"])
+def test_a_cuda_or_memory_failure_is_model_unavailable(machine, detail):
+    machine.model.ready()
+    machine.completion_error = http_error(500, detail)
+
+    with pytest.raises(ModelUnavailable, match="CUDA|out of memory"):
+        machine.model.generate(Prompt(system="s", user="label"))
+
+
+def test_a_server_that_died_is_not_restarted(machine):
+    """No automatic restart: the run stops, and a person decides."""
+    machine.model.ready()
+    machine.spawned[0].returncode = -11
+
+    with pytest.raises(ModelUnavailable, match="not restarting"):
+        machine.model.ready()
+    assert len(machine.spawned) == 1
+
+    machine.model.close()
+    machine.model.ready()
+    assert len(machine.spawned) == 2
 
 
 # --- fitting ----------------------------------------------------------------

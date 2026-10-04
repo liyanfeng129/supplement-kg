@@ -25,6 +25,8 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from engine import config
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 RUNS_ROOT = REPO_ROOT / "data" / "dsld" / "runs"
 
@@ -36,6 +38,10 @@ MANIFEST_NAME = "purpose_risk.json"
 # passages a run was given and the rows it produced, side by side.
 PASSAGES_NAME = "passages.jsonl"
 PASSAGES_MANIFEST_NAME = "passages.json"
+
+# Used when `configs/engine.toml` has no `[store]` value.
+_FALLBACK_FLUSH_EVERY = 64
+_FALLBACK_FLUSH_SECONDS = 30.0
 
 
 def run_id() -> str:
@@ -135,12 +141,28 @@ class Sink:
     A context manager, so `close()` runs on a normal exit, on an exception and
     on Ctrl-C. Flushes run on the caller's thread: a local append of 64 rows
     takes milliseconds against seconds per generation.
+
+    Both thresholds come from `configs/engine.toml` `[store]` unless passed; a
+    missing or non-numeric value falls back to 64 rows and 30 seconds. Rows
+    are plain dicts: the sink knows nothing of what produced them.
     """
 
-    def __init__(self, run: str | Path, flush_every: int = 64, flush_seconds: float = 30.0):
+    def __init__(
+        self,
+        run: str | Path,
+        flush_every: int | None = None,
+        flush_seconds: float | None = None,
+    ):
+        table = config.read_toml(config.ENGINE_CONFIG_PATH).get("store")
+        table = table if isinstance(table, dict) else {}
+        every, seconds = table.get("flush_every"), table.get("flush_seconds")
+        if not isinstance(every, int) or isinstance(every, bool):
+            every = _FALLBACK_FLUSH_EVERY
+        if not isinstance(seconds, (int, float)) or isinstance(seconds, bool):
+            seconds = _FALLBACK_FLUSH_SECONDS
         self.path = rows_path(run)
-        self.flush_every = flush_every
-        self.flush_seconds = flush_seconds
+        self.flush_every = every if flush_every is None else flush_every
+        self.flush_seconds = float(seconds) if flush_seconds is None else flush_seconds
         self._buffer: list[dict] = []
         self.path.parent.mkdir(parents=True, exist_ok=True)
         repair(run)

@@ -1,0 +1,21 @@
+# Engine settings that are not the model's: how runs are stored and when
+# a person is told about them. Global, committed and diffable.
+#
+# Read by engine/repositories/dsld/store.py ([store]) and
+# engine/services/purpose_risk/service.py ([notify]). An explicit constructor
+# argument beats anything here; a missing or malformed file falls back to the
+# hardcoded defaults in those files rather than raising.
+#
+# None of these change an answer, so none is in a run's config_hash. Mail
+# address, app password and recipient are secrets: they live in .env.
+
+[store]
+# A row reaches disk when this many have queued up, or this many seconds have
+# passed since the last flush -- whichever comes first. A crash loses only the
+# buffer, which resume re-runs.
+flush_every = 64
+flush_seconds = 30.0
+
+[notify]
+fail_rate = 0.05       # warn when failed labels exceed this share...
+fail_min_labels = 200  # ...once at least this many are done

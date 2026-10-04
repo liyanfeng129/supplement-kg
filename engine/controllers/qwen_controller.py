@@ -32,10 +32,26 @@ spent. It can do that without understanding any check, because a check carries
 its own message to the model. The prompt asks for a format and the controller
 verifies it -- a prompt asking nicely is not a guarantee.
 
+**A failed request is retried like a failed check**, within the same budget,
+but re-sent as it was: no answer came back, so there is no rule to cite. One
+that fails every attempt comes back as an `error` outcome and the stream goes
+on. Only `ModelUnavailable` -- the model says it cannot run at all -- ends it.
+
+**The parser comes with the prompt, like the checks.** An answer that passed
+every check is parsed and the result carried in `Outcome.parsed`; the
+controller runs the parser without knowing the format.
+
+**The controller creates and owns its model.** `QwenController()` builds
+`QwenModel()`, and `close()` closes it; a caller reaches the model only
+through the controller. Passing a model in is the seam tests use.
+
 **Progress is counted here, measured below.** The model reports tokens per
 generation; the controller turns completed units and the wall clock into
 done-of-total, throughput and an ETA. Wall clock rather than summed latency,
-because concurrent generations overlap: four at 6s each is 6s, not 24.
+because concurrent generations overlap: four at 6s each is 6s, not 24. Rate
+and ETA are over the last `_ETA_WINDOW` units, not the whole run, so a
+slowdown shows within minutes; a resumed run counts what earlier sessions did
+into done-of-total and reports this session's share beside it.
 
 A check is a `Check` (see `models/base_model.py`): a name, a `passes(prompt,
 generation)` test, and a message. It is run against the *original* prompt, so
@@ -45,13 +61,14 @@ is a bug in the check and propagates.
 
 from __future__ import annotations
 
+import collections
 import itertools
 import logging
 import time
-from concurrent.futures import FIRST_COMPLETED, Future, wait
+from concurrent.futures import FIRST_COMPLETED, CancelledError, Future, wait
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Hashable, Iterable, Iterator, Sequence, TypeVar
+from typing import Callable, Hashable, Iterable, Iterator, Sequence, TypeVar
 
 from engine import config
 from engine.models.base_model import (
@@ -74,6 +91,12 @@ _FALLBACK_IN_FLIGHT = 8
 
 # The failure name given to a prompt the model says cannot fit a slot.
 TOO_LONG = "fits_context"
+
+# The failure name given to a prompt whose request failed on every attempt.
+ERROR = "error"
+
+# Units the rate and ETA are measured over: at ~1s per unit, a few minutes.
+_ETA_WINDOW = 200
 
 # The caller's key for one unit of work. Opaque to the controller.
 K = TypeVar("K", bound=Hashable)
@@ -104,6 +127,7 @@ class Outcome:
     ok: bool
     attempts: int
     failed: list[str]  # names from the final attempt
+    parsed: dict | None = None  # the parser's result; ok outcomes only
 
 
 def load_max_attempts(path: Path | None = None) -> int:
@@ -134,15 +158,23 @@ class _Meter:
     The clock starts when the meter is built -- after the model is ready and
     its cache is warm -- so a 40s load never inflates the ETA. Without a
     total there is no ETA, only done count and throughput.
+
+    `total` and `done` are this session's; `n_already_done` is what earlier
+    sessions of the same run finished, added to both for the reported
+    progress. Throughput and the ETA come from the last `_ETA_WINDOW` units.
     """
 
-    def __init__(self, total: int | None):
+    def __init__(self, total: int | None, n_already_done: int = 0):
         self.total = total
+        self.n_already_done = n_already_done
         self.done = 0
         self.too_long = 0
         self.tokens = 0
         self.completion_tokens = 0
         self.started = _now()
+        # (time, completion tokens so far) at the start and after each unit;
+        # one more entry than the window, so it spans `_ETA_WINDOW` units.
+        self.recent = collections.deque([(self.started, 0)], maxlen=_ETA_WINDOW + 1)
 
     def attempt(self, attempt: Attempt) -> None:
         usage = attempt.generation.usage
@@ -151,29 +183,39 @@ class _Meter:
 
     def unit_done(self) -> Progress:
         self.done += 1
-        elapsed = _now() - self.started
-        parts = [f"{self.tokens} tok"]
-        if elapsed > 0:
-            parts.append(f"{self.completion_tokens / elapsed:.1f} tok/s")
+        self.recent.append((_now(), self.completion_tokens))
+        (t0, tok0), (t1, tok1) = self.recent[0], self.recent[-1]
+        span, units = t1 - t0, len(self.recent) - 1
+        parts = []
+        if self.n_already_done:
+            of = "" if self.total is None else f"/{self.total}"
+            parts.append(f"(this session {self.done}{of})")
+        parts.append(f"{self.tokens} tok")
+        if span > 0:
+            parts.append(f"{(tok1 - tok0) / span:.1f} tok/s")
         if self.too_long:
             parts.append(f"{self.too_long} too long")
         remaining = None if self.total is None else self.total - self.done
-        if remaining:
-            parts.append(f"eta {_duration(elapsed / self.done * remaining)}")
-        return Progress(done=self.done, total=self.total, detail=" · ".join(parts))
+        if remaining and span > 0:
+            parts.append(f"eta {_duration(span / units * remaining)}")
+        return Progress(
+            done=self.n_already_done + self.done,
+            total=None if self.total is None else self.n_already_done + self.total,
+            detail=" · ".join(parts),
+        )
 
 
 class QwenController:
-    """Holds one model and runs prompts through it to outcomes."""
+    """Owns one model and runs prompts through it to outcomes."""
 
     def __init__(
         self,
-        model: QwenModel,
+        model: QwenModel | None = None,
         max_attempts: int | None = None,
         in_flight: int | None = None,
     ):
-        """Holds one model. Budget and in-flight count from configs/qwen.toml unless overridden."""
-        self.model = model
+        """Creates `QwenModel()` unless given one. Budget and in-flight count from configs/qwen.toml unless overridden."""
+        self.model = QwenModel() if model is None else model
         self.max_attempts = (
             load_max_attempts() if max_attempts is None else max_attempts
         )
@@ -192,11 +234,17 @@ class QwenController:
 
     # --- surface ------------------------------------------------------------
 
+    def close(self) -> None:
+        """Close the model: stop its server, free the card. Idempotent."""
+        self.model.close()
+
     def stream(
         self,
         work: Iterable[tuple[K, Prompt]],
         checks: Iterable[Check] = (),
+        parse: Callable[[str], dict] | None = None,
         total: int | None = None,
+        n_already_done: int = 0,
         on_progress: ProgressFn | None = None,
     ) -> Iterator[tuple[K, Outcome]]:
         """Run each `(key, prompt)` to an outcome, yielding `(key, outcome)` as each settles.
@@ -204,7 +252,17 @@ class QwenController:
         `work` is pulled lazily: at most `in_flight` prompts are outstanding,
         and one more is pulled each time one settles. Outcomes come out in
         completion order; the key is what maps them back. `total`, when
-        given, is the denominator for progress and the ETA.
+        given, is the denominator for progress and the ETA: prompts in this
+        `work`. `n_already_done` is what earlier sessions of a resumed run
+        finished, counted into the reported progress.
+
+        `parse`, when given, is run on the text of every `ok` outcome and its
+        result put in `Outcome.parsed`. A parser that raises is a bug and
+        propagates, as a check that raises does.
+
+        A request that fails is retried as it was, within `max_attempts`;
+        after the last it comes back as an `ERROR` outcome and the stream goes
+        on. `ModelUnavailable` ends the stream.
 
         Whatever the caller does between two `next()` calls runs on this
         loop's thread, while the model works through its queue -- keep it
@@ -223,7 +281,7 @@ class QwenController:
         self.model.cache_shared_prefix([p for _, p in first]) 
         work = itertools.chain(first, work) 
 
-        meter = _Meter(total)
+        meter = _Meter(total, n_already_done)
         # future -> (key, original prompt, attempts so far). Insertion order is
         # submit order, so settling the oldest finished future first keeps a
         # run deterministic when several finish together.
@@ -262,8 +320,31 @@ class QwenController:
                 done, _ = wait(outstanding, return_when=FIRST_COMPLETED)
                 future = next(f for f in outstanding if f in done)
                 key, prompt, n = outstanding.pop(future)
-                generation = future.result()
                 n += 1
+                try:
+                    generation = future.result()
+                except (ModelUnavailable, CancelledError):
+                    raise
+                except Exception as exc:
+                    # The request failed; the model says the server is still
+                    # fit, or it would have raised ModelUnavailable. Re-send
+                    # it as it was: there is no answer, so no rule to cite.
+                    if n < self.max_attempts:
+                        log.info(
+                            "prompt %r attempt %d/%d failed with %r; retrying",
+                            key, n, self.max_attempts, exc,
+                        )
+                        outstanding[self.model.submit(prompt)] = (key, prompt, n)
+                        continue
+                    log.warning("prompt %r: giving up after %d attempts; last error %r", key, n, exc)
+                    self._report(meter.unit_done(), on_progress)
+                    yield key, Outcome(
+                        generation=Generation(text="", latency_ms=0, stop_reason="error"),
+                        ok=False,
+                        attempts=n,
+                        failed=[ERROR],
+                    )
+                    continue
                 failed = [c for c in checks if not c.passes(prompt, generation)]
                 names = [c.name for c in failed]
                 meter.attempt(Attempt(generation=generation, failed=names))
@@ -282,7 +363,13 @@ class QwenController:
                         "prompt %r: giving up after %d attempts; last failed %s", key, n, names
                     )
                 self._report(meter.unit_done(), on_progress)
-                yield key, Outcome(generation=generation, ok=not failed, attempts=n, failed=names)
+                yield key, Outcome(
+                    generation=generation,
+                    ok=not failed,
+                    attempts=n,
+                    failed=names,
+                    parsed=parse(generation.text) if parse is not None and not failed else None,
+                )
         finally:
             for future in outstanding:
                 future.cancel()

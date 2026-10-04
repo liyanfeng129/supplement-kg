@@ -7,7 +7,8 @@
   to `controllers/qwen_controller.py`, `models/qwen_model.py`,
   `repositories/prompts/schema.py` and `repositories/dsld/store.py`.
 
-Builds on `docs/specs/0002-streaming-run.md`, which built the loader's `pending`, the
+Builds on `docs/specs/0001-qwen-model-controller.md` (updated to match) and
+`docs/specs/0002-streaming-run.md`, which built the loader's `pending`, the
 store's `Sink` and the controller's `stream`. This spec adds the service that joins
 them, and amends 0002 where listed under [Departures](#departures).
 

@@ -15,6 +15,7 @@ import json
 
 import pytest
 
+from engine import config
 from engine.repositories.dsld import store
 
 
@@ -94,3 +95,40 @@ def test_a_sink_on_a_new_run_creates_the_rows_file(tmp_path):
         sink.add({"dsld_id": 1})
 
     assert store.done_ids(run) == {1}
+
+
+# --- settings from configs/engine.toml --------------------------------------
+
+
+def test_flush_settings_come_from_the_committed_file(tmp_path):
+    sink = store.Sink(tmp_path / "run")
+
+    assert (sink.flush_every, sink.flush_seconds) == (64, 30.0)
+
+
+def test_flush_settings_follow_the_file(monkeypatch, tmp_path):
+    file = tmp_path / "engine.toml"
+    file.write_text("[store]\nflush_every = 5\nflush_seconds = 2.5\n")
+    monkeypatch.setattr(config, "ENGINE_CONFIG_PATH", file)
+
+    sink = store.Sink(tmp_path / "run")
+
+    assert (sink.flush_every, sink.flush_seconds) == (5, 2.5)
+
+
+def test_constructor_arguments_beat_the_file(monkeypatch, tmp_path):
+    file = tmp_path / "engine.toml"
+    file.write_text("[store]\nflush_every = 5\nflush_seconds = 2.5\n")
+    monkeypatch.setattr(config, "ENGINE_CONFIG_PATH", file)
+
+    sink = store.Sink(tmp_path / "run", flush_every=1, flush_seconds=0)
+
+    assert (sink.flush_every, sink.flush_seconds) == (1, 0)
+
+
+def test_a_missing_file_falls_back(monkeypatch, tmp_path):
+    monkeypatch.setattr(config, "ENGINE_CONFIG_PATH", tmp_path / "absent.toml")
+
+    sink = store.Sink(tmp_path / "run")
+
+    assert (sink.flush_every, sink.flush_seconds) == (64, 30.0)

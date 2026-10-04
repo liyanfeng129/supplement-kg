@@ -15,7 +15,7 @@ not reach the GPU, and a model that answers "Hello" in garbage.
 **Settings come from `configs/qwen.toml`**; an explicit argument wins. Every
 tuned number (4 slots, speculative decoding, 2,048-token batches, primed
 slots, input order) was chosen by measurement: see
-`docs/qwen-model-controller-design.md`, "Measurements behind the code".
+`docs/specs/0001-qwen-model-controller.md`, "Measurements behind the code".
 
 Public: `ready`, `generate`, `fits`, `cache_shared_prefix`, `submit`, `close`. Everything else is private.
 """
@@ -310,10 +310,17 @@ class QwenModel(BaseModel):
                     "been built since. Use QwenModel() to get the current one."
                 )
 
-        # Already running: nothing to do.
-        if self._proc is not None and self._proc.poll() is None:
-            return
-        self._proc = None
+        # Already running: nothing to do. A server this model started that has
+        # since exited is not restarted: whatever killed it (a CUDA fault, the
+        # card taken) would likely kill the next one, and a person decides.
+        if self._proc is not None:
+            if self._proc.poll() is None:
+                return
+            raise ModelUnavailable(
+                f"Refusing to run: llama-server exited with code {self._proc.returncode} "
+                f"mid-run, and the model is not restarting it. See {self.log_path}. "
+                "close() the model, then ready() it again to start a fresh server."
+            )
 
         # 1. Paths are set.
         if not self.model_path:
@@ -510,6 +517,10 @@ class QwenModel(BaseModel):
         Safe from several threads at once -- the server queues requests into
         its slots -- which is how `submit()`'s workers run. No retry here:
         validation and retry are the controller's.
+
+        A failed request raises one of two things. `ModelUnavailable` when the
+        server is gone -- nothing more can run. Anything else is that
+        request's own error, and the server is still fit for the next.
         """
         self.ready()
         body: dict[str, Any] = {
@@ -535,6 +546,29 @@ class QwenModel(BaseModel):
             started = time.monotonic()
             out = self._request("/completion", body)
             latency_ms = int((time.monotonic() - started) * 1000)
+        except Exception as exc:
+            # This request's problem, or the server's? The server is gone when
+            # its process has exited, when it reports a CUDA or out-of-memory
+            # failure, or when /health no longer answers ok. Then nothing more
+            # can run and the caller must stop. Otherwise the error is this
+            # request's own, raised as it is, and the controller retries it.
+            proc = self._proc
+            if proc is None or proc.poll() is not None:
+                failure_reason = f"llama-server exited with code {None if proc is None else proc.returncode}"
+            elif re.search(r"CUDA|out of memory", str(exc), re.IGNORECASE):
+                failure_reason = "llama-server reported a CUDA or out-of-memory failure"
+            else:
+                try:
+                    healthy = self._request("/health", timeout=5).get("status") == "ok"
+                except (OSError, ValueError, ServerError):
+                    healthy = False
+                failure_reason = None if healthy else "llama-server no longer answers /health"
+            if failure_reason:
+                raise ModelUnavailable(
+                    f"{failure_reason} during a request ({exc}). The model is not restarting "
+                    f"it. See {self.log_path}."
+                ) from exc
+            raise
         finally:
             with self._in_flight_lock:
                 self._in_flight -= 1

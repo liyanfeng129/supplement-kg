@@ -6,7 +6,7 @@
   `controllers/qwen_controller.py`, `models/qwen_model.py`, the purpose/risk service,
   and `configs/qwen.toml`.
 
-Builds on `docs/qwen-model-controller-design.md` and amends it in the places listed
+Builds on `docs/specs/0001-qwen-model-controller.md` and amends it in the places listed
 under [Departures](#departures).
 
 ## Problem
@@ -266,7 +266,7 @@ None of these comes near the headroom. Nothing needs a background thread in v1.
 
 ## Departures
 
-From `docs/qwen-model-controller-design.md` and the agreed architecture:
+From `docs/specs/0001-qwen-model-controller.md` and the agreed architecture:
 
 - **The controller no longer hands the model the whole set.** It was agreed on
   2026-09-23 that the model measures the whole set in `plan`. With a stream it caches
