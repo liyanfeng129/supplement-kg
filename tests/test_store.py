@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 
-from engine.pipeline import store
+from engine.repositories.dsld import store
 
 
 def _write(d, rows):
