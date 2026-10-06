@@ -5,11 +5,12 @@
 - **Scope:** new `services/purpose_risk/service.py`, new `engine/notify.py`, new
   `configs/engine.toml`, new `repositories/prompts/purpose_risk/parse.py`, and changes
   to `controllers/qwen_controller.py`, `models/qwen_model.py`,
-  `repositories/prompts/schema.py` and `repositories/dsld/store.py`.
+  `repositories/prompts/schema.py`, `repositories/dsld/store.py`,
+  `repositories/dsld/loader.py` and `services/dsld_cleaning/service.py`.
 
 Builds on `docs/specs/0001-qwen-model-controller.md` (updated to match) and
-`docs/specs/0002-streaming-run.md`, which built the loader's `pending`, the
-store's `Sink` and the controller's `stream`. This spec adds the service that joins
+`docs/specs/0002-streaming-run.md`, which built the store's `Sink` and the
+controller's `stream`. This spec adds the service that joins
 them, and amends 0002 where listed under [Departures](#departures).
 
 ## Scope of the service
@@ -22,12 +23,15 @@ service later; none of it is in this build.
 
 ```
 entry point (notebook / pipeline script)          configures logging
-        │  with PurposeRiskService() as svc: svc.run(run=None | path, ids, limit, …)
+        │  with PurposeRiskService() as svc: svc.run(label_set, ids, limit, …) │ svc.run(run=path)
         ▼
 PurposeRiskService
   1. prompts.load("purpose_risk") ─► PromptSpec(system, checks, parse, stop, max_tokens)
-  2. manifest: new run → write it │ resume → read selection, refuse if config_hash differs
-  3. loader.pending(run, …) ─► Pending (lazy labels, total, n_already_done)
+  2. new run → loader.load_flattened(label_set) ─► (passages_sha, {id: Label}); choose ids;
+               store.new_run(label_set, ids, manifest) ─► runs/<set>-<YYMMDDHHMM>-<n>/
+     resume  → store.read_manifest(run); refuse if config_hash or passages_sha differs;
+               loader.load_flattened(manifest["label_set"])
+  3. store.read_ids(run) − store.done_ids(run) ─► todo; prompts built lazily
   4. store.Sink(run) as sink
   5. for key, outcome in controller.stream(work, spec.checks, spec.parse, total, done):
          row = to_row(key, outcome) ─► sink.add(row)
@@ -52,15 +56,20 @@ class PurposeRiskService:
     def __init__(self, controller: QwenController | None = None): ...
     def __enter__(self) -> "PurposeRiskService": ...
     def __exit__(self, *exc) -> None: ...          # controller.close()
-    def run(self, run=None, path=None, ids=None, limit=None, order=None, seed=None) -> None
+    def run(self, label_set=None, ids=None, limit=None, order=None, seed=None, run=None) -> None
 ```
 
 - Declares its own collaborators: it is for purpose/risk only. It creates the
   controller (which creates the model); it never creates a model itself. `controller`
   is an optional seam so tests pass one built on a fake model.
-- `run=None` starts a new timestamped run directory; `run=<path>` resumes it. On
-  resume, the selection arguments are read from the manifest, not passed again.
-- Loads the prompt spec, writes or checks the manifest, and owns the one loop:
+- `run=None` starts a new run over `label_set` (a set's name). The ids are
+  chosen once, here: `ids` (every one must be in the set) or the whole set in file
+  order; then `order="sorted"`, or `order="random"` with a required `seed`; then
+  `limit`. The store creates the run with those ids and the manifest.
+- `run=<path>` resumes it: ids and label set come from the run; `label_set` and the
+  selection arguments must be left out. Whether to start a new run or resume is the
+  caller's decision.
+- Loads the prompt spec, creates or checks the run, and owns the one loop:
   label → `Prompt` (lazy) → `controller.stream` → row dict → `sink.add`.
 - **Failure policy:** a label whose outcome is not ok is written as a failed row and
   the run continues. The service counts failed labels; once more than
@@ -109,14 +118,56 @@ class PurposeRiskService:
 - `PromptSpec` gains `parse`; `prompts.load` fills it from `parse.py`. The line format
   lives only in this folder.
 
-### `repositories/dsld/loader.py` — `pending` (built in 0002)
+### `repositories/dsld/loader.py` — two forms, two consumers
 
-Ids up front minus done ids; labels read lazily; supplies `total` and
-`n_already_done`.
+- `load_raw(...)`: raw dump records, for the cleaning service. Unchanged.
+- `load_flattened(name) -> (passages_sha, {dsld_id: Label})`: a whole label set, by
+  name. The passages are hashed on read and must match the manifest's `passages_sha`,
+  so a set edited in place is refused. Nothing to select here — a set was chosen when
+  the cleaning service saved it. Parsed once per process.
+- Removed: `load`, `pending`, `Pending`, `Selection`, `read_all`, `load_gold`,
+  `gold_by_id`, and the `DEFAULT_RECORDS` / `DEFAULT_GOLD` defaults.
 
-### `repositories/dsld/store.py` — `Sink` (built in 0002)
+### `repositories/dsld/store.py` — label sets, runs, `Sink`
 
-Buffers dict rows and appends at `flush_every` rows or `flush_seconds`; repairs a torn
+**Label sets** live under a short name that says what they are, and hold the
+annotations made on them, when there are any:
+
+```
+data/dsld/labels/gold1000-r1/     passages.jsonl  annotations.jsonl  manifest.json
+data/dsld/labels/gold1000-r2/     passages.jsonl                     manifest.json
+data/dsld/labels/silver1000-r2/   passages.jsonl  annotations.jsonl  manifest.json
+```
+
+`manifest.json`: `name`, `source`, `description`, `renderer_version`, `n_labels`,
+`created_at`, `passages_sha`, and `annotations_sha` when annotated.
+
+- `write_label_set(name, rows, manifest) -> passages_sha`: `passages_sha` is the first
+  16 hex of the sha256 of `passages.jsonl`. A name is one set of passages for good:
+  the same passages again → nothing written; different passages under a used name →
+  refused. Rows must read as `Label`s with unique ids. Written to a temporary
+  directory and renamed into place.
+- Called by `DsldCleaningService.save(flattened, name)`, never by a run.
+- Annotations are copied in, with `annotations_sha` in the manifest. Loading and
+  scoring them is future work. Fixing an annotation changes `annotations_sha` only;
+  runs on the passages stay valid.
+
+**Runs** are named after their label set and hold references only:
+
+```
+data/dsld/runs/<set>-<YYMMDDHHMM>-<n>/manifests/purpose_risk.json   # prompt, label_set, passages_sha, selection, config_hash
+data/dsld/runs/<set>-<YYMMDDHHMM>-<n>/raw/ids.jsonl                 # the run's ids, in run order, written once
+data/dsld/runs/<set>-<YYMMDDHHMM>-<n>/raw/purpose_risk.jsonl        # rows, appended by the Sink
+```
+
+- `new_run(name, ids, manifest) -> Path`: the time is the UTC minute; `n` counts from 0
+  for runs started in the same minute. Ids and manifest are written together, via a
+  temporary directory, so a crash leaves the whole run or nothing. `read_ids(run)`
+  reads the ids back.
+- A label is done when its id has a row; no status is stored anywhere else.
+- Removed: `run_dir`, `write_manifest`, `write_passages`, `load_runs`.
+
+**`Sink`** (built in 0002) buffers dict rows and appends at `flush_every` rows or `flush_seconds`; repairs a torn
 trailing line on open; flushes on exit, including on an exception.
 **New:** flush settings are read from `configs/engine.toml` `[store]`, constructor
 arguments still win. The store takes plain dicts and never imports `Outcome`.
@@ -160,7 +211,7 @@ the prompts, loader and store repositories. Nothing calls up.
 
 ## Rows
 
-One row per label in `data/dsld/runs/<ts>/purpose_risk.jsonl`:
+One row per label in `data/dsld/runs/<ts>/raw/purpose_risk.jsonl`:
 
 ```json
 {"dsld_id": 123, "status": "ok|failed_checks|too_long|error",
@@ -178,12 +229,17 @@ One row per label in `data/dsld/runs/<ts>/purpose_risk.jsonl`:
 
 ## Manifest and resume
 
-- A new run writes the manifest: selection arguments and `config_hash`.
+- A new run's manifest holds the prompt id, the label set's name and `passages_sha`,
+  the selection arguments and `config_hash`. The chosen ids themselves are in `raw/ids.jsonl`.
 - `config_hash` covers the prompt spec (system, stop, max_tokens, check names), the
   model, the `[sampling]` settings and `max_attempts`. Not `in_flight`, `n_parallel`
   or the flush settings: they change speed, not answers.
-- Resume reads the selection from the manifest and refuses when `config_hash`
-  differs. The fix is a new run directory.
+- Resume reads the ids and the label set from the run and refuses when `config_hash`
+  or the set's `passages_sha` differs. The fix is a new run directory. The selection is not in `config_hash`: it
+  decides which labels, not how each is answered.
+- Because a name is one set of passages for good, a resumed run reads exactly the
+  passages it started with, and any row can be joined back to its passage by
+  `load_flattened(manifest["label_set"])[1][dsld_id]`.
 - After a crash only the unflushed buffer and the prompts in flight are re-run.
 
 ## Build order
@@ -211,6 +267,13 @@ From spec 0002 and the agreed architecture:
 - **The poison guard is a warning, not a stop.** 0002 said "stop after too many
   consecutive failures"; the service now keeps going and notifies once.
 - **Sink config** (0002 open question 1) lives in `configs/engine.toml`.
+- **No lazy `pending` in the loader.** 0002's offset-indexed `pending` existed to
+  shuffle and resume lazily over a file. The run's ids are now chosen once and stored
+  in the run, the label set is held whole (a few MB), and resume is the run's ids
+  minus the ids with a row.
+- **Label sets replace passage files.** A run names its labels by set name, checked by
+  `passages_sha`, not by a file path, and the loader has no default label set. Runs
+  are named after their set, not a bare timestamp.
 
 ## Acceptance
 
@@ -223,3 +286,7 @@ From spec 0002 and the agreed architecture:
 5. Crossing the failure threshold calls `notify` exactly once.
 6. `ok` rows carry parsed `purpose` / `risk`; failed rows carry empty lists and the
    raw text.
+7. The same passages saved again under a name write nothing; changed passages under a
+   used name are refused; a set edited in place is refused on read.
+8. A new run stores its ids in run order; a random order is redrawn by its seed and
+   refused without one; ids outside the set are refused before a run exists.

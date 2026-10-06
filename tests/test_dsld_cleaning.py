@@ -173,14 +173,20 @@ def test_every_row_is_stamped_with_the_renderer_version():
     assert flatten(clean({"id": 11}))["renderer_version"] == RENDERER_VERSION
 
 
-def test_rows_round_trip_through_the_store(tmp_path):
-    from engine.repositories.dsld import store
+def test_saved_rows_come_back_as_a_label_set(tmp_path, monkeypatch):
+    from engine.repositories.dsld import loader, store
+    from engine.services.dsld_cleaning import DsldCleaningService
 
+    monkeypatch.setattr(store, "LABELS_ROOT", tmp_path)
+    loader.reset()
     rows = flatten(clean([{"id": 12, "fullName": "P",
                            "statements": [{"type": "Other", "notes": "Supports sleep."}]}]))
-    written = store.write_passages(tmp_path, rows, {"n": 1})
 
-    assert [json.loads(l) for l in written["rows"].read_text().splitlines()] == rows
-    assert json.loads(written["manifest"].read_text()) == {"n": 1}
-    # The extraction artifact in the same run dir is untouched by passages.
-    assert store.rows_path(tmp_path) != written["rows"]
+    sha = DsldCleaningService().save(rows, "one-r3")
+
+    got_sha, labels = loader.load_flattened("one-r3")
+    assert got_sha == sha
+    assert labels[12].passage == rows[0]["passage"]
+    manifest = json.loads((tmp_path / "one-r3" / store.LABEL_SET_MANIFEST_NAME).read_text())
+    assert (manifest["name"], manifest["renderer_version"]) == ("one-r3", RENDERER_VERSION)
+    loader.reset()

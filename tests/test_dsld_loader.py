@@ -1,11 +1,12 @@
-"""The DSLD loader: what it returns, and what it says about what it left out.
+"""The DSLD loader: the raw dump for cleaning, whole label sets for the LLM.
 
-The old loader returned a bare list and printed its counts, so a caller could
-not tell a short result from a filtered one. These tests pin the thing that
-replaced it: every record dropped is accounted for on the `Selection`, in a
-field rather than on stdout.
+What is pinned: `load_raw` returns one record, several, or a draw from the
+dump, sorted unless told otherwise and never randomly without a seed.
+`load_flattened` reads a label set by name, returns its labels keyed by id
+with the set's `passages_sha`, refuses a set edited in place, and parses each
+set once.
 
-No GPU, no network, no model. The loader reads files and filters.
+No GPU, no network, no model. The loader reads files.
 """
 
 from __future__ import annotations
@@ -24,11 +25,19 @@ RECORDS = [
 ]
 
 
+@pytest.fixture(autouse=True)
+def _fresh_loader():
+    """Every test gets a cold loader, so one test's cached set is not the next's."""
+    loader.reset()
+    yield
+    loader.reset()
+
+
 @pytest.fixture
-def records(tmp_path):
-    p = tmp_path / "labels.jsonl"
-    p.write_text("".join(json.dumps(r) + "\n" for r in RECORDS))
-    return p
+def labels_root(tmp_path, monkeypatch):
+    root = tmp_path / "labels"
+    monkeypatch.setattr(store, "LABELS_ROOT", root)
+    return root
 
 
 # --- schema -----------------------------------------------------------------
@@ -59,192 +68,51 @@ def test_label_is_frozen():
         lab.passage = "changed"  # type: ignore[misc]
 
 
-# --- reading ----------------------------------------------------------------
+
+# --- load_flattened: a whole label set ------------------------------------
 
 
-def test_reads_every_record_in_file_order(records):
-    assert [lab.dsld_id for lab in loader.read_all(records)] == [709, 885, 889]
+def test_a_set_is_read_by_its_name(labels_root):
+    sha = store.write_label_set("tiny", RECORDS, {}, root=labels_root)
+
+    got_sha, labels = loader.load_flattened("tiny")
+
+    assert got_sha == sha
+    assert list(labels) == [709, 885, 889]  # the set's file order
+    assert labels[885] == Label.from_dict(RECORDS[1])
 
 
-def test_missing_source_says_where_and_why(tmp_path):
-    """raw/ is gitignored, so a fresh clone hits this -- the message has to
-    explain that rather than just naming a path."""
-    with pytest.raises(FileNotFoundError, match="gitignored"):
-        loader.read_all(tmp_path / "absent.jsonl")
+def test_an_unknown_set_says_where_it_looked(labels_root):
+    with pytest.raises(FileNotFoundError, match="no label set"):
+        loader.load_flattened("nope")
 
 
-def test_a_malformed_line_names_its_line_number(tmp_path):
-    p = tmp_path / "bad.jsonl"
-    p.write_text(json.dumps(RECORDS[0]) + "\nnot json\n")
-    with pytest.raises(ValueError, match=":2:"):
-        loader.read_all(p)
+def test_a_set_edited_in_place_is_refused(labels_root):
+    store.write_label_set("tiny", RECORDS, {}, root=labels_root)
+    rows_p = labels_root / "tiny" / store.LABEL_SET_ROWS_NAME
+    rows_p.write_text(rows_p.read_text().replace("Spirulina", "Chlorella"))
+
+    with pytest.raises(ValueError, match="edited in place"):
+        loader.load_flattened("tiny")
 
 
-def test_blank_lines_are_skipped(tmp_path):
-    p = tmp_path / "gaps.jsonl"
-    p.write_text(json.dumps(RECORDS[0]) + "\n\n" + json.dumps(RECORDS[1]) + "\n")
-    assert len(loader.read_all(p)) == 2
+def test_a_set_is_parsed_once(labels_root):
+    store.write_label_set("tiny", RECORDS, {}, root=labels_root)
+    loader.load_flattened("tiny")
+    (labels_root / "tiny" / store.LABEL_SET_ROWS_NAME).write_text("")
+
+    assert len(loader.load_flattened("tiny")[1]) == 3
 
 
-# --- selection --------------------------------------------------------------
+def test_a_returned_set_can_be_edited_without_damaging_the_cache(labels_root):
+    store.write_label_set("tiny", RECORDS, {}, root=labels_root)
+    loader.load_flattened("tiny")[1].clear()
 
-
-def test_load_reports_what_is_available(records):
-    sel = loader.load(records)
-    assert len(sel) == 3 and sel.n_available == 3
-    assert sel.n_already_done == 0 and sel.missing_ids == []
-
-
-def test_selection_is_iterable_and_carries_its_ids(records):
-    sel = loader.load(records)
-    assert [lab.dsld_id for lab in sel] == sel.ids == [709, 885, 889]
-
-
-def test_ids_come_back_sorted_by_default(records):
-    """An id list is a set, not a ranking -- it usually arrives from a CSV
-    column or a comma-separated flag, where the order is incidental."""
-    assert loader.load(records, ids=[889, 709]).ids == [709, 889]
-
-
-def test_ids_keep_caller_order_when_asked(records):
-    assert loader.load(records, ids=[889, 709], order="given").ids == [889, 709]
-
-
-def test_ids_can_be_drawn_at_random(records):
-    """Selecting a set of ids and shuffling them are separate questions, so
-    asking both at once is allowed."""
-    sel = loader.load(records, ids=[889, 709, 885], order="random", seed=4)
-    assert sorted(sel.ids) == [709, 885, 889]
-    assert sel.ids == loader.load(records, ids=[889, 709, 885], order="random", seed=4).ids
-
-
-def test_unknown_ids_are_reported_not_silently_dropped(records):
-    """A typo'd id and a genuinely absent one look identical in a bare result."""
-    sel = loader.load(records, ids=[709, 99999])
-    assert sel.ids == [709]
-    assert sel.missing_ids == [99999]
-
-
-def test_limit_caps_the_result(records):
-    assert len(loader.load(records, limit=2)) == 2
-
-
-# --- resume -----------------------------------------------------------------
-
-
-def _run_with(tmp_path, done_ids):
-    d = store.run_dir(root=tmp_path / "runs")
-    with store.rows_path(d).open("w") as fh:
-        for i in done_ids:
-            fh.write(json.dumps({"dsld_id": i, "status": "ok"}) + "\n")
-    return d
-
-
-def test_resume_drops_done_labels_and_counts_them(records, tmp_path):
-    d = _run_with(tmp_path, [709, 885])
-    sel = loader.load(records, resume_from=d)
-    assert sel.ids == [889]
-    assert sel.n_already_done == 2
-    assert sel.n_available == 3
-
-
-def test_resume_against_an_empty_run_changes_nothing(records, tmp_path):
-    d = _run_with(tmp_path, [])
-    sel = loader.load(records, resume_from=d)
-    assert len(sel) == 3 and sel.n_already_done == 0
-
-
-def test_limit_applies_after_resume(records, tmp_path):
-    """`--limit 10` must mean ten labels that will be processed.
-
-    Applying it before the resume filter let a resumed run hand back nothing
-    and look like completion.
-    """
-    d = _run_with(tmp_path, [709, 885])
-    sel = loader.load(records, limit=1, resume_from=d)
-    assert sel.ids == [889]
-
-
-def test_resume_and_ids_compose(records, tmp_path):
-    d = _run_with(tmp_path, [709])
-    sel = loader.load(records, ids=[709, 889], resume_from=d)
-    assert sel.ids == [889] and sel.n_already_done == 1
-
-
-# --- the summary line -------------------------------------------------------
-
-
-def test_summary_mentions_each_kind_of_exclusion(records, tmp_path):
-    d = _run_with(tmp_path, [709])
-    summary = loader.load(records, ids=[709, 885, 99999], resume_from=d).summary()
-    assert "1 to do" in summary
-    assert "already done" in summary
-    assert "99999" in summary
-
-
-def test_summary_stays_quiet_when_nothing_was_excluded(records):
-    summary = loader.load(records).summary()
-    assert summary == "3 to do of 3 available"
-
-
-# --- the singleton ----------------------------------------------------------
-
-
-@pytest.fixture(autouse=True)
-def _fresh_loader():
-    """Every test gets a cold loader.
-
-    The loader caches parsed corpora on one shared instance, so a test that
-    read a fixture would otherwise hand its corpus to the next test.
-    """
-    loader.reset()
-    yield
-    loader.reset()
+    assert len(loader.load_flattened("tiny")[1]) == 3
 
 
 def test_there_is_only_one_loader():
     assert loader.loader() is loader.loader() is loader.DsldLoader()
-
-
-def test_the_corpus_is_read_once_and_shared(records, monkeypatch):
-    """The point of the singleton: two callers asking for the same file must
-    not each pay for it, and must not be able to see two different versions."""
-    loader.load_flattened(records)
-    records.write_text("")  # a second read of the file would now yield nothing
-    assert len(loader.load_flattened(records)) == 3
-
-
-def test_reset_drops_the_cache(records):
-    loader.load_flattened(records)
-    loader.reset()
-    records.write_text(json.dumps(RECORDS[0]) + "\n")
-    assert len(loader.load_flattened(records)) == 1
-
-
-def test_a_returned_list_can_be_mutated_without_damaging_the_cache(records):
-    """The cached list is shared; handing it out directly would let one caller
-    sort or clear the corpus for everyone after it."""
-    loader.load_flattened(records).clear()
-    assert len(loader.load_flattened(records)) == 3
-
-
-def test_different_paths_are_cached_separately(records, tmp_path):
-    other = tmp_path / "other.jsonl"
-    other.write_text(json.dumps(RECORDS[0]) + "\n")
-    assert len(loader.load_flattened(records)) == 3
-    assert len(loader.load_flattened(other)) == 1
-
-
-# --- load_flattened ---------------------------------------------------------
-
-
-def test_load_flattened_reads_every_record_in_file_order(records):
-    assert [lab.dsld_id for lab in loader.load_flattened(records)] == [709, 885, 889]
-
-
-def test_read_all_still_works_for_existing_callers(records):
-    """The notebook and CLI call it; the alias keeps them running."""
-    assert loader.read_all(records) == loader.load_flattened(records)
 
 
 # --- load_raw ---------------------------------------------------------------
@@ -278,142 +146,6 @@ def test_load_raw_on_an_absent_id_raises_dsld_not_found(tmp_path):
     with pytest.raises(loader.DSLDNotFound, match="99999"):
         loader.load_raw(99999, tmp_path / "dump")
 
-
-# --- load_gold --------------------------------------------------------------
-
-
-GOLD = [
-    {
-        "dsld_id": 709,
-        "name": "Huperzine A",
-        "purpose": [{"text": "supports memory", "evidence": "Supports Memory*", "grounded": True}],
-        "risk": [{"text": "do not exceed intake", "evidence": "WARNING", "grounded": True}],
-        "model": "claude-opus-5",
-        "extracted_at": "2026-09-08T13:19:16Z",
-    },
-    {"dsld_id": 885, "name": "Spirulina", "purpose": [], "risk": []},
-]
-
-
-@pytest.fixture
-def gold(tmp_path):
-    p = tmp_path / "gold.jsonl"
-    p.write_text("".join(json.dumps(r) + "\n" for r in GOLD))
-    return p
-
-
-def test_load_gold_reads_claims_with_their_evidence(gold):
-    """A claim that cannot be pointed back at the passage cannot be audited,
-    and the gold set is a reference reading, not ground truth."""
-    rows = loader.load_gold(gold)
-    assert [g.dsld_id for g in rows] == [709, 885]
-    assert rows[0].purpose[0].evidence == "Supports Memory*"
-    assert rows[0].purpose[0].grounded is True
-    assert rows[0].model == "claude-opus-5"
-
-
-def test_a_gold_row_with_no_claims_is_valid(gold):
-    """Most labels declare no risk; an empty list is an answer, not a failure."""
-    assert loader.load_gold(gold)[1].purpose == []
-
-
-def test_gold_by_id_is_keyed_for_the_join(gold):
-    by_id = loader.gold_by_id(gold)
-    assert set(by_id) == {709, 885}
-    assert by_id[709].name == "Huperzine A"
-
-
-def test_a_missing_gold_set_says_how_to_rebuild_it(tmp_path):
-    """It is committed outside data/ and costs money to regenerate, so the
-    message has to say that rather than just naming a path."""
-    with pytest.raises(FileNotFoundError, match="gold_set"):
-        loader.load_gold(tmp_path / "absent.jsonl")
-
-
-def test_a_malformed_gold_line_names_its_line_number(tmp_path):
-    p = tmp_path / "bad.jsonl"
-    p.write_text(json.dumps(GOLD[0]) + "\nnot json\n")
-    with pytest.raises(ValueError, match=":2:"):
-        loader.load_gold(p)
-
-
-# --- one, many, in order, at random -----------------------------------------
-
-
-def test_sorted_order_is_by_id(tmp_path):
-    p = tmp_path / "unsorted.jsonl"
-    p.write_text("".join(json.dumps(r) + "\n" for r in reversed(RECORDS)))
-    assert [lab.dsld_id for lab in loader.load_flattened(p, order="sorted")] == [709, 885, 889]
-
-
-def test_file_order_is_the_default(records):
-    assert [lab.dsld_id for lab in loader.load_flattened(records)] == [709, 885, 889]
-
-
-def test_the_same_seed_redraws_the_same_order(records):
-    """The whole point of requiring a seed: a rerun scores the same subset."""
-    a = [lab.dsld_id for lab in loader.load_flattened(records, order="random", seed=42)]
-    b = [lab.dsld_id for lab in loader.load_flattened(records, order="random", seed=42)]
-    assert a == b
-
-
-def test_a_different_seed_draws_a_different_order(records):
-    seen = {
-        tuple(lab.dsld_id for lab in loader.load_flattened(records, order="random", seed=s))
-        for s in range(12)
-    }
-    assert len(seen) > 1
-
-
-def test_a_random_draw_without_a_seed_is_refused(records):
-    """An unseeded draw looks identical to a seeded one and is not redrawable."""
-    with pytest.raises(ValueError, match="explicit seed"):
-        loader.load_flattened(records, order="random")
-
-
-def test_a_seed_without_a_random_order_is_refused(records):
-    """It would do nothing, which is worse than failing -- the caller believes
-    they asked for something."""
-    with pytest.raises(ValueError, match="seed only means"):
-        loader.load_flattened(records, order="sorted", seed=1)
-
-
-def test_an_unknown_order_is_refused(records):
-    with pytest.raises(ValueError, match="order must be one of"):
-        loader.load_flattened(records, order="backwards")
-
-
-def test_the_draw_does_not_depend_on_file_order(tmp_path):
-    """Shuffling a sorted copy means the same ids and seed give the same draw
-    however the file happened to be written."""
-    a, b = tmp_path / "a.jsonl", tmp_path / "b.jsonl"
-    a.write_text("".join(json.dumps(r) + "\n" for r in RECORDS))
-    b.write_text("".join(json.dumps(r) + "\n" for r in reversed(RECORDS)))
-    draw = lambda p: [lab.dsld_id for lab in loader.load_flattened(p, order="random", seed=3)]
-    assert draw(a) == draw(b)
-
-
-def test_ordering_does_not_corrupt_the_shared_cache(records):
-    """One caller's random draw must not change what the next caller sees."""
-    loader.load_flattened(records, order="random", seed=42)
-    assert [lab.dsld_id for lab in loader.load_flattened(records)] == [709, 885, 889]
-
-
-def test_a_random_limit_is_a_random_sample(records):
-    """`limit` after a shuffle is how you ask for a random N."""
-    sel = loader.load(records, limit=2, order="random", seed=42)
-    assert len(sel) == 2
-    assert sel.ids == loader.load(records, limit=2, order="random", seed=42).ids
-
-
-def test_an_unseeded_random_id_draw_is_still_refused(records):
-    """Combining ids= and order= is fine, but the seed rule still holds."""
-    with pytest.raises(ValueError, match="explicit seed"):
-        loader.load(records, ids=[709, 885], order="random")
-
-
-def test_gold_takes_an_order_too(gold):
-    assert [g.dsld_id for g in loader.load_gold(gold, order="sorted")] == [709, 885]
 
 
 # --- raw: many, ordered -----------------------------------------------------
@@ -562,76 +294,3 @@ def test_load_raw_with_neither_ids_nor_n_is_refused(dump):
         loader.load_raw(root=dump)
 
 
-# --- pending: the lazy, resumable selection a streaming run reads -----------
-
-
-def test_pending_yields_the_same_labels_as_load(records, tmp_path):
-    """The same frozen passages, in the same default file order."""
-    run = _run_with(tmp_path, [])
-
-    todo = loader.pending(run, records)
-
-    assert list(todo) == list(loader.load(records))
-    assert todo.total == 3
-
-
-def test_pending_leaves_out_what_the_run_already_holds(records, tmp_path):
-    run = _run_with(tmp_path, [709, 885])
-
-    todo = loader.pending(run, records)
-
-    assert [lab.dsld_id for lab in todo] == [889]
-    assert todo.total == 1
-    assert todo.n_already_done == 2
-
-
-def test_pending_reports_unknown_ids_and_sorts_named_ones(records, tmp_path):
-    run = _run_with(tmp_path, [])
-
-    todo = loader.pending(run, records, ids=[889, 99999, 709])
-
-    assert [lab.dsld_id for lab in todo] == [709, 889]
-    assert todo.missing_ids == [99999]
-    assert todo.source == records
-
-
-def test_pending_takes_the_same_orders_as_load(records, tmp_path):
-    run = _run_with(tmp_path, [])
-
-    for kwargs in ({"ids": [889, 709], "order": "given"}, {"order": "random", "seed": 7}):
-        assert [lab.dsld_id for lab in loader.pending(run, records, **kwargs)] == loader.load(
-            records, **kwargs
-        ).ids
-
-
-def test_pending_applies_limit_after_resume(records, tmp_path):
-    run = _run_with(tmp_path, [709])
-
-    todo = loader.pending(run, records, limit=1)
-
-    assert [lab.dsld_id for lab in todo] == [885]
-    assert todo.total == 1
-
-
-def test_pending_reads_one_label_per_step(records, tmp_path, monkeypatch):
-    """Memory holds the ids, not the labels: a label is built when it is pulled."""
-    run = _run_with(tmp_path, [])
-    built = []
-    real = Label.from_dict
-    monkeypatch.setattr(Label, "from_dict", lambda record: built.append(record) or real(record))
-
-    todo = iter(loader.pending(run, records))
-    assert built == []
-
-    next(todo)
-    assert len(built) == 1
-
-
-def test_pending_does_not_fill_the_whole_file_cache(records, tmp_path, monkeypatch):
-    """A full-corpus run must not hold every label via `load_flattened`."""
-    run = _run_with(tmp_path, [])
-    monkeypatch.setattr(
-        loader.DsldLoader, "load_flattened", lambda *a, **k: pytest.fail("read the whole file")
-    )
-
-    assert len(list(loader.pending(run, records))) == 3

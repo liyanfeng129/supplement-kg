@@ -1,119 +1,74 @@
-"""The entry to read DSLD labels.
+"""The entry to read DSLD data: labels, in the two forms the engine consumes, and runs.
 
 Being *the entry* is the whole job: callers ask this module for labels and
-never open the file themselves. Where the labels physically live -- a frozen
-pilot JSONL today, a database or the DSLD API later -- is an implementation
-detail behind it, and moving them changes this file and nothing above it.
+never open the files themselves. Where the labels physically live is an
+implementation detail behind it.
 
-**Three sources, three named entries.** A DSLD label exists here in three
-forms, and a caller that has to remember which file holds which is not being
-given an entry at all:
+**Two forms, two consumers.**
 
-- `load_raw(dsld_id) -> dict` -- **one product**, its full record from the
-  full-database dump, every field DSLD publishes. What a passage is built
-  *from*. Hand it several ids and it returns several records.
-- `load_flattened() -> list[Label]` -- **the whole corpus** of frozen pilot
-  passages: id, name, one rendered string each. What an extractor is run
-  *over*.
-- `load_gold() -> list[GoldLabel]` -- **the whole reference set**, the
-  purpose/risk reading of 100 of those labels. What a run is scored *against*.
-
-Note the first is singular and the other two are plural, which is a fact about
-the sources rather than an inconsistency: the dump is ~215k separate JSON files
-and a caller reads a handful, so there is no whole to load. The pilot and the
-gold set are one file each, of 1000 and 100 lines -- small enough to read once
-and hold. That is also why only the latter two are cached.
+- `load_raw(dsld_id) -> dict` -- a product's full record from the
+  full-database dump, every field DSLD publishes. What the cleaning service
+  cleans *from*. Hand it several ids and it returns several records; name none
+  and `n=` draws from the dump.
+- `load_flattened(name) -> (passages_sha, {dsld_id: Label})` -- a whole
+  label set the cleaning service saved: id, name and one passage each. What an
+  LLM is run *over*.
 
 They are deliberately not one function with a `kind` argument: they return
-different shapes (`dict`, `Label`, `GoldLabel`), take different arguments, and
-fail for different reasons.
+different shapes, feed different consumers, and fail for different reasons.
 
-**One, many, N, in order, or at random.** Every entry answers all of these.
-On the raw side the *argument* says which: an id returns a `dict`, an iterable
-of ids returns a `list[dict]`, and naming no ids at all draws from the dump.
+**Runs are read here too**, though the store writes them: `read_manifest`,
+`read_ids`, `read_rows` and `done_ids`. The loader is the entry to read and
+the store the entry to write, whatever the data.
 
-    load_raw(709)                                   # one   -> dict
-    load_raw([889, 709])                            # many  -> list[dict]
-    load_raw(n=50)                                  # the first 50 by id
-    load_raw(n=50, order="random", seed=42)         # a random 50
-    load_raw([889, 709], order="given")             # keep caller order
-    load_flattened(order="random", seed=42)         # the corpus, shuffled
-    load(limit=50, order="random", seed=42)         # a random 50 passages
+**A label set is read whole, by name.** A set was chosen and written by the
+cleaning service, so there is nothing to select here: which labels a run
+does, and in what order, is the run's business. The set's `passages_sha`
+comes back with the labels -- checked against the file, so a set edited in
+place is refused -- and a run records it, so a resume can tell whether the
+passages it started on are still the ones under that name.
 
-`n=` exists because the population has to be listed before it can be sampled,
-and only this layer knows how -- there is no file listing the dump's contents,
-so a caller cannot otherwise name what it would be drawing from. `dump_ids()`
-exposes the same listing for a caller that wants the ids themselves.
-
-**Ids come back sorted unless you say otherwise.** A list of ids is a *set*:
-it arrives from a CSV column, a comma-separated flag or a set difference,
-where the order is incidental, so two callers asking for the same ids should
-get the same answer. `order="given"` keeps caller order for the rarer case
-where the list really is a ranking. Reading a whole file still defaults to
-"file" order, because the pilot file is itself a randomised draw and a prefix
-of it is already a random subset.
+**Ids come back sorted unless you say otherwise** on the raw side. A list of
+ids is a *set*: it arrives from a CSV column, a comma-separated flag or a set
+difference, where the order is incidental, so two callers asking for the same
+ids should get the same answer. `order="given"` keeps caller order.
 
 **A random draw requires a seed.** `order="random"` without one raises rather
-than defaulting, because the failure is otherwise silent: an unseeded draw
-makes every rerun score a different subset of labels while looking exactly
-like the run before it. This follows the rule `pilot_sample.sample` already
-set. Selecting ids and ordering them are separate questions, so `ids=` and
-`order=` compose rather than conflicting.
+than defaulting: an unseeded draw makes every rerun see a different subset
+while looking exactly like the run before it.
 
-**One loader instance.** The three sources are read repeatedly -- a scoring
-pass wants the gold set, then the passages that produced it, then a run's rows
--- and re-reading a 1000-line JSONL per call is both slow and a source of
-disagreement if the file changes underneath a session. `DsldLoader` enforces a
-single instance so each parsed file is read once and shared; `reset()` exists
-for tests and for a caller that has genuinely rewritten a source.
-
-**Resume lives here**, because resume is a question about what is left to read:
-the store knows which ids are done, so the loader consults it and hands back
-only the rest. A caller that wants everything simply does not pass a run.
-`pending(run, ...)` is the streaming form: the same selection and resume, but
-labels are read one at a time as the run pulls them, so a corpus larger than
-memory can be run.
-
-**A selection is returned, not a bare list.** The old loader returned records
-and printed the counts it had dropped, which meant a notebook calling it either
-scraped stdout or guessed. `Selection` carries the numbers that were previously
-only printed -- how many matched, how many were already done, which requested
-ids do not exist -- so the caller can report them however it likes. That is the
-"say what is in and out" rule from ADR 0002 §4 applied to the one layer that
-knows.
+**One loader instance.** A label set does not change under its name, so it is
+parsed once per process and shared. `reset()` exists for tests.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import random
 import threading
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable, overload
 
-from engine.repositories.dsld import store
-from engine.repositories.dsld.schema import GoldLabel, Label
+from engine.repositories.dsld.schema import Label
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-
-# The frozen pilot passages. The gold set was labelled against these exact
-# strings, so a run that re-renders instead of reading them is not comparable
-# to the gold set -- see `schema.Label`.
-DEFAULT_RECORDS = (
-    REPO_ROOT / "data" / "dsld" / "runs" / "20260908T125504Z" / "raw" / "pilot-1000.jsonl"
-)
 
 # The full-database dump: one JSON file per product, bucketed by id.
 DEFAULT_DUMP_ROOT = REPO_ROOT / "datasets" / "DSLD-full-database-JSON"
 
-# The gold set. Committed outside the gitignored `data/` tree on purpose: it
-# cost money to produce and every later comparison depends on it, so clearing
-# a cache must not destroy it.
-DEFAULT_GOLD = REPO_ROOT / "datasets" / "pilot" / "gold-100.jsonl"
-
 # Dump files are bucketed a thousand ids to a directory.
 DUMP_BUCKET_SIZE = 1000
+
+# Label sets, as the cleaning service saves them: labels/<name>/<file>.
+LABELS_ROOT = REPO_ROOT / "data" / "dsld" / "labels"
+LABEL_SET_ROWS_NAME = "passages.jsonl"
+LABEL_SET_MANIFEST_NAME = "manifest.json"
+
+# A run's files, relative to its directory.
+RUN_MANIFEST = Path("manifests") / "purpose_risk.json"
+RUN_IDS = Path("raw") / "ids.jsonl"
+RUN_ROWS = Path("raw") / "purpose_risk.jsonl"
 
 # How a caller may ask for records to come back.
 #
@@ -190,82 +145,12 @@ class DSLDNotFound(LookupError):
     """
 
 
-@dataclass(frozen=True)
-class Selection:
-    """Labels to process, and an account of everything left out.
-
-    The account is the point. `labels` alone cannot distinguish "you asked for
-    500 and the file holds 200" from "you asked for 500 and 300 were already
-    done", and those call for opposite responses from the caller.
-    """
-
-    labels: list[Label]
-    n_available: int = 0
-    n_already_done: int = 0
-    missing_ids: list[int] = field(default_factory=list)
-    source: Path | None = None
-
-    def __len__(self) -> int:
-        return len(self.labels)
-
-    def __iter__(self):
-        return iter(self.labels)
-
-    @property
-    def ids(self) -> list[int]:
-        return [lab.dsld_id for lab in self.labels]
-
-    def summary(self) -> str:
-        """One line a frontend can print as-is, or ignore in favour of the fields."""
-        parts = [f"{len(self.labels)} to do of {self.n_available} available"]
-        if self.n_already_done:
-            parts.append(f"{self.n_already_done} already done")
-        if self.missing_ids:
-            shown = ", ".join(str(i) for i in self.missing_ids[:5])
-            more = f" (+{len(self.missing_ids) - 5})" if len(self.missing_ids) > 5 else ""
-            parts.append(f"{len(self.missing_ids)} requested id(s) not in source: {shown}{more}")
-        return "; ".join(parts)
-
-
-@dataclass(frozen=True)
-class Pending:
-    """Labels a streaming run still has to do, read one at a time as it pulls them.
-
-    What `Selection` is to `load`, for a corpus too large to hold: the same
-    account of what was left out, but `ids` instead of labels. Iterating reads
-    one cleaned, flattened `Label` per step from `source`, seeking straight to
-    its line, so memory holds the ids and where each line starts -- never the
-    labels. The passages are read as stored and never re-rendered, for the
-    reason `load_flattened` gives.
-
-    `total` is the denominator for progress: labels still to do.
-    """
-
-    ids: list[int]
-    offsets: dict[int, int]  # id -> byte offset of its line in `source`
-    total: int
-    n_already_done: int = 0
-    missing_ids: list[int] = field(default_factory=list)
-    source: Path | None = None
-
-    def __iter__(self):
-        with Path(self.source).open("rb") as fh:  # type: ignore[arg-type]
-            for i in self.ids:
-                fh.seek(self.offsets[i])
-                yield Label.from_dict(json.loads(fh.readline()))
-
-
 class DsldLoader:
-    """The single entry to read DSLD data, in any of its three forms.
+    """The single entry to read DSLD data, in both of its forms.
 
-    One instance per process. The instance holds the parsed corpora so a
-    session that reads the passages, then the gold set, then the passages
-    again pays for each file once and cannot see two different versions of
-    one file within a run.
-
-    Caching is keyed by resolved path, so passing an explicit path -- a test
-    fixture, a second pilot draw -- is a normal call and not a cache bypass.
-    The dump is *not* cached: it is ~92k files and a caller reads a handful.
+    One instance per process. It holds the parsed label sets, keyed by name:
+    a set does not change under its name, so a cached one is not stale. The
+    dump is *not* cached: it is ~215k files and a caller reads a handful.
     """
 
     _instance: "DsldLoader | None" = None
@@ -283,15 +168,13 @@ class DsldLoader:
         return cls._instance
 
     def _init(self) -> None:
-        self._flattened: dict[Path, list[Label]] = {}
-        self._gold: dict[Path, list[GoldLabel]] = {}
+        self._flattened: dict[str, tuple[str, dict[int, Label]]] = {}
 
     @classmethod
     def reset(cls) -> None:
         """Drop the instance and everything it has cached.
 
-        For tests, and for a caller that has just rewritten a source file and
-        means the next read to see it.
+        For tests.
         """
         with cls._lock:
             cls._instance = None
@@ -429,218 +312,40 @@ class DsldLoader:
 
     # --- flattened ----------------------------------------------------------
 
-    def load_flattened(
-        self,
-        path: str | Path | None = None,
-        order: str | None = None,
-        seed: int | None = None,
-    ) -> list[Label]:
-        """Every frozen pilot passage, in file order unless asked otherwise.
+    def load_flattened(self, name: str) -> tuple[str, dict[int, Label]]:
+        """A whole label set, and its `passages_sha`, as the cleaning service saved it.
 
-        These are read as data and never re-rendered: the gold set was
-        labelled against these exact strings, so a run that rebuilds a passage
-        from the dump is not comparable to it.
+        The labels come back keyed by id, in the set's file order. The dict is
+        a copy, so a caller that edits it damages nothing; `Label` is frozen.
 
-        Separate from `load()` so that counting or inspecting the corpus does
-        not require constructing a selection, and so `load()` has one obvious
-        place to get its universe from.
+        The passages are hashed on read and must match the manifest's
+        `passages_sha`: a set edited in place would otherwise be read as the
+        set a run started on.
         """
-        src = Path(path or DEFAULT_RECORDS).resolve()
-        cached = self._flattened.get(src)
+        cached = self._flattened.get(name)
         if cached is None:
-            if not src.exists():
+            d = Path(LABELS_ROOT) / name
+            rows_p = d / LABEL_SET_ROWS_NAME
+            if not rows_p.exists():
                 raise FileNotFoundError(
-                    f"no label records at {src}. The pilot passages are gitignored "
-                    f"(raw/ is not committed); re-run the pilot or point --records elsewhere."
+                    f"no label set {name!r} at {d}. Label sets are saved by the "
+                    f"cleaning service's save()."
                 )
-            cached = [Label.from_dict(r) for r in _read_jsonl(src)]
-            self._flattened[src] = cached
-        # Ordering is applied to a copy on the way out, never to the cache:
-        # the cache stays in canonical file order, so one caller's random
-        # draw cannot change what the next caller sees. The copy also means a
-        # caller that sorts in place damages nothing -- `Label` is frozen, so
-        # the elements themselves need no copying.
-        return _ordered(list(cached), order or "file", seed, key=lambda lab: lab.dsld_id)
-
-    # --- gold ---------------------------------------------------------------
-
-    def load_gold(
-        self,
-        path: str | Path | None = None,
-        order: str | None = None,
-        seed: int | None = None,
-    ) -> list[GoldLabel]:
-        """The reference purpose/risk reading, in file order unless asked otherwise.
-
-        A reference, not ground truth: one model's reading of each passage,
-        auditable because every claim keeps the evidence span it came from.
-        """
-        src = Path(path or DEFAULT_GOLD).resolve()
-        cached = self._gold.get(src)
-        if cached is None:
-            if not src.exists():
-                raise FileNotFoundError(
-                    f"no gold set at {src}. It is committed under datasets/ rather "
-                    f"than data/; if it is absent, rebuild it with "
-                    f"services/extraction/gold_set.py -- it calls the frontier model."
+            manifest = json.loads((d / LABEL_SET_MANIFEST_NAME).read_text())
+            passages_sha = hashlib.sha256(rows_p.read_bytes()).hexdigest()[:16]
+            if passages_sha != manifest.get("passages_sha"):
+                raise ValueError(
+                    f"label set {name!r}: passages.jsonl hashes to {passages_sha} but its "
+                    f"manifest says {manifest.get('passages_sha')} -- it was edited in "
+                    f"place. Save changed passages as a new set."
                 )
-            cached = [GoldLabel.from_dict(r) for r in _read_jsonl(src)]
-            self._gold[src] = cached
-        return _ordered(list(cached), order or "file", seed, key=lambda g: g.dsld_id)
-
-    def gold_by_id(self, path: str | Path | None = None) -> dict[int, GoldLabel]:
-        """The gold set keyed by id -- what scoring joins a run's rows against."""
-        return {g.dsld_id: g for g in self.load_gold(path)}
-
-    # --- selection ----------------------------------------------------------
-
-    def load(
-        self,
-        path: str | Path | None = None,
-        ids: list[int] | None = None,
-        limit: int | None = None,
-        resume_from: str | Path | None = None,
-        order: str | None = None,
-        seed: int | None = None,
-    ) -> Selection:
-        """Flattened labels to process, with an account of what was left out.
-
-        `ids` selects specific labels; ids absent from the source are reported
-        in `Selection.missing_ids` rather than silently yielding a shorter
-        list, since a typo'd id and a genuinely absent one look identical in a
-        bare result.
-
-        `limit` applies after id selection and after the resume filter, so
-        `limit=10` means ten labels that will actually be processed -- not ten
-        candidates of which some are already done. The old loader applied it
-        before the resume filter, where `--limit 10` on a resumed run could
-        hand back nothing at all and look like completion.
-
-        `resume_from` is a run directory. Labels already present in its rows
-        are dropped and counted. It is explicit and never inferred: appending
-        to an existing run is a deliberate act.
-        """
-        src = Path(path or DEFAULT_RECORDS)
-        labels = self.load_flattened(src)
-        n_available = len(labels)
-
-        missing: list[int] = []
-        if ids is None:
-            # No ids named: order the whole corpus. "file" is the default
-            # here because the pilot file is itself a randomised draw, so a
-            # prefix of it is already a random subset.
-            labels = _ordered(labels, order or "file", seed, key=lambda lab: lab.dsld_id)
-        else:
-            wanted = [int(i) for i in ids]
-            by_id = {lab.dsld_id: lab for lab in labels}
-            missing = [i for i in wanted if i not in by_id]
-            # Ordered after selection, not before: an id list is a *set*, so
-            # it is the selected labels that get ordered, and "sorted" is the
-            # default for the same reason as in `load_raw` -- the order a list
-            # of ids was typed in is almost always incidental.
-            labels = _ordered(
-                [by_id[i] for i in wanted if i in by_id],
-                order or "sorted",
-                seed,
-                key=lambda lab: lab.dsld_id,
-            )
-
-        n_done = 0
-        if resume_from is not None:
-            done = store.done_ids(resume_from)
-            if done:
-                before = len(labels)
-                labels = [lab for lab in labels if lab.dsld_id not in done]
-                n_done = before - len(labels)
-
-        if limit is not None:
-            labels = labels[:limit]
-
-        return Selection(
-            labels=labels,
-            n_available=n_available,
-            n_already_done=n_done,
-            missing_ids=missing,
-            source=src,
-        )
-
-    def pending(
-        self,
-        run: str | Path,
-        path: str | Path | None = None,
-        ids: list[int] | None = None,
-        limit: int | None = None,
-        order: str | None = None,
-        seed: int | None = None,
-    ) -> Pending:
-        """What `run` still has to do, as a lazy iterator of labels.
-
-        Takes `load`'s selection arguments and means the same by them: ids
-        absent from the source are reported, `order` defaults to "file" for
-        the whole corpus and "sorted" for named ids, and `limit` applies after
-        resume. `run` is the run directory; the ids its rows already hold are
-        left out and counted. A new run simply has none.
-
-        The id list is worked out up front -- ids are small -- by one pass
-        over the file that parses each line for its id and remembers where it
-        starts. No `Label` is built and `load_flattened`'s whole-file cache is
-        not touched; labels are read one per step when the run pulls them.
-        """
-        src = Path(path or DEFAULT_RECORDS)
-        if not src.exists():
-            raise FileNotFoundError(
-                f"no label records at {src.resolve()}. The pilot passages are gitignored "
-                f"(raw/ is not committed); re-run the pilot or point --records elsewhere."
-            )
-
-        # 1. Every id in the file, in file order, with where its line starts.
-        offsets: dict[int, int] = {}
-        with src.open("rb") as fh:
-            n = 0
-            while True:
-                offset = fh.tell()
-                line = fh.readline()
-                if not line:
-                    break
-                n += 1
-                if not line.strip():
-                    continue
-                try:
-                    record = json.loads(line)
-                except json.JSONDecodeError as exc:
-                    raise ValueError(f"{src}:{n}: {exc}") from exc
-                try:
-                    offsets[int(record["dsld_id"])] = offset
-                except (KeyError, TypeError, ValueError) as exc:
-                    raise ValueError(f"{src}:{n}: not a usable label record") from exc
-
-        # 2. Select and order, as `load` does.
-        missing: list[int] = []
-        if ids is None:
-            todo = _ordered(list(offsets), order or "file", seed, key=int)
-        else:
-            wanted = [int(i) for i in ids]
-            missing = [i for i in wanted if i not in offsets]
-            todo = _ordered([i for i in wanted if i in offsets], order or "sorted", seed, key=int)
-
-        # 3. Resume: leave out what the run already holds.
-        done = store.done_ids(run)
-        before = len(todo)
-        todo = [i for i in todo if i not in done]
-        n_done = before - len(todo)
-
-        # 4. Limit last, so it counts labels that will actually run.
-        if limit is not None:
-            todo = todo[:limit]
-
-        return Pending(
-            ids=todo,
-            offsets={i: offsets[i] for i in todo},
-            total=len(todo),
-            n_already_done=n_done,
-            missing_ids=missing,
-            source=src,
-        )
+            labels = {}
+            for record in _read_jsonl(rows_p):
+                label = Label.from_dict(record)
+                labels[label.dsld_id] = label
+            cached = (passages_sha, labels)
+            self._flattened[name] = cached
+        return cached[0], dict(cached[1])
 
 
 def _read_jsonl(src: Path) -> list[dict]:
@@ -695,61 +400,58 @@ def dump_ids(root: str | Path | None = None) -> list[int]:
     return loader().dump_ids(root)
 
 
-def load_flattened(
-    path: str | Path | None = None, order: str | None = None, seed: int | None = None
-) -> list[Label]:
-    """The frozen pilot passages. See `DsldLoader.load_flattened`."""
-    return loader().load_flattened(path, order=order, seed=seed)
-
-
-def load_gold(
-    path: str | Path | None = None, order: str | None = None, seed: int | None = None
-) -> list[GoldLabel]:
-    """The reference purpose/risk reading. See `DsldLoader.load_gold`."""
-    return loader().load_gold(path, order=order, seed=seed)
-
-
-def gold_by_id(path: str | Path | None = None) -> dict[int, GoldLabel]:
-    """The gold set keyed by id. See `DsldLoader.gold_by_id`."""
-    return loader().gold_by_id(path)
-
-
-def load(
-    path: str | Path | None = None,
-    ids: list[int] | None = None,
-    limit: int | None = None,
-    resume_from: str | Path | None = None,
-    order: str | None = None,
-    seed: int | None = None,
-) -> Selection:
-    """Labels to process, with an account of what was left out. See `DsldLoader.load`."""
-    return loader().load(
-        path, ids=ids, limit=limit, resume_from=resume_from, order=order, seed=seed
-    )
-
-
-def pending(
-    run: str | Path,
-    path: str | Path | None = None,
-    ids: list[int] | None = None,
-    limit: int | None = None,
-    order: str | None = None,
-    seed: int | None = None,
-) -> Pending:
-    """What a run still has to do, read lazily. See `DsldLoader.pending`."""
-    return loader().pending(run, path, ids=ids, limit=limit, order=order, seed=seed)
-
-
-def read_all(path: str | Path | None = None) -> list[Label]:
-    """Deprecated alias for `load_flattened`.
-
-    Kept because the pilot notebook and CLI call it; the name said nothing
-    about *which* of the three forms it read, which is the ambiguity the three
-    named entries exist to remove.
-    """
-    return load_flattened(path)
+def load_flattened(name: str) -> tuple[str, dict[int, Label]]:
+    """A whole label set and its `passages_sha`. See `DsldLoader.load_flattened`."""
+    return loader().load_flattened(name)
 
 
 def reset() -> None:
     """Drop the loader and its caches. See `DsldLoader.reset`."""
     DsldLoader.reset()
+
+
+# --- runs ---------------------------------------------------------------------
+# Read straight from disk on every call, never cached: a run is appended to
+# while it goes, so a cached read would be stale.
+
+
+def read_manifest(d: str | Path) -> dict:
+    """The run's manifest, or `{}` if it has none."""
+    p = Path(d) / RUN_MANIFEST
+    return json.loads(p.read_text()) if p.exists() else {}
+
+
+def read_ids(d: str | Path) -> list[int]:
+    """The run's ids, in the order the run does them."""
+    return [
+        int(json.loads(line)["dsld_id"])
+        for line in (Path(d) / RUN_IDS).read_text().splitlines()
+        if line.strip()
+    ]
+
+
+def read_rows(d: str | Path) -> list[dict]:
+    """Read a run's rows, discarding a malformed trailing line.
+
+    A crash mid-write leaves a partial final line. Discarding it costs the one
+    record it belongs to, which resume then re-runs.
+    """
+    path = Path(d) / RUN_ROWS
+    if not path.exists():
+        return []
+    rows, lines = [], path.read_text().splitlines()
+    for i, line in enumerate(lines):
+        if not line.strip():
+            continue
+        try:
+            rows.append(json.loads(line))
+        except json.JSONDecodeError:
+            if i == len(lines) - 1:
+                break  # torn trailing write; the record is simply not done
+            raise
+    return rows
+
+
+def done_ids(d: str | Path) -> set[int]:
+    """IDs already present in the output -- the only progress record there is."""
+    return {int(r["dsld_id"]) for r in read_rows(d) if "dsld_id" in r}

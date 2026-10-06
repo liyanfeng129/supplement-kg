@@ -21,11 +21,16 @@ and empty `purpose` / `risk`. Failures never stop the run; once more than
 stops a run: the finished rows are flushed, a person is told, and it is
 re-raised.
 
-**Resume is a run directory.** `run=None` starts a new timestamped one and
-writes the manifest -- the selection arguments and the `config_hash`.
-`run=<path>` resumes it: the selection is read from the manifest, never passed
-again, and a `config_hash` that differs from the manifest's is refused -- the
-answers would no longer be comparable. The fix is a new run directory.
+**A run is created whole, then resumed from its own files.** `run=None`
+starts a new one: the label set is loaded by name, the ids are chosen from it
+-- `ids`, or the whole set, then `order` and `limit` -- and the store creates
+the run, named after the set, with those ids and a manifest holding the set's
+name and `passages_sha`, the selection arguments and the `config_hash`.
+`run=<path>` resumes it: the ids and the set come from the run, never from the
+call. A `config_hash` or `passages_sha` that differs from the manifest's is
+refused -- the answers would no longer be comparable. The fix is a new run.
+
+A label is done when its id has a row. Resume is the run's ids minus those.
 
 `config_hash` covers what changes an answer: the prompt (system text, stop
 sequences, output budget, check names), the model, its sampling settings and
@@ -38,6 +43,7 @@ from __future__ import annotations
 import collections
 import hashlib
 import json
+import random
 from pathlib import Path
 
 from engine import config
@@ -72,20 +78,23 @@ class PurposeRiskService:
 
     def run(
         self,
-        run: str | Path | None = None,
-        path: str | Path | None = None,
+        label_set: str | None = None,
         ids: list[int] | None = None,
         limit: int | None = None,
         order: str | None = None,
         seed: int | None = None,
+        run: str | Path | None = None,
     ) -> None:
-        """Run every label the selection names that the run does not hold yet.
+        """Run every label of the run that has no row yet.
 
-        `run=None` starts a new run with this selection -- `path`, `ids`,
-        `limit`, `order`, `seed`, meaning what they mean to `loader.pending`.
-        `run=<path>` resumes that run with the selection in its manifest; the
-        selection arguments must then be left out. `limit` counts the run's
-        labels, not a session's: a resumed run of 100 with 40 done does 60.
+        A new run: `label_set` is a set's name. `ids` picks labels
+        from it -- every id must be in the set -- or, left out, the whole set
+        is taken, in its file order. `order="sorted"` sorts by id;
+        `order="random"` shuffles with `seed`, which is then required.
+        `limit` keeps the first `limit` after ordering.
+
+        `run=<path>` resumes that run; `label_set` and the selection arguments
+        must then be left out.
 
         Returns nothing. The rows are in the run directory; one line is
         printed at the end, and `notify` is told the counts.
@@ -111,33 +120,87 @@ class PurposeRiskService:
             json.dumps(answer_settings, sort_keys=True).encode()
         ).hexdigest()[:16]
 
-        # 2. The manifest: written for a new run, checked for a resumed one.
+        # 2. The run: created with its ids, or reopened and checked.
         selection = {
-            "path": None if path is None else str(path),
             "ids": None if ids is None else [int(i) for i in ids],
             "limit": limit,
             "order": order,
             "seed": seed,
         }
         if run is None:
-            run_path = store.run_dir(root=store.RUNS_ROOT)
-            store.write_manifest(
-                run_path,
-                {"prompt": PROMPT_ID, "selection": selection, "config_hash": config_hash},
+            # A new run: its ids are chosen here, once, and stored with it.
+            if label_set is None:
+                raise ValueError("a new run needs label_set=<name>")
+            passages_sha, labels = loader.load_flattened(label_set)
+
+            # Which labels: the ids named, or the whole set in its file order.
+            # Every named id must be in the set, and named once.
+            chosen = list(labels) if selection["ids"] is None else selection["ids"]
+            if len(set(chosen)) != len(chosen):
+                raise ValueError("ids holds an id more than once")
+            missing = [i for i in chosen if i not in labels]
+            if missing:
+                shown = ", ".join(str(i) for i in missing[:5])
+                more = f" (+{len(missing) - 5})" if len(missing) > 5 else ""
+                raise ValueError(
+                    f"{len(missing)} of {len(chosen)} id(s) are not in label set "
+                    f"{label_set!r}: {shown}{more}"
+                )
+
+            # In what order.
+            match order, seed:
+                case None, None:
+                    pass  # as named, or the set's file order
+                case "sorted", None:
+                    chosen = sorted(chosen)
+                case "random", None:
+                    raise ValueError(
+                        "order='random' needs seed=..., or the draw cannot be redrawn"
+                    )
+                case "random", _:
+                    # Shuffled from sorted, so the draw depends on the seed and
+                    # the set of ids -- not on the order they were named in.
+                    chosen = sorted(chosen)
+                    random.Random(seed).shuffle(chosen)
+                case _, None:
+                    raise ValueError(f"order must be 'sorted' or 'random', not {order!r}")
+                case _:
+                    raise ValueError("seed only means something with order='random'")
+
+            # How many: the first `limit` of them.
+            if limit is not None:
+                chosen = chosen[:limit]
+
+            run_path = store.new_run(
+                label_set,
+                chosen,
+                {
+                    "prompt": PROMPT_ID,
+                    "label_set": label_set,
+                    "passages_sha": passages_sha,
+                    "selection": selection,
+                    "config_hash": config_hash,
+                },
             )
-        else:
+        else:#run is not none
+            # A resume: everything comes from the run, and is refused if it no
+            # longer matches what the run started with.
             run_path = Path(run)
-            manifest = store.read_manifest(run_path)
+            manifest = loader.read_manifest(run_path)
             if not manifest:
                 raise FileNotFoundError(
                     f"no manifest at {store.manifest_path(run_path)}: not a run to resume. "
                     "Pass run=None to start a new one."
                 )
-            if any(v is not None for v in selection.values()):
+
+            # The selection is the run's; passing one again would be ignored.
+            if label_set is not None or any(v is not None for v in selection.values()):
                 raise ValueError(
-                    f"resuming {run_path}: the selection comes from its manifest; "
-                    "leave path, ids, limit, order and seed out."
+                    f"resuming {run_path}: its label set and ids come from the run; "
+                    "leave label_set, ids, limit, order and seed out."
                 )
+
+            # Answers made another way would not be comparable.
             if manifest.get("config_hash") != config_hash:
                 raise ValueError(
                     f"refusing to resume {run_path}: its config_hash is "
@@ -145,32 +208,33 @@ class PurposeRiskService:
                     f"{config_hash!r} -- the prompt, model, sampling or attempt budget "
                     "changed, so its rows would not be comparable. Start a new run."
                 )
-            selection = manifest["selection"]
 
-        # 3. What is left, read lazily. `limit` is the run's, so what earlier
-        # sessions wrote counts against it.
-        run_limit = selection["limit"]
-        if run_limit is not None:
-            run_limit = max(0, run_limit - len(store.done_ids(run_path)))
-        pending = loader.pending(
-            run_path,
-            selection["path"],
-            ids=selection["ids"],
-            limit=run_limit,
-            order=selection["order"],
-            seed=selection["seed"],
-        )
+            # Nor would answers to passages that have changed under the set's name.
+            passages_sha, labels = loader.load_flattened(manifest["label_set"])
+            if passages_sha != manifest.get("passages_sha"):
+                raise ValueError(
+                    f"refusing to resume {run_path}: label set {manifest['label_set']!r} "
+                    f"now has passages_sha {passages_sha}, and the run started on "
+                    f"{manifest.get('passages_sha')}. Start a new run."
+                )
+
+        # 3. What is left: the run's ids without a row, each label built into
+        # a prompt only as the controller pulls it.
+        run_ids = loader.read_ids(run_path)
+        finished = loader.done_ids(run_path)
+        todo = [i for i in run_ids if i not in finished]
+        n_already_done = len(run_ids) - len(todo)
         work = (
             (
-                label.dsld_id,
+                i,
                 Prompt(
                     system=spec.system,
-                    user=label.passage,
+                    user=labels[i].passage,
                     stop=spec.stop,
                     max_tokens=spec.max_tokens,
                 ),
             )
-            for label in pending
+            for i in todo
         )
 
         table = config.read_toml(config.ENGINE_CONFIG_PATH).get("notify")
@@ -191,8 +255,8 @@ class PurposeRiskService:
                     work,
                     spec.checks,
                     spec.parse,
-                    total=pending.total,
-                    n_already_done=pending.n_already_done,
+                    total=len(todo),
+                    n_already_done=n_already_done,
                 ):
                     if outcome.ok:
                         status = "ok"
@@ -246,7 +310,7 @@ class PurposeRiskService:
         )
         line = (
             f"{run_path}: {sum(counts.values())} labels this session ({summary}); "
-            f"{pending.n_already_done} done before"
+            f"{n_already_done} done before"
         )
         notify("run finished", line)
         print(line)

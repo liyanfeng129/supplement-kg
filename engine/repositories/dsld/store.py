@@ -1,43 +1,56 @@
-"""Results store: JSONL under timestamped run directories.
+"""The entry to save DSLD data: label sets and runs, as JSONL under `data/dsld/`.
 
-Follows the convention the DSLD census and pilot runs already use --
-`data/dsld/runs/<TIMESTAMP>Z/`, manifest committed, `raw/*.jsonl` gitignored.
-Every row carries `config_hash` and `provenance` inline, so a row is
-interpretable without joining it back to a manifest, and stats are a glob into
-pandas rather than a database.
+**A label set is written once under a name that says what it is.** The
+cleaning service saves its flattened labels with `write_label_set`:
+`labels/<name>/passages.jsonl` plus a `manifest.json` that records, among
+what the set is, `passages_sha` -- a hash of the passages. A name means one
+set of passages for good: saving the same passages again writes nothing, and
+saving different ones under a used name is refused. A set may also hold the
+annotations made on it (`annotations.jsonl`), which is what makes it a gold or
+silver set. A run refers to its labels by name and `passages_sha` and never
+copies them, so a result can always be joined back to the passage it was read
+from.
 
-SQLite is rejected here: it breaks the run-dir convention, is not
-human-readable, and the agent driver would have to issue SQL in-session rather
-than appending reviewable dicts. A JSONL-plus-derived-index is worse -- a stale
-index is a silent wrong-answer source.
+**A run is created whole, then only appended to.** `new_run` writes
+`runs/<set name>-<YYMMDDHHMM>-<n>/raw/ids.jsonl` -- the run's ids, in run
+order -- and its manifest together, so a crash leaves the whole run or none of
+it. Results are appended to `raw/purpose_risk.jsonl` by a `Sink`. Every row
+carries `config_hash` inline, so a row is interpretable without joining it
+back to a manifest.
 
-**Resume is input IDs minus IDs present in the output.** No sidecar progress
-file: two files can disagree, and a checkpoint contradicting the data is worse
-than none. A malformed trailing line -- a crash mid-write -- is discarded and
-that record re-run, costing one record rather than corrupting a run.
+**Done is read from the results, never stored.** A label is done when its id
+is in the results file; `loader.done_ids` reads it, as this module only
+writes. There is no status field to update: JSONL cannot change a line in
+place, and a status beside a result is two facts that a crash can leave
+disagreeing. A malformed trailing line -- a crash mid-write -- is discarded
+and that label re-run, costing one label rather than corrupting a run.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import shutil
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
 from engine import config
+from engine.repositories.dsld.schema import Label
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 RUNS_ROOT = REPO_ROOT / "data" / "dsld" / "runs"
+LABELS_ROOT = REPO_ROOT / "data" / "dsld" / "labels"
 
 ROWS_NAME = "purpose_risk.jsonl"
 MANIFEST_NAME = "purpose_risk.json"
+IDS_NAME = "ids.jsonl"
 
-# Cleaned, flattened label text -- the extractor's input rather than its
-# output. It shares the run-dir convention so one directory can hold the
-# passages a run was given and the rows it produced, side by side.
-PASSAGES_NAME = "passages.jsonl"
-PASSAGES_MANIFEST_NAME = "passages.json"
+LABEL_SET_ROWS_NAME = "passages.jsonl"
+LABEL_SET_MANIFEST_NAME = "manifest.json"
+LABEL_SET_ANNOTATIONS_NAME = "annotations.jsonl"
 
 # Used when `configs/engine.toml` has no `[store]` value.
 _FALLBACK_FLUSH_EVERY = 64
@@ -45,30 +58,8 @@ _FALLBACK_FLUSH_SECONDS = 30.0
 
 
 def run_id() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-
-
-def run_dir(rid: str | None = None, root: str | Path = RUNS_ROOT) -> Path:
-    """Open a run directory, creating `raw/` and `manifests/` inside it.
-
-    With an explicit `rid` this is how `--resume` reopens a directory, so an
-    existing one is returned as-is. Without one, a *new* directory is wanted:
-    run ids have second resolution, so a run started within a second of another
-    -- a retry pass immediately after its parent, most likely -- would otherwise
-    silently append to it and blend the two, which is exactly what keeping
-    retried work attributable forbids.
-    """
-    root = Path(root)
-    if rid is None:
-        rid = base = run_id()
-        for n in range(1, 100):
-            if not (root / rid).exists():
-                break
-            rid = f"{base}-{n}"
-    d = root / rid
-    (d / "raw").mkdir(parents=True, exist_ok=True)
-    (d / "manifests").mkdir(parents=True, exist_ok=True)
-    return d
+    """The current UTC minute, `YYMMDDHHMM`: the time part of a run's name."""
+    return datetime.now(timezone.utc).strftime("%y%m%d%H%M")
 
 
 def rows_path(d: str | Path, name: str = ROWS_NAME) -> Path:
@@ -81,15 +72,18 @@ def manifest_path(d: str | Path, name: str = MANIFEST_NAME) -> Path:
     return Path(d) / "manifests" / name
 
 
-def read_rows(d: str | Path) -> list[dict]:
-    """Read a run's rows, discarding a malformed trailing line.
+def repair(d: str | Path) -> int:
+    """Rewrite the rows file without its torn trailing line, if any.
 
-    A crash mid-write leaves a partial final line. Discarding it costs the one
-    record it belongs to, which resume then re-runs.
+    Returns the number of rows kept. Appending after a torn line would leave
+    one unparseable line in the middle of the file, where `loader.read_rows`
+    cannot safely skip it.
     """
     path = rows_path(d)
     if not path.exists():
-        return []
+        return 0
+    # The rule `loader.read_rows` reads by, applied here to rewrite: a bad
+    # last line is a torn write and dropped; a bad line anywhere else raises.
     rows, lines = [], path.read_text().splitlines()
     for i, line in enumerate(lines):
         if not line.strip():
@@ -98,27 +92,8 @@ def read_rows(d: str | Path) -> list[dict]:
             rows.append(json.loads(line))
         except json.JSONDecodeError:
             if i == len(lines) - 1:
-                break  # torn trailing write; the record is simply not done
+                break
             raise
-    return rows
-
-
-def done_ids(d: str | Path) -> set[int]:
-    """IDs already present in the output -- the only progress record there is."""
-    return {int(r["dsld_id"]) for r in read_rows(d) if "dsld_id" in r}
-
-
-def repair(d: str | Path) -> int:
-    """Rewrite the rows file without its torn trailing line, if any.
-
-    Returns the number of rows kept. Appending after a torn line would leave
-    one unparseable line in the middle of the file, where `read_rows` cannot
-    safely skip it.
-    """
-    path = rows_path(d)
-    if not path.exists():
-        return 0
-    rows = read_rows(d)
     with path.open("w") as fh:
         for r in rows:
             fh.write(json.dumps(r, ensure_ascii=False) + "\n")
@@ -135,8 +110,8 @@ class Sink:
     resume re-runs.
 
     `flush` appends and fsyncs; it never rewrites, so the torn-trailing-line
-    rule in `read_rows` still covers a crash mid-flush. Opening a sink on an
-    existing run repairs it once first, for the reason `repair` exists.
+    rule in `loader.read_rows` still covers a crash mid-flush. Opening a sink
+    on an existing run repairs it once first, for the reason `repair` exists.
 
     A context manager, so `close()` runs on a normal exit, on an exception and
     on Ctrl-C. Flushes run on the caller's thread: a local append of 64 rows
@@ -199,50 +174,108 @@ class Sink:
         self.close()
 
 
-def write_manifest(d: str | Path, manifest: dict) -> Path:
-    p = manifest_path(d)
-    p.write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
-    return p
+def new_run(name: str, ids: list[int], manifest: dict, root: str | Path | None = None) -> Path:
+    """Create a run over label set `name`: its directory, ids and manifest, all or nothing.
 
-
-def read_manifest(d: str | Path) -> dict:
-    p = manifest_path(d)
-    return json.loads(p.read_text()) if p.exists() else {}
-
-
-def write_passages(d: str | Path, rows: list[dict], manifest: dict) -> dict[str, Path]:
-    """Save cleaned, flattened label text and the manifest describing it.
-
-    Written whole rather than appended: cleaning a label is cheap and
-    deterministic, so a interrupted run is re-cleaned rather than resumed, and
-    a half-written passage file has no reason to exist. Extraction rows, which
-    cost a model call each, keep their append-and-resume path.
+    The directory is `<name>-<YYMMDDHHMM>-<n>`, the time in UTC and `n`
+    counting from 0 for runs started in the same minute. Everything is written
+    into a hidden temporary directory beside the runs and renamed into place
+    last, so a crash leaves either a complete run or no run -- never a
+    manifest without ids, which would look like a run with nothing to do, nor
+    ids without a manifest.
     """
-    rows_p = rows_path(d, PASSAGES_NAME)
-    rows_p.parent.mkdir(parents=True, exist_ok=True)
-    with rows_p.open("w") as fh:
-        for r in rows:
-            fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+    root = Path(root or RUNS_ROOT)
+    root.mkdir(parents=True, exist_ok=True)
+    tmp = root / f".new-run-{uuid.uuid4().hex}"
+    tmp.mkdir()
+    try:
+        (tmp / "raw").mkdir()
+        (tmp / "manifests").mkdir()
+        with rows_path(tmp, IDS_NAME).open("w") as fh:
+            for i in ids:
+                fh.write(json.dumps({"dsld_id": int(i)}) + "\n")
+        manifest_path(tmp).write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
 
-    man_p = manifest_path(d, PASSAGES_MANIFEST_NAME)
-    man_p.parent.mkdir(parents=True, exist_ok=True)
-    man_p.write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
-    return {"rows": rows_p, "manifest": man_p}
+        stamp = run_id()
+        n = 0
+        while True:
+            d = root / f"{name}-{stamp}-{n}"
+            if not d.exists():
+                try:
+                    os.rename(tmp, d)
+                    break
+                except OSError:
+                    if not d.exists():
+                        raise
+            n += 1  # taken, perhaps by a run started a moment ago: the next number
+    except BaseException:
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise
+    return d
 
 
-def load_runs(root: str | Path = RUNS_ROOT, pattern: str = "*"):
-    """Glob run directories into one pandas frame.
+def write_label_set(
+    name: str, rows: list[dict], manifest: dict, root: str | Path | None = None
+) -> str:
+    """Save flattened labels as label set `name`; return its `passages_sha`.
 
-    At ~92k rows this is tens of MB -- comparing runs needs no database.
+    `passages_sha` is the first 16 hex digits of the sha256 of
+    `passages.jsonl` as written. It goes into the manifest beside `name`, so
+    the manifest passed in describes the set and need not carry either.
+
+    A name is one set of passages for good. If `name` exists with the same
+    `passages_sha`, nothing is written and its manifest is kept; if it exists
+    with a different one, this refuses -- changed passages need a new name, or
+    every run that read the old ones would silently point at the new.
+
+    Every row must read as a `Label` and ids must be unique: a set is looked up
+    by id, and a duplicate would silently shadow the other row. A new set is
+    written into a hidden temporary directory and renamed into place, so a
+    half-written set never exists under a name.
     """
-    import pandas as pd
+    if not name or "/" in name or name.startswith("."):
+        raise ValueError(f"{name!r} cannot name a label set directory")
+    seen: set[int] = set()
+    for n, r in enumerate(rows, 1):
+        i = Label.from_dict(r).dsld_id
+        if i in seen:
+            raise ValueError(f"row {n}: dsld_id {i} appears twice; a label set holds each id once")
+        seen.add(i)
 
-    frames = []
-    for d in sorted(Path(root).glob(pattern)):
-        rows = read_rows(d) if rows_path(d).exists() else []
-        if not rows:
-            continue
-        df = pd.DataFrame(rows)
-        df["run_id"] = d.name
-        frames.append(df)
-    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    data = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows).encode()
+    passages_sha = hashlib.sha256(data).hexdigest()[:16]
+    root = Path(root or LABELS_ROOT)
+    d = root / name
+    if d.exists():
+        existing = json.loads((d / LABEL_SET_MANIFEST_NAME).read_text()).get("passages_sha")
+        if existing != passages_sha:
+            raise ValueError(
+                f"label set {name!r} already exists with passages_sha {existing}, and these "
+                f"passages hash to {passages_sha}. Changed passages need a new name."
+            )
+        return passages_sha
+
+    root.mkdir(parents=True, exist_ok=True)
+    tmp = root / f".{name}-{uuid.uuid4().hex}"
+    tmp.mkdir()
+    try:
+        (tmp / LABEL_SET_ROWS_NAME).write_bytes(data)
+        (tmp / LABEL_SET_MANIFEST_NAME).write_text(
+            json.dumps(
+                {"name": name, **manifest, "name": name, "passages_sha": passages_sha},
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+    except BaseException:
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise
+    try:
+        os.rename(tmp, d)
+    except OSError:
+        shutil.rmtree(tmp, ignore_errors=True)
+        if not d.exists():
+            raise
+        # A concurrent write won the race; the check above decides again.
+        return write_label_set(name, rows, manifest, root)
+    return passages_sha
