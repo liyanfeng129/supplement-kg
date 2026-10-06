@@ -178,6 +178,7 @@ def test_saved_rows_come_back_as_a_label_set(tmp_path, monkeypatch):
     from engine.services.dsld_cleaning import DsldCleaningService
 
     monkeypatch.setattr(store, "LABELS_ROOT", tmp_path)
+    monkeypatch.setattr(loader, "LABELS_ROOT", tmp_path)
     loader.reset()
     rows = flatten(clean([{"id": 12, "fullName": "P",
                            "statements": [{"type": "Other", "notes": "Supports sleep."}]}]))

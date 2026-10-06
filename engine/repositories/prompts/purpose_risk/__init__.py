@@ -11,6 +11,8 @@ strips the stop sequence, so a finished answer arrives without it.
 
 STOP = ("<|im_end|>", "\nEND")
 
-# Enough for the longest healthy answer seen (186 tokens over ten labels) with
-# room to spare; low enough that a runaway costs seconds, not a minute.
-MAX_TOKENS = 400
+# Twice the longest healthy answer seen over gold1000-r1 (p99 333, one label cut
+# off at 400); a runaway holds a slot ~40 s. The cap is taken out of `slot_ctx`,
+# so prompts up to ~4,250 tokens still fit. Labels cut off here go to a second
+# run with a larger `slot_ctx` and cap.
+MAX_TOKENS = 800

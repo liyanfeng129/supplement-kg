@@ -29,9 +29,9 @@ PurposeRiskService
   1. prompts.load("purpose_risk") ─► PromptSpec(system, checks, parse, stop, max_tokens)
   2. new run → loader.load_flattened(label_set) ─► (passages_sha, {id: Label}); choose ids;
                store.new_run(label_set, ids, manifest) ─► runs/<set>-<YYMMDDHHMM>-<n>/
-     resume  → store.read_manifest(run); refuse if config_hash or passages_sha differs;
+     resume  → loader.read_manifest(run); refuse if config_hash or passages_sha differs;
                loader.load_flattened(manifest["label_set"])
-  3. store.read_ids(run) − store.done_ids(run) ─► todo; prompts built lazily
+  3. loader.read_ids(run) − loader.done_ids(run) ─► todo; prompts built lazily
   4. store.Sink(run) as sink
   5. for key, outcome in controller.stream(work, spec.checks, spec.parse, total, done):
          row = to_row(key, outcome) ─► sink.add(row)
@@ -118,13 +118,16 @@ class PurposeRiskService:
 - `PromptSpec` gains `parse`; `prompts.load` fills it from `parse.py`. The line format
   lives only in this folder.
 
-### `repositories/dsld/loader.py` — two forms, two consumers
+### `repositories/dsld/loader.py` — two forms of label, and runs
 
 - `load_raw(...)`: raw dump records, for the cleaning service. Unchanged.
 - `load_flattened(name) -> (passages_sha, {dsld_id: Label})`: a whole label set, by
   name. The passages are hashed on read and must match the manifest's `passages_sha`,
   so a set edited in place is refused. Nothing to select here — a set was chosen when
   the cleaning service saved it. Parsed once per process.
+- `read_manifest(run)`, `read_ids(run)`, `read_rows(run)`, `done_ids(run)`: a run's
+  files, read fresh on every call. Moved here from the store: the loader is the entry
+  to read and the store the entry to write, whatever the data.
 - Removed: `load`, `pending`, `Pending`, `Selection`, `read_all`, `load_gold`,
   `gold_by_id`, and the `DEFAULT_RECORDS` / `DEFAULT_GOLD` defaults.
 
@@ -162,10 +165,11 @@ data/dsld/runs/<set>-<YYMMDDHHMM>-<n>/raw/purpose_risk.jsonl        # rows, appe
 
 - `new_run(name, ids, manifest) -> Path`: the time is the UTC minute; `n` counts from 0
   for runs started in the same minute. Ids and manifest are written together, via a
-  temporary directory, so a crash leaves the whole run or nothing. `read_ids(run)`
-  reads the ids back.
+  temporary directory, so a crash leaves the whole run or nothing.
+  `loader.read_ids(run)` reads the ids back.
 - A label is done when its id has a row; no status is stored anywhere else.
-- Removed: `run_dir`, `write_manifest`, `write_passages`, `load_runs`.
+- Removed: `run_dir`, `write_manifest`, `write_passages`, `load_runs`; and, moved to the
+  loader, `read_manifest`, `read_rows`, `done_ids`.
 
 **`Sink`** (built in 0002) buffers dict rows and appends at `flush_every` rows or `flush_seconds`; repairs a torn
 trailing line on open; flushes on exit, including on an exception.

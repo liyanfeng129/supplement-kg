@@ -1,0 +1,12 @@
+{
+  "prompt": "purpose_risk",
+  "label_set": "random100-seed20260930-r3",
+  "passages_sha": "dd9f20527520e932",
+  "selection": {
+    "ids": null,
+    "limit": null,
+    "order": null,
+    "seed": null
+  },
+  "config_hash": "75c8f759040683d3"
+}

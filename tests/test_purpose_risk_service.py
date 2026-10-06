@@ -74,6 +74,7 @@ def env(monkeypatch, tmp_path):
     """Runs and label sets under tmp_path, notify recorded, the committed engine.toml thresholds."""
     monkeypatch.setattr(store, "RUNS_ROOT", tmp_path / "runs")
     monkeypatch.setattr(store, "LABELS_ROOT", tmp_path / "labels")
+    monkeypatch.setattr(loader, "LABELS_ROOT", tmp_path / "labels")
     loader.reset()
     sent: list[tuple[str, str]] = []
     monkeypatch.setattr(service_module, "notify", lambda subject, body: sent.append((subject, body)))
@@ -97,7 +98,7 @@ def the_run(env):
 
 
 def rows_by_id(run) -> dict[int, dict]:
-    rows = store.read_rows(run)
+    rows = loader.read_rows(run)
     by_id = {r["dsld_id"]: r for r in rows}
     assert len(by_id) == len(rows), "an id was written twice"
     return by_id
@@ -156,11 +157,11 @@ def test_every_row_and_the_manifest_carry_one_config_hash(env):
         svc.run(labels, limit=2, order="sorted")
 
     run = the_run(env)
-    manifest = store.read_manifest(run)
+    manifest = loader.read_manifest(run)
     assert manifest["label_set"] == labels
     assert manifest["passages_sha"] == loader.load_flattened(labels)[0]
     assert manifest["selection"] == {"ids": None, "limit": 2, "order": "sorted", "seed": None}
-    assert {r["config_hash"] for r in store.read_rows(run)} == {manifest["config_hash"]}
+    assert {r["config_hash"] for r in loader.read_rows(run)} == {manifest["config_hash"]}
 
 
 def test_the_run_finishes_with_one_notice_and_one_printed_line(env, capsys):
@@ -237,7 +238,7 @@ def test_a_new_run_stores_its_ids_in_run_order(env):
     with service(ByPassage()) as svc:
         svc.run(labels, ids=[5, 2, 4])
 
-    assert store.read_ids(the_run(env)) == [5, 2, 4]
+    assert loader.read_ids(the_run(env)) == [5, 2, 4]
     assert set(rows_by_id(the_run(env))) == {2, 4, 5}
 
 
@@ -249,8 +250,8 @@ def test_a_random_order_is_redrawn_by_its_seed(env):
         svc.run(labels, order="random", seed=7, limit=4)
 
     a, b = sorted((env["tmp"] / "runs").iterdir())
-    assert store.read_ids(a) == store.read_ids(b)
-    assert len(store.read_ids(a)) == 4
+    assert loader.read_ids(a) == loader.read_ids(b)
+    assert len(loader.read_ids(a)) == 4
 
 
 def test_a_random_order_without_a_seed_is_refused(env):
@@ -327,7 +328,7 @@ def test_crossing_the_failure_threshold_notifies_exactly_once(env, monkeypatch):
     subjects = [s for s, _ in env["sent"]]
     assert sum("fail" in s for s in subjects) == 1
     assert len(subjects) == 2  # the warning, then the finish
-    assert len(store.read_rows(the_run(env))) == 8  # warned, did not stop
+    assert len(loader.read_rows(the_run(env))) == 8  # warned, did not stop
 
 
 def test_below_the_minimum_no_warning_is_sent(env, monkeypatch):

@@ -60,8 +60,10 @@ carrying both a lot code and a caution must survive this stage intact.
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Iterable
 
+from engine.repositories.dsld import store
 from engine.services.dsld_cleaning.schema import CleanedLabel, Segment
 
 # Hand-bumped, and stamped onto every flattened row. 1 = the renderer the pilot
@@ -79,9 +81,10 @@ RENDERER_VERSION = 3
 class DsldCleaningService:
     """Cleans raw DSLD records into extractor-ready text.
 
-    Holds no state and does no I/O: raw records come from the repository's
-    loader and cleaned rows go back to its store, so this stays a pure
-    transformation that a test can exercise without a 215k-file dump on disk.
+    Holds no state. `clean` and `flatten` do no I/O: raw records come from
+    the repository's loader, so they stay a pure transformation that a test
+    can exercise without a 215k-file dump on disk. `save` hands the flattened
+    rows to the store as a label set, which is what a run reads.
     """
 
     # --- public -------------------------------------------------------------
@@ -108,6 +111,25 @@ class DsldCleaningService:
         if isinstance(cleaned, CleanedLabel):
             return self._flatten_one(cleaned)
         return [self._flatten_one(c) for c in cleaned]
+
+    def save(self, flattened: list[dict], name: str) -> str:
+        """Save flattened rows as label set `name`; return its `passages_sha`.
+
+        A name is one set of passages for good: saving the same rows again
+        writes nothing, and saving different ones under a used name is
+        refused. Name a set by what distinguishes it -- `silver1000-r2` is
+        1000 silver labels, renderer 2.
+        """
+        return store.write_label_set(
+            name,
+            flattened,
+            {
+                "source": "engine.services.dsld_cleaning",
+                "renderer_version": RENDERER_VERSION,
+                "n_labels": len(flattened),
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            },
+        )
 
     # --- cleaning steps -----------------------------------------------------
 

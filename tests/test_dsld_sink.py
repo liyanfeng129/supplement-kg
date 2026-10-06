@@ -16,11 +16,11 @@ import json
 import pytest
 
 from engine import config
-from engine.repositories.dsld import store
+from engine.repositories.dsld import loader, store
 
 
 def rows_on_disk(run) -> list[dict]:
-    return store.read_rows(run)
+    return loader.read_rows(run)
 
 
 def test_rows_wait_in_the_buffer_until_flush_every(tmp_path):
@@ -73,7 +73,7 @@ def test_a_flush_appends_to_an_existing_run(tmp_path):
     with store.Sink(run, flush_every=1) as sink:
         sink.add({"dsld_id": 2})
 
-    assert store.done_ids(run) == {1, 2}
+    assert loader.done_ids(run) == {1, 2}
 
 
 def test_opening_on_a_torn_run_repairs_it_before_appending(tmp_path):
@@ -87,7 +87,7 @@ def test_opening_on_a_torn_run_repairs_it_before_appending(tmp_path):
     with store.Sink(run, flush_every=1) as sink:
         sink.add({"dsld_id": 3})
 
-    assert store.done_ids(run) == {1, 3}
+    assert loader.done_ids(run) == {1, 3}
 
 
 def test_a_sink_on_a_new_run_creates_the_rows_file(tmp_path):
@@ -95,7 +95,7 @@ def test_a_sink_on_a_new_run_creates_the_rows_file(tmp_path):
     with store.Sink(run, flush_every=1) as sink:
         sink.add({"dsld_id": 1})
 
-    assert store.done_ids(run) == {1}
+    assert loader.done_ids(run) == {1}
 
 
 # --- settings from configs/engine.toml --------------------------------------

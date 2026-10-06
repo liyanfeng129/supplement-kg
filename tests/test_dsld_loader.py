@@ -37,6 +37,7 @@ def _fresh_loader():
 def labels_root(tmp_path, monkeypatch):
     root = tmp_path / "labels"
     monkeypatch.setattr(store, "LABELS_ROOT", root)
+    monkeypatch.setattr(loader, "LABELS_ROOT", root)
     return root
 
 

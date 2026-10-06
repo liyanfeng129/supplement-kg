@@ -15,7 +15,7 @@ import json
 
 import pytest
 
-from engine.repositories.dsld import store
+from engine.repositories.dsld import loader, store
 
 
 def _write(d, rows):
@@ -97,8 +97,8 @@ def test_a_run_is_named_after_its_label_set_and_the_minute(tmp_path, monkeypatch
     d = store.new_run("gold1000-r1", [889, 709, 885], {"label_set": "gold1000-r1"}, root=tmp_path)
 
     assert d.name == "gold1000-r1-2609301512-0"
-    assert store.read_ids(d) == [889, 709, 885]
-    assert store.read_manifest(d) == {"label_set": "gold1000-r1"}
+    assert loader.read_ids(d) == [889, 709, 885]
+    assert loader.read_manifest(d) == {"label_set": "gold1000-r1"}
     assert store.rows_path(d).parent.name == "raw"
     assert store.manifest_path(d).parent.name == "manifests"
 
@@ -134,7 +134,7 @@ def test_a_failed_creation_leaves_no_run_behind(tmp_path, monkeypatch):
 def test_done_ids_are_read_from_the_rows_themselves(tmp_path):
     _write(tmp_path, [{"dsld_id": 1, "status": "ok"}, {"dsld_id": 2, "status": "error"}])
 
-    assert store.done_ids(tmp_path) == {1, 2}
+    assert loader.done_ids(tmp_path) == {1, 2}
 
 
 def test_a_torn_trailing_line_is_discarded_not_fatal(tmp_path):
@@ -143,8 +143,8 @@ def test_a_torn_trailing_line_is_discarded_not_fatal(tmp_path):
     with store.rows_path(tmp_path).open("a") as fh:
         fh.write('{"dsld_id": 2, "sta')  # killed mid-flush
 
-    assert store.done_ids(tmp_path) == {1}
-    assert len(store.read_rows(tmp_path)) == 1
+    assert loader.done_ids(tmp_path) == {1}
+    assert len(loader.read_rows(tmp_path)) == 1
 
 
 def test_repair_rewrites_the_file_without_the_torn_line(tmp_path):
@@ -158,11 +158,11 @@ def test_repair_rewrites_the_file_without_the_torn_line(tmp_path):
     with store.rows_path(tmp_path).open("a") as fh:
         fh.write(json.dumps({"dsld_id": 3, "status": "ok"}) + "\n")
 
-    assert store.done_ids(tmp_path) == {1, 3}
+    assert loader.done_ids(tmp_path) == {1, 3}
 
 
 def test_a_run_without_rows_has_no_done_ids(tmp_path):
     d = store.new_run("s", [1], {}, root=tmp_path)
 
-    assert store.done_ids(d) == set()
-    assert store.read_rows(d) == []
+    assert loader.done_ids(d) == set()
+    assert loader.read_rows(d) == []
