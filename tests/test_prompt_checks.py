@@ -17,9 +17,9 @@ from engine.repositories.prompts.purpose_risk.checks import CHECKS
 PROMPT = Prompt(system="sys", user="label text")
 BY_NAME = {c.name: c for c in CHECKS}
 
-GOOD = """P: supports memory retention | 5
-R: do not exceed recommended intake | 5
-R: consult your physicial prior to using this product if you are pregnant | 4"""
+GOOD = """P: supports memory retention
+R: do not exceed recommended intake
+R: consult your physicial prior to using this product if you are pregnant"""
 
 
 def failed(text: str, stop_reason: str = "word") -> list[str]:
@@ -34,7 +34,8 @@ def test_load_returns_the_prompt_with_everything_its_format_decides():
     spec = loader.load("purpose_risk")
 
     assert spec.system.startswith("You extract structured attributes")
-    assert "P: <claim> | <1-5>" in spec.system
+    assert "P: <claim>\n" in spec.system
+    assert "| " not in spec.system  # no score left in format or examples
     assert spec.checks == CHECKS
     assert spec.stop == STOP
     assert spec.max_tokens == MAX_TOKENS
@@ -57,33 +58,20 @@ def test_an_answer_with_no_claims_passes(text):
     assert failed(text) == []
 
 
-def test_a_claim_may_contain_a_pipe():
-    assert failed("R: take with food | not on an empty stomach | 3") == []
+def test_spacing_around_the_colon_is_tolerated():
+    assert failed("P:supports sleep\nR : avoid alcohol") == []
 
 
-def test_spacing_around_colon_and_pipe_is_tolerated():
-    assert failed("P:supports sleep|4\nR : avoid alcohol |  2") == []
-
-
-def test_a_preamble_breaks_both_ends_of_the_line():
-    assert failed("Here are the claims:\n" + GOOD) == ["line_prefix", "line_score"]
-
-
-def test_a_missing_score_breaks_only_the_score_rule():
-    assert failed("P: supports memory retention") == ["line_score"]
-
-
-@pytest.mark.parametrize("score", ["0", "6", "a"])
-def test_a_score_outside_1_to_5_breaks_the_score_rule(score):
-    assert failed(f"P: supports memory retention | {score}") == ["line_score"]
+def test_a_preamble_breaks_only_the_prefix_rule():
+    assert failed("Here are the claims:\n" + GOOD) == ["line_prefix"]
 
 
 def test_a_wrong_field_letter_breaks_only_the_prefix_rule():
-    assert failed("purpose: supports memory retention | 5") == ["line_prefix"]
+    assert failed("purpose: supports memory retention") == ["line_prefix"]
 
 
 def test_an_empty_claim_breaks_only_the_claim_rule():
-    assert failed("P:  | 5") == ["claim_not_empty"]
+    assert failed("P:  ") == ["claim_not_empty"]
 
 
 def test_running_out_of_tokens_breaks_only_the_truncation_rule():

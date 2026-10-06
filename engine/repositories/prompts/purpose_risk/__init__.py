@@ -1,6 +1,6 @@
 """The purpose/risk prompt: `prompt.md`, the rules in `checks.py`, and how it ends.
 
-The prompt asks for `P: claim | 1-5` lines closed by `END`, and everything that
+The prompt asks for `P: claim` lines closed by `END`, and everything that
 format decides lives in this folder, so a change to the format changes one
 place.
 

@@ -6,9 +6,8 @@ it). An empty answer passes every check: a label stating no purpose and no
 risk is a valid and common result.
 
 The line checks are split so a failure names only what is wrong: a line with
-no `P:` and no score fails `line_prefix` and `line_score`, and the model is
-told both. `claim_not_empty` only judges lines that have both ends, so it never
-repeats their failures.
+no `P:` fails `line_prefix` alone. `claim_not_empty` only judges lines that
+have the prefix, so it never repeats that failure.
 """
 
 from __future__ import annotations
@@ -18,9 +17,7 @@ import re
 from engine.models.base_model import Check, Generation, Prompt
 
 _PREFIX = re.compile(r"[PR]\s*:")
-_SCORE = re.compile(r"\|\s*[1-5]$")
-# Greedy `(.*)` so the score binds to the last pipe: a claim may contain one.
-_WHOLE = re.compile(r"[PR]\s*:(.*)\|\s*[1-5]")
+_WHOLE = re.compile(r"[PR]\s*:(.*)")
 
 
 def _line_prefix(prompt: Prompt, generation: Generation) -> bool:
@@ -29,16 +26,6 @@ def _line_prefix(prompt: Prompt, generation: Generation) -> bool:
         if not line or line == "END":
             continue
         if not _PREFIX.match(line):
-            return False
-    return True
-
-
-def _line_score(prompt: Prompt, generation: Generation) -> bool:
-    for line in generation.text.splitlines():
-        line = line.strip()
-        if not line or line == "END":
-            continue
-        if not _SCORE.search(line):
             return False
     return True
 
@@ -66,14 +53,9 @@ CHECKS = (
         message="Start every line with 'P: ' for a purpose or 'R: ' for a risk.",
     ),
     Check(
-        name="line_score",
-        passes=_line_score,
-        message="End every line with ' | ' and a score from 1 to 5.",
-    ),
-    Check(
         name="claim_not_empty",
         passes=_claim_not_empty,
-        message="Put the claim copied from the label between 'P: ' or 'R: ' and the score.",
+        message="Put the claim copied from the label after 'P: ' or 'R: '.",
     ),
     Check(
         name="not_truncated",

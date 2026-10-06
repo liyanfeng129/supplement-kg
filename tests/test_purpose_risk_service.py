@@ -32,7 +32,7 @@ from engine.repositories.prompts import loader as prompts
 from engine.services.purpose_risk import service as service_module
 from engine.services.purpose_risk.service import PurposeRiskService
 
-GOOD = "P: supports restful sleep | 4\nR: may cause drowsiness | 3"
+GOOD = "P: supports restful sleep\nR: may cause drowsiness"
 
 
 class ByPassage(BaseModel):
@@ -130,8 +130,8 @@ def test_ok_rows_carry_the_parsed_terms_and_failed_rows_the_raw_text(env):
 
     rows = rows_by_id(the_run(env))
     ok, failed = rows[1], rows[2]
-    assert ok["purpose"] == [{"text": "supports restful sleep", "score": 4}]
-    assert ok["risk"] == [{"text": "may cause drowsiness", "score": 3}]
+    assert ok["purpose"] == [{"text": "supports restful sleep"}]
+    assert ok["risk"] == [{"text": "may cause drowsiness"}]
     assert ok["text"] == GOOD
     assert (ok["attempts"], ok["failed"]) == (1, [])
     assert (ok["prompt_tokens"], ok["completion_tokens"], ok["latency_ms"]) == (50, 9, 1200)
