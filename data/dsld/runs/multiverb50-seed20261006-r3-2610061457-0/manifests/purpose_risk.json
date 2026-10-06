@@ -1,0 +1,12 @@
+{
+  "prompt": "purpose_risk",
+  "label_set": "multiverb50-seed20261006-r3",
+  "passages_sha": "c5950d2d7c42e448",
+  "selection": {
+    "ids": null,
+    "limit": null,
+    "order": null,
+    "seed": null
+  },
+  "config_hash": "997cfa8a60219618"
+}
