@@ -63,7 +63,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Iterable
 
-from engine.repositories.dsld import store
+from engine.repositories.dsld.labels import store
 from engine.services.dsld_cleaning.schema import CleanedLabel, Segment
 
 # Hand-bumped, and stamped onto every flattened row. 1 = the renderer the pilot

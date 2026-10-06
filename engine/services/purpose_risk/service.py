@@ -30,7 +30,8 @@ name and `passages_sha`, the selection arguments and the `config_hash`.
 call. A `config_hash` or `passages_sha` that differs from the manifest's is
 refused -- the answers would no longer be comparable. The fix is a new run.
 
-A label is done when its id has a row. Resume is the run's ids minus those.
+A label is done when its id has a complete row; the loader's `todo_ids` is
+the run's ids without one, and the `Sink` repairs a torn tail before it appends.
 
 `config_hash` covers what changes an answer: the prompt (system text, stop
 sequences, output budget, check names), the model, its sampling settings and
@@ -50,7 +51,8 @@ from engine import config
 from engine.controllers.qwen_controller import ERROR, TOO_LONG, QwenController
 from engine.models.base_model import ModelUnavailable, Prompt
 from engine.notify import notify
-from engine.repositories.dsld import loader, store
+from engine.repositories.dsld.labels import loader as label_sets
+from engine.repositories.dsld.runs import loader as runs, paths as run_paths, store as run_store
 from engine.repositories.prompts import loader as prompts
 
 PROMPT_ID = "purpose_risk"
@@ -131,7 +133,7 @@ class PurposeRiskService:
             # A new run: its ids are chosen here, once, and stored with it.
             if label_set is None:
                 raise ValueError("a new run needs label_set=<name>")
-            passages_sha, labels = loader.load_flattened(label_set)
+            passages_sha, labels = label_sets.load_flattened(label_set)
 
             # Which labels: the ids named, or the whole set in its file order.
             # Every named id must be in the set, and named once.
@@ -171,7 +173,7 @@ class PurposeRiskService:
             if limit is not None:
                 chosen = chosen[:limit]
 
-            run_path = store.new_run(
+            run_path = run_store.new_run(
                 label_set,
                 chosen,
                 {
@@ -186,10 +188,10 @@ class PurposeRiskService:
             # A resume: everything comes from the run, and is refused if it no
             # longer matches what the run started with.
             run_path = Path(run)
-            manifest = loader.read_manifest(run_path)
+            manifest = runs.read_manifest(run_path)
             if not manifest:
                 raise FileNotFoundError(
-                    f"no manifest at {store.manifest_path(run_path)}: not a run to resume. "
+                    f"no manifest at {run_paths.manifest_path(run_path)}: not a run to resume. "
                     "Pass run=None to start a new one."
                 )
 
@@ -210,7 +212,7 @@ class PurposeRiskService:
                 )
 
             # Nor would answers to passages that have changed under the set's name.
-            passages_sha, labels = loader.load_flattened(manifest["label_set"])
+            passages_sha, labels = label_sets.load_flattened(manifest["label_set"])
             if passages_sha != manifest.get("passages_sha"):
                 raise ValueError(
                     f"refusing to resume {run_path}: label set {manifest['label_set']!r} "
@@ -220,10 +222,8 @@ class PurposeRiskService:
 
         # 3. What is left: the run's ids without a row, each label built into
         # a prompt only as the controller pulls it.
-        run_ids = loader.read_ids(run_path)
-        finished = loader.done_ids(run_path)
-        todo = [i for i in run_ids if i not in finished]
-        n_already_done = len(run_ids) - len(todo)
+        todo = runs.todo_ids(run_path)
+        n_already_done = len(runs.read_ids(run_path)) - len(todo)
         work = (
             (
                 i,
@@ -249,7 +249,7 @@ class PurposeRiskService:
         # thread that keeps the model fed.
         counts: collections.Counter[str] = collections.Counter()
         warned = False
-        with store.Sink(run_path) as sink:
+        with run_store.Sink(run_path) as sink:
             try:
                 for dsld_id, outcome in self.controller.stream(
                     work,

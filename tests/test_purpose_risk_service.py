@@ -23,7 +23,11 @@ import pytest
 from engine import config
 from engine.controllers.qwen_controller import QwenController
 from engine.models.base_model import BaseModel, Generation, ModelUnavailable, Prompt, Usage
-from engine.repositories.dsld import loader, store
+from engine.repositories.dsld.labels import loader as label_sets
+from engine.repositories.dsld.labels import paths as label_paths
+from engine.repositories.dsld.labels import store as label_store
+from engine.repositories.dsld.runs import loader as runs
+from engine.repositories.dsld.runs import paths as run_paths
 from engine.repositories.prompts import loader as prompts
 from engine.services.purpose_risk import service as service_module
 from engine.services.purpose_risk.service import PurposeRiskService
@@ -72,10 +76,9 @@ class ByPassage(BaseModel):
 @pytest.fixture
 def env(monkeypatch, tmp_path):
     """Runs and label sets under tmp_path, notify recorded, the committed engine.toml thresholds."""
-    monkeypatch.setattr(store, "RUNS_ROOT", tmp_path / "runs")
-    monkeypatch.setattr(store, "LABELS_ROOT", tmp_path / "labels")
-    monkeypatch.setattr(loader, "LABELS_ROOT", tmp_path / "labels")
-    loader.reset()
+    monkeypatch.setattr(run_paths, "RUNS_ROOT", tmp_path / "runs")
+    monkeypatch.setattr(label_paths, "LABELS_ROOT", tmp_path / "labels")
+    label_sets.reset()
     sent: list[tuple[str, str]] = []
     monkeypatch.setattr(service_module, "notify", lambda subject, body: sent.append((subject, body)))
     return {"tmp": tmp_path, "sent": sent}
@@ -84,7 +87,7 @@ def env(monkeypatch, tmp_path):
 def label_set(passages: list[str], name: str = "test-set") -> str:
     """One label per passage, ids 1..N, saved as a label set; returns its name."""
     rows = [{"dsld_id": i, "name": f"label {i}", "passage": p} for i, p in enumerate(passages, 1)]
-    store.write_label_set(name, rows, {})
+    label_store.write_label_set(name, rows, {})
     return name
 
 
@@ -98,7 +101,7 @@ def the_run(env):
 
 
 def rows_by_id(run) -> dict[int, dict]:
-    rows = loader.read_rows(run)
+    rows = runs.read_rows(run)
     by_id = {r["dsld_id"]: r for r in rows}
     assert len(by_id) == len(rows), "an id was written twice"
     return by_id
@@ -157,11 +160,11 @@ def test_every_row_and_the_manifest_carry_one_config_hash(env):
         svc.run(labels, limit=2, order="sorted")
 
     run = the_run(env)
-    manifest = loader.read_manifest(run)
+    manifest = runs.read_manifest(run)
     assert manifest["label_set"] == labels
-    assert manifest["passages_sha"] == loader.load_flattened(labels)[0]
+    assert manifest["passages_sha"] == label_sets.load_flattened(labels)[0]
     assert manifest["selection"] == {"ids": None, "limit": 2, "order": "sorted", "seed": None}
-    assert {r["config_hash"] for r in loader.read_rows(run)} == {manifest["config_hash"]}
+    assert {r["config_hash"] for r in runs.read_rows(run)} == {manifest["config_hash"]}
 
 
 def test_the_run_finishes_with_one_notice_and_one_printed_line(env, capsys):
@@ -204,6 +207,26 @@ def test_a_killed_run_resumed_writes_every_id_exactly_once(env):
     assert set(rows_by_id(run)) == {1, 2, 3, 4, 5, 6}  # the manifest's limit, not 6 more
 
 
+def test_a_run_killed_mid_flush_resumed_writes_every_id_exactly_once(env):
+    """SIGKILL mid-flush leaves a torn last row; the resume redoes that label."""
+    labels = label_set([f"good {i}" for i in range(1, 7)])
+
+    with pytest.raises(KeyboardInterrupt):
+        with service(ByPassage(kill_after=3), in_flight=1) as svc:
+            svc.run(labels)
+    run = the_run(env)
+    rows_p = run_paths.rows_path(run)
+    whole = rows_p.read_bytes()
+    rows_p.write_bytes(whole[: whole.rindex(b"\n", 0, len(whole) - 1) + 1 + 20])  # row 3 torn
+    assert set(rows_by_id(run)) == {1, 2}
+
+    with service(ByPassage()) as svc:
+        svc.run(run=run)
+
+    assert set(rows_by_id(run)) == {1, 2, 3, 4, 5, 6}
+    assert len(rows_p.read_text().splitlines()) == 6  # the torn row is gone, not stranded
+
+
 def test_a_resume_under_a_changed_prompt_is_refused(env, monkeypatch):
     labels = label_set(["good one", "good two"])
     with service(ByPassage()) as svc:
@@ -238,7 +261,7 @@ def test_a_new_run_stores_its_ids_in_run_order(env):
     with service(ByPassage()) as svc:
         svc.run(labels, ids=[5, 2, 4])
 
-    assert loader.read_ids(the_run(env)) == [5, 2, 4]
+    assert runs.read_ids(the_run(env)) == [5, 2, 4]
     assert set(rows_by_id(the_run(env))) == {2, 4, 5}
 
 
@@ -250,8 +273,8 @@ def test_a_random_order_is_redrawn_by_its_seed(env):
         svc.run(labels, order="random", seed=7, limit=4)
 
     a, b = sorted((env["tmp"] / "runs").iterdir())
-    assert loader.read_ids(a) == loader.read_ids(b)
-    assert len(loader.read_ids(a)) == 4
+    assert runs.read_ids(a) == runs.read_ids(b)
+    assert len(runs.read_ids(a)) == 4
 
 
 def test_a_random_order_without_a_seed_is_refused(env):
@@ -287,14 +310,14 @@ def test_a_resume_on_changed_passages_is_refused(env):
     with service(ByPassage()) as svc:
         svc.run(labels, limit=1)
     run = the_run(env)
-    rows_p = store.LABELS_ROOT / labels / store.LABEL_SET_ROWS_NAME
-    manifest_p = store.LABELS_ROOT / labels / store.LABEL_SET_MANIFEST_NAME
+    rows_p = label_paths.set_dir(labels) / label_paths.PASSAGES_NAME
+    manifest_p = label_paths.set_dir(labels) / label_paths.MANIFEST_NAME
     rows_p.write_text(rows_p.read_text().replace("good two", "good 2"))
     # and its manifest updated to match, as a careless rewrite of the set would
     m = json.loads(manifest_p.read_text())
     m["passages_sha"] = hashlib.sha256(rows_p.read_bytes()).hexdigest()[:16]
     manifest_p.write_text(json.dumps(m))
-    loader.reset()
+    label_sets.reset()
 
     with pytest.raises(ValueError, match="passages_sha"):
         with service(ByPassage()) as svc:
@@ -328,7 +351,7 @@ def test_crossing_the_failure_threshold_notifies_exactly_once(env, monkeypatch):
     subjects = [s for s, _ in env["sent"]]
     assert sum("fail" in s for s in subjects) == 1
     assert len(subjects) == 2  # the warning, then the finish
-    assert len(loader.read_rows(the_run(env))) == 8  # warned, did not stop
+    assert len(runs.read_rows(the_run(env))) == 8  # warned, did not stop
 
 
 def test_below_the_minimum_no_warning_is_sent(env, monkeypatch):

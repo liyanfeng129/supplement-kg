@@ -5,6 +5,12 @@
 - **Scope:** the target structure for `engine/`, designed fresh. It governs new
   work; existing code is not migrated by this document.
 
+> **Partly outdated.** The `repositories/` layout in §8 and the *resume* row of §9 are
+> superseded by [ADR 0003](0003-repositories-one-folder-per-data-source.md): one folder
+> per data source (`dsld/raw`, `dsld/labels`, `dsld/runs`), no `repositories/gold/`, and
+> a loader that works out what is left from the run's own files, without the store. The rest of this ADR stands; it is kept as written as the record
+> of what was decided on 2026-09-17.
+
 ## Context
 
 The pipeline built under ADR 0001 works — it extracts, validates, scores and
@@ -125,6 +131,8 @@ a stage. Pre/processing remains a useful concept; it is never a folder name.
 
 ### 8. Structure
 
+> *`repositories/` below is superseded by ADR 0003.*
+
 ```
 cli.py                          frontend: flags, formatting, exit codes
 notebooks/                      frontend: peer of the CLI
@@ -164,6 +172,9 @@ engine/
 ```
 
 ### 9. Where today's `run.py` goes
+
+> *The resume row is amended by ADR 0003: the loader returns what is left from the
+> run's own files and does not consult the store; the `Sink` repairs a torn tail on open.*
 
 | was | now | why |
 |---|---|---|

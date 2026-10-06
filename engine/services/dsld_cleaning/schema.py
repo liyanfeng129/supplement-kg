@@ -4,7 +4,7 @@ The shapes live beside the service that produces them, not in a global
 `schemas/` package: a shape and the code that fills it drift apart the moment
 they are edited in different files for different reasons.
 
-These are deliberately *not* `repositories/dsld/schema.py`'s `Label`. That one
+These are deliberately *not* `repositories/dsld/labels/schema.py`'s `Label`. That one
 is the frozen pilot row the gold set was labelled against, and its passage must
 never be re-rendered; this one is the freshly cleaned reading of a raw record.
 Two distinct types mean feeding a re-cleaned passage where a frozen one is

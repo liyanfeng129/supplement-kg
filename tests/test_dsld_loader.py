@@ -1,4 +1,4 @@
-"""The DSLD loader: the raw dump for cleaning, whole label sets for the LLM.
+"""The DSLD loaders: the raw dump for cleaning, whole label sets for the LLM.
 
 What is pinned: `load_raw` returns one record, several, or a draw from the
 dump, sorted unless told otherwise and never randomly without a seed.
@@ -6,7 +6,7 @@ dump, sorted unless told otherwise and never randomly without a seed.
 with the set's `passages_sha`, refuses a set edited in place, and parses each
 set once.
 
-No GPU, no network, no model. The loader reads files.
+No GPU, no network, no model. The loaders read files.
 """
 
 from __future__ import annotations
@@ -15,8 +15,11 @@ import json
 
 import pytest
 
-from engine.repositories.dsld import loader, store
-from engine.repositories.dsld.schema import Label
+from engine.repositories.dsld.labels import loader, store
+from engine.repositories.dsld.labels import paths as label_paths
+from engine.repositories.dsld.labels.schema import Label
+from engine.repositories.dsld.raw import loader as raw
+from engine.repositories.dsld.raw import paths as raw_paths
 
 RECORDS = [
     {"dsld_id": 709, "name": "Huperzine A", "passage": "PRODUCT: Huperzine A"},
@@ -36,8 +39,7 @@ def _fresh_loader():
 @pytest.fixture
 def labels_root(tmp_path, monkeypatch):
     root = tmp_path / "labels"
-    monkeypatch.setattr(store, "LABELS_ROOT", root)
-    monkeypatch.setattr(loader, "LABELS_ROOT", root)
+    monkeypatch.setattr(label_paths, "LABELS_ROOT", root)
     return root
 
 
@@ -90,7 +92,7 @@ def test_an_unknown_set_says_where_it_looked(labels_root):
 
 def test_a_set_edited_in_place_is_refused(labels_root):
     store.write_label_set("tiny", RECORDS, {}, root=labels_root)
-    rows_p = labels_root / "tiny" / store.LABEL_SET_ROWS_NAME
+    rows_p = labels_root / "tiny" / label_paths.PASSAGES_NAME
     rows_p.write_text(rows_p.read_text().replace("Spirulina", "Chlorella"))
 
     with pytest.raises(ValueError, match="edited in place"):
@@ -100,7 +102,7 @@ def test_a_set_edited_in_place_is_refused(labels_root):
 def test_a_set_is_parsed_once(labels_root):
     store.write_label_set("tiny", RECORDS, {}, root=labels_root)
     loader.load_flattened("tiny")
-    (labels_root / "tiny" / store.LABEL_SET_ROWS_NAME).write_text("")
+    (labels_root / "tiny" / label_paths.PASSAGES_NAME).write_text("")
 
     assert len(loader.load_flattened("tiny")[1]) == 3
 
@@ -113,15 +115,15 @@ def test_a_returned_set_can_be_edited_without_damaging_the_cache(labels_root):
 
 
 def test_there_is_only_one_loader():
-    assert loader.loader() is loader.loader() is loader.DsldLoader()
+    assert loader.loader() is loader.loader() is loader.LabelsLoader()
 
 
 # --- load_raw ---------------------------------------------------------------
 
 
 def _dump_with(root, dsld_id, doc):
-    lo = (int(dsld_id) // loader.DUMP_BUCKET_SIZE) * loader.DUMP_BUCKET_SIZE
-    bucket = root / f"{lo:06d}-{lo + loader.DUMP_BUCKET_SIZE - 1:06d}"
+    lo = (int(dsld_id) // raw_paths.DUMP_BUCKET_SIZE) * raw_paths.DUMP_BUCKET_SIZE
+    bucket = root / f"{lo:06d}-{lo + raw_paths.DUMP_BUCKET_SIZE - 1:06d}"
     bucket.mkdir(parents=True, exist_ok=True)
     (bucket / f"{dsld_id}.json").write_text(json.dumps(doc))
     return root
@@ -132,20 +134,20 @@ def test_load_raw_returns_the_whole_published_record(tmp_path):
     those is the reason a dump exists at all."""
     doc = {"id": 709, "fullName": "Huperzine A", "someFieldWeIgnore": [1, 2]}
     root = _dump_with(tmp_path / "dump", 709, doc)
-    assert loader.load_raw(709, root) == doc
+    assert raw.load_raw(709, root) == doc
 
 
 def test_load_raw_finds_the_bucket_for_an_id(tmp_path):
     root = _dump_with(tmp_path / "dump", 18162, {"id": 18162})
-    assert loader.dump_path(18162, root).parent.name == "018000-018999"
-    assert loader.load_raw("18162", root)["id"] == 18162
+    assert raw.dump_path(18162, root).parent.name == "018000-018999"
+    assert raw.load_raw("18162", root)["id"] == 18162
 
 
 def test_load_raw_on_an_absent_id_raises_dsld_not_found(tmp_path):
     """Matches what the API client raises for an id it does not know, so a
     caller can swap a dump for the API without changing its handling."""
-    with pytest.raises(loader.DSLDNotFound, match="99999"):
-        loader.load_raw(99999, tmp_path / "dump")
+    with pytest.raises(raw.DSLDNotFound, match="99999"):
+        raw.load_raw(99999, tmp_path / "dump")
 
 
 
@@ -158,7 +160,7 @@ def test_load_raw_sorts_ids_by_default(tmp_path):
     root = tmp_path / "dump"
     for i in (709, 885, 889):
         _dump_with(root, i, {"id": i})
-    assert [d["id"] for d in loader.load_raw([889, 709], root)] == [709, 889]
+    assert [d["id"] for d in raw.load_raw([889, 709], root)] == [709, 889]
 
 
 def test_load_raw_keeps_caller_order_when_asked(tmp_path):
@@ -166,20 +168,20 @@ def test_load_raw_keeps_caller_order_when_asked(tmp_path):
     root = tmp_path / "dump"
     for i in (709, 885, 889):
         _dump_with(root, i, {"id": i})
-    assert [d["id"] for d in loader.load_raw([889, 709], root, order="given")] == [889, 709]
+    assert [d["id"] for d in raw.load_raw([889, 709], root, order="given")] == [889, 709]
 
 
 def test_load_raw_many_can_be_sorted_or_drawn(tmp_path):
     root = tmp_path / "dump"
     for i in (709, 885, 889):
         _dump_with(root, i, {"id": i})
-    assert [d["id"] for d in loader.load_raw([889, 709, 885], root, order="sorted")] == [
+    assert [d["id"] for d in raw.load_raw([889, 709, 885], root, order="sorted")] == [
         709,
         885,
         889,
     ]
-    a = [d["id"] for d in loader.load_raw([889, 709, 885], root, order="random", seed=5)]
-    b = [d["id"] for d in loader.load_raw([889, 709, 885], root, order="random", seed=5)]
+    a = [d["id"] for d in raw.load_raw([889, 709, 885], root, order="random", seed=5)]
+    b = [d["id"] for d in raw.load_raw([889, 709, 885], root, order="random", seed=5)]
     assert a == b and sorted(a) == [709, 885, 889]
 
 
@@ -187,13 +189,13 @@ def test_load_raw_many_names_every_missing_id(tmp_path):
     """A hole in the dump is usually a partial download; finding out at the end
     of a batch beats finding out in the output."""
     root = _dump_with(tmp_path / "dump", 709, {"id": 709})
-    with pytest.raises(loader.DSLDNotFound, match="1 of 2"):
-        loader.load_raw([709, 99999], root)
+    with pytest.raises(raw.DSLDNotFound, match="1 of 2"):
+        raw.load_raw([709, 99999], root)
 
 
 def test_load_raw_many_can_skip_missing_ids(tmp_path):
     root = _dump_with(tmp_path / "dump", 709, {"id": 709})
-    assert [d["id"] for d in loader.load_raw([709, 99999], root, skip_missing=True)] == [709]
+    assert [d["id"] for d in raw.load_raw([709, 99999], root, skip_missing=True)] == [709]
 
 
 def test_dump_ids_lists_the_population_to_sample_from(tmp_path):
@@ -202,7 +204,17 @@ def test_dump_ids_lists_the_population_to_sample_from(tmp_path):
     root = tmp_path / "dump"
     for i in (889, 709, 18162):
         _dump_with(root, i, {"id": i})
-    assert loader.dump_ids(root) == [709, 889, 18162]
+    assert raw.dump_ids(root) == [709, 889, 18162]
+
+
+def test_the_dump_is_redirected_by_patching_its_paths_alone(tmp_path, monkeypatch):
+    """`DUMP_ROOT` is read at call time, so one patch moves every read."""
+    root = _dump_with(tmp_path / "dump", 709, {"id": 709})
+    monkeypatch.setattr(raw_paths, "DUMP_ROOT", root)
+
+    assert raw.load_raw(709)["id"] == 709
+    assert raw.dump_ids() == [709]
+    assert raw.dump_path(709).parent.parent == root
 
 
 # --- load_raw dispatches on the argument ------------------------------------
@@ -217,81 +229,81 @@ def dump(tmp_path):
 
 
 def test_an_id_returns_one_record(dump):
-    assert loader.load_raw(709, dump)["id"] == 709
+    assert raw.load_raw(709, dump)["id"] == 709
 
 
 def test_ids_return_a_list_of_records(dump):
-    assert [d["id"] for d in loader.load_raw([889, 709], dump)] == [709, 889]
+    assert [d["id"] for d in raw.load_raw([889, 709], dump)] == [709, 889]
 
 
 def test_a_string_id_is_one_record_not_three_characters(dump):
     """The trap in dispatching on type: `str` is iterable, so a naive check
     would read "709" as ids '7', '0', '9'. Ids arrive as strings from CLI
     flags and CSV cells, so this is a certainty rather than a corner case."""
-    assert loader.load_raw("709", dump)["id"] == 709
+    assert raw.load_raw("709", dump)["id"] == 709
 
 
 def test_any_iterable_of_ids_works(dump):
     """A caller holding a tuple or a generator should not have to build a
     list first."""
-    assert [d["id"] for d in loader.load_raw((889, 709), dump)] == [709, 889]
-    assert [d["id"] for d in loader.load_raw((i for i in [885, 709]), dump)] == [709, 885]
+    assert [d["id"] for d in raw.load_raw((889, 709), dump)] == [709, 889]
+    assert [d["id"] for d in raw.load_raw((i for i in [885, 709]), dump)] == [709, 885]
 
 
 def test_a_one_element_list_still_returns_a_list(dump):
     """The argument decides the shape, not the count: a caller looping over a
     list of length one must not get a bare dict back."""
-    got = loader.load_raw([709], dump)
+    got = raw.load_raw([709], dump)
     assert isinstance(got, list) and len(got) == 1
 
 
 def test_ordering_one_id_is_refused(dump):
     """It would do nothing; the caller believes they asked for something."""
     with pytest.raises(ValueError, match="more than one id"):
-        loader.load_raw(709, dump, order="sorted")
+        raw.load_raw(709, dump, order="sorted")
 
 
 # --- n=: a draw from the dump, without naming ids ---------------------------
 
 
 def test_n_draws_that_many_records(dump):
-    assert len(loader.load_raw(n=2, root=dump)) == 2
+    assert len(raw.load_raw(n=2, root=dump)) == 2
 
 
 def test_n_sorted_takes_the_lowest_ids(dump):
-    assert [d["id"] for d in loader.load_raw(n=2, root=dump, order="sorted")] == [709, 885]
+    assert [d["id"] for d in raw.load_raw(n=2, root=dump, order="sorted")] == [709, 885]
 
 
 def test_n_random_is_reproducible_and_a_real_subset(dump):
-    a = [d["id"] for d in loader.load_raw(n=2, root=dump, order="random", seed=9)]
-    b = [d["id"] for d in loader.load_raw(n=2, root=dump, order="random", seed=9)]
+    a = [d["id"] for d in raw.load_raw(n=2, root=dump, order="random", seed=9)]
+    b = [d["id"] for d in raw.load_raw(n=2, root=dump, order="random", seed=9)]
     assert a == b
     assert len(a) == 2 and set(a) <= {709, 885, 889}
 
 
 def test_an_unseeded_random_draw_is_refused(dump):
     with pytest.raises(ValueError, match="explicit seed"):
-        loader.load_raw(n=2, root=dump, order="random")
+        raw.load_raw(n=2, root=dump, order="random")
 
 
 def test_n_never_reports_missing_ids(dump):
     """It drew from what the dump holds, so `n` means n records -- not n
     attempts of which some fail."""
-    assert len(loader.load_raw(n=3, root=dump)) == 3
+    assert len(raw.load_raw(n=3, root=dump)) == 3
 
 
 def test_n_larger_than_the_dump_returns_what_exists(dump):
-    assert len(loader.load_raw(n=99, root=dump)) == 3
+    assert len(raw.load_raw(n=99, root=dump)) == 3
 
 
 def test_n_together_with_ids_is_refused(dump):
     """Two different ways of saying which records; honouring both is undefined."""
     with pytest.raises(ValueError, match="n= draws from the dump"):
-        loader.load_raw([709], dump, n=2)
+        raw.load_raw([709], dump, n=2)
 
 
 def test_load_raw_with_neither_ids_nor_n_is_refused(dump):
     with pytest.raises(ValueError, match="needs an id"):
-        loader.load_raw(root=dump)
+        raw.load_raw(root=dump)
 
 

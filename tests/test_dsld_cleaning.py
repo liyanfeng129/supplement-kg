@@ -14,12 +14,13 @@ from pathlib import Path
 
 import pytest
 
+from engine.repositories.dsld.raw import loader as raw_loader
+from engine.repositories.dsld.raw import paths as raw_paths
 from engine.services.dsld_cleaning import RENDERER_VERSION, clean, flatten
 from engine.services.extraction.label_purpose_risk import label_segments, label_text
-from engine.services.sources.dsld import dump_path, parse_label
+from engine.services.sources.dsld import parse_label
 
 ROOT = Path(__file__).resolve().parents[1]
-DUMP_ROOT = ROOT / "datasets" / "DSLD-full-database-JSON"
 AUDITED = (
     ROOT / "datasets" / "pilot" / "gold-1000.jsonl",
     ROOT / "datasets" / "pilot" / "silver-1000.jsonl",
@@ -34,11 +35,11 @@ def audited_ids(path: Path) -> list[int]:
 @pytest.mark.parametrize("corpus", AUDITED, ids=lambda p: p.stem)
 def test_matches_the_audited_renderer_on_every_label(corpus):
     """Same passage and same paths as `label_segments`, across the whole set."""
-    if not corpus.exists() or not DUMP_ROOT.exists():
+    if not corpus.exists() or not raw_paths.DUMP_ROOT.exists():
         pytest.skip(f"{corpus.name} or the DSLD dump is not present")
 
     for dsld_id in audited_ids(corpus):
-        raw = json.loads(dump_path(dsld_id, DUMP_ROOT).read_text())
+        raw = raw_loader.load_raw(dsld_id)
 
         expected = label_segments(parse_label(raw))
         actual = clean(raw).segments
@@ -174,11 +175,10 @@ def test_every_row_is_stamped_with_the_renderer_version():
 
 
 def test_saved_rows_come_back_as_a_label_set(tmp_path, monkeypatch):
-    from engine.repositories.dsld import loader, store
+    from engine.repositories.dsld.labels import loader, paths
     from engine.services.dsld_cleaning import DsldCleaningService
 
-    monkeypatch.setattr(store, "LABELS_ROOT", tmp_path)
-    monkeypatch.setattr(loader, "LABELS_ROOT", tmp_path)
+    monkeypatch.setattr(paths, "LABELS_ROOT", tmp_path)
     loader.reset()
     rows = flatten(clean([{"id": 12, "fullName": "P",
                            "statements": [{"type": "Other", "notes": "Supports sleep."}]}]))
@@ -188,6 +188,6 @@ def test_saved_rows_come_back_as_a_label_set(tmp_path, monkeypatch):
     got_sha, labels = loader.load_flattened("one-r3")
     assert got_sha == sha
     assert labels[12].passage == rows[0]["passage"]
-    manifest = json.loads((tmp_path / "one-r3" / store.LABEL_SET_MANIFEST_NAME).read_text())
+    manifest = json.loads((tmp_path / "one-r3" / paths.MANIFEST_NAME).read_text())
     assert (manifest["name"], manifest["renderer_version"]) == ("one-r3", RENDERER_VERSION)
     loader.reset()
