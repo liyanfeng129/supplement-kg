@@ -25,6 +25,11 @@ data/pubmed/runs/*/raw/
 data/dsld/runs/*/raw/
 !data/dsld/runs/*/manifests/
 
+# Label sets: manifest and draw record tracked; passages are re-rendered from
+# the DSLD dump, and gold/silver annotations are copies of datasets/pilot/.
+!data/dsld/labels/
+data/dsld/labels/*/*.jsonl
+
 # The gold set is committed. `datasets/` is excluded wholesale because it holds
 # the 2.4 GB DSLD dump and the iDISK release -- both re-downloadable. The gold
 # set is neither: it is hand-labelled reference data that every future scoring

@@ -1,0 +1,11 @@
+{
+  "name": "gold1000-r1",
+  "source": "imported from data/dsld/runs/20260908T125504Z/raw/pilot-1000.jsonl",
+  "description": "pilot draw, seed 20260908, DSLD-only frame; the passages gold-1000 was annotated on",
+  "renderer_version": 1,
+  "n_labels": 1000,
+  "created_at": "2026-09-30T16:08:33.993223+00:00",
+  "passages_sha": "903d58f90ed3bc3b",
+  "annotations_source": "datasets/pilot/gold-1000.jsonl",
+  "annotations_sha": "6762ec54ee319646"
+}

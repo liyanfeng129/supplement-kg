@@ -1,0 +1,15 @@
+{
+  "name": "multiverb50-seed20261006-r3",
+  "source": "engine.services.dsld_cleaning",
+  "renderer_version": 3,
+  "n_labels": 50,
+  "created_at": "2026-10-06T14:08:05.800465+00:00",
+  "description": "probe set for the one-verb-per-claim rule: 25 labels with a sentence holding >=2 distinct purpose verbs, 25 with >=2 risk verbs (and none of the purpose kind). 'help(s) (to)' and 'may' fold into the next verb; at most one label per distinct sentence, and at most 4 of the stock 'discontinue use and consult ... if adverse reactions occur' kind. Drawn from 6000 dump ids shuffled with seed 20261006, excluding every id in an existing label set. Not annotated.",
+  "selection": {
+    "seed": 20261006,
+    "draw": 6000,
+    "purpose_verbs": "supports?|promotes?|helps?|maintains?|reduces?|protects?|improves?|boosts?|enhances?|aids?|increases?|strengthens?|relieves?|calms?|fights?|defends?|balances?|nourishes?|encourages?|contributes?|restores?|soothes?|energizes?|optimizes?",
+    "risk_verbs": "consult|discontinue|stop|do not|don't|avoid|seek|talk to|ask|not recommended|may cause|should not|reduce the dose|keep away"
+  },
+  "passages_sha": "c5950d2d7c42e448"
+}

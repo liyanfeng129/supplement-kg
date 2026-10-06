@@ -1,0 +1,8 @@
+{
+  "name": "random100-seed20260930-r3",
+  "source": "engine.services.dsld_cleaning",
+  "renderer_version": 3,
+  "n_labels": 100,
+  "created_at": "2026-09-30T16:44:10.143075+00:00",
+  "passages_sha": "dd9f20527520e932"
+}
