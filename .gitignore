@@ -39,3 +39,6 @@ data/dsld/labels/*/*.jsonl
 datasets/*
 !datasets/pilot/
 !datasets/pilot/**
+
+# Claude Code hook state (which engine/ diff was last reviewed)
+.claude/state/

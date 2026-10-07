@@ -182,7 +182,7 @@ duplication this removes.
 - **ADR 0002 §8** puts runs in `dsld/store.py` and has no `repositories/runs/`. Runs
   get their own folder here, as do label sets: §8 predates label sets, and the single
   folder is what left the layout defined twice. Recorded in a new
-  [ADR 0003](../adr/0003-repositories-one-folder-per-data-source.md) that supersedes
+  [ADR 0003](../adr/0003-repositories-one-folder-per-data-source/) that supersedes
   §8's repository layout; 0002 stays as the record of what was decided then.
 - **Spec 0003**: the loader returns `todo_ids(run)` in place of `done_ids(run)`; the
   service no longer computes `read_ids − done_ids` itself. `store.repair` looks at the
