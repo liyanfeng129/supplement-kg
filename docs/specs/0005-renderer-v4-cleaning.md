@@ -8,9 +8,10 @@
   `tests/test_dsld_cleaning.py`.
 
 Out of scope: clustering (`docs/specs/0006-near-duplicate-clustering.md`, which takes
-this spec's output as its input), and the output-side boilerplate filter
-(`drop_boilerplate_risks` in `engine/pipeline/lines.py`) and the prompt rule, which stay
-as they are as a backstop.
+this spec's output as its input), and the prompt rule, which stays as it is. There is
+no output-side boilerplate filter any more (`drop_boilerplate_risks` went with
+`engine/pipeline/`), so the checklist is the only boilerplate filter; bringing one back
+is a separate decision.
 
 ## Why
 
@@ -43,6 +44,10 @@ against the same v4 passage, so a faithful quote is still a substring.
 
 **Selection is unchanged.** The same five paths are read; no statement type is dropped.
 v4 changes the *text* of each segment, not which segments are read.
+
+**Loading is unchanged.** Normalising and stripping happen only in the cleaning service,
+when it writes a label set. `load_flattened` and the rest of the labels repository
+return passages exactly as saved, for v4 and v1–v3 alike.
 
 ## Cleaning steps, in order
 
@@ -102,15 +107,28 @@ starting with `#` are ignored.
   could leave `warning` behind.
 - **Only the phrase is cut.** The rest of the segment stays. This is what keeps the
   real caution in a mixed line ("keep out of reach of children discontinue use if
-  rapid heartbeat occurs" → "discontinue use if rapid heartbeat occurs").
-- **Loaded once**, at import, into one compiled pattern. It is a fixed data file
-  shipped with the service, not a data source, so it is not a repository.
+  rapid heartbeat occurs" → "discontinue use if rapid heartbeat occurs"). A short
+  phrase is cut mid-sentence too ("take one capsule daily as a dietary supplement" →
+  "take one daily as a"); accepted, and revisited only if acceptance 11 shows damage.
+- **Loaded once**, when `service.py` is imported, into one compiled pattern. Each
+  phrase is first run through `_normalise`, then duplicates and empty phrases are
+  dropped, so a phrase matches whatever the miner's normalising sketch left in it
+  ("store at 30 c 86 f", phone numbers). It is a fixed data file shipped with the
+  service, not a data source, so it is not a repository.
 - **Editing the checklist changes the output, so it bumps `RENDERER_VERSION`.**
 - **Seeded from** `docs/boilerplate-candidates.md`: the 400 most frequent normalised
-  sentences across the full dump, with the lines the user ticked becoming the file.
-  Frequency alone does not decide: real cautions ("discontinue use two weeks prior to
-  surgery", the iron overdose warning) and ingredient forms ("vitamin b12 form as
-  cyanocobalamin") are among the most frequent lines and must stay.
+  sentences across the full dump; the 362 ticked by the user and Claude on 2026-10-07
+  are copied into the file once, under a header comment pointing back to the
+  candidates file. From then on `boilerplate.txt` is what gets edited; the candidates
+  file is the record of the review and is not regenerated.
+- **What was kept off it.** Frequency alone does not decide. Unticked, so they stay in
+  passages: pregnancy, nursing, medication and medical-condition cautions; specific
+  risks ("discontinue use two weeks prior to surgery", the iron overdose warning,
+  "do not use for weight reduction", drowsiness); age limits; allergens a product
+  contains ("contains milk and soy"). Ticked, so they are cut: ingredient forms
+  ("vitamin b12 form as cyanocobalamin") and `name …` notes, generic consult-a-doctor
+  and stop-if-adverse-reaction lines, "for adults only", dosing directions, storage,
+  seals, facility and certification claims, brand and contact lines.
 
 ## Where each step lives
 
@@ -150,3 +168,5 @@ removed, checklist boilerplate cut."
 11. On the full dump: the passage-length distribution before and after, the number of
     empty passages, and a hand-checked sample of v4 passages are recorded. This is a
     measurement for the user to run, not a unit test.
+12. A checklist phrase written with a number `_normalise` removes (`store at 30 c 86 f`)
+    still cuts the same line from a raw segment ("Store at 30°C (86°F).").
