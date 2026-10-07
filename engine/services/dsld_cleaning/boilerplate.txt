@@ -1,0 +1,373 @@
+# Boilerplate phrases cut from every passage segment except fullName (spec 0005).
+#
+# One phrase per line; blank lines and lines starting with # are ignored. Each
+# phrase is run through `_normalise` when service.py is imported, so it may be
+# written with numbers or punctuation. Editing this file changes the output:
+# bump RENDERER_VERSION.
+#
+# Seeded 2026-10-07 from the ticked lines of docs/boilerplate-candidates.md,
+# which is the record of what was reviewed and why. Edit this file from now on;
+# the candidates file is not regenerated.
+
+this product is not intended to diagnose treat cure or prevent any disease
+dietary supplement
+keep out of reach of children
+these statements have not been evaluated by the food and drug administration
+store in a cool dry place
+keep out of the reach of children
+this statement has not been evaluated by the food and drug administration
+herbal supplement
+a dietary supplement
+store at room temperature
+discontinue use and consult your doctor if any adverse reactions occur
+these statements have not been evaluated by the fda
+do not use if safety seal is damaged or missing
+do not use if you are allergic to any ingredients
+do not use if seal is broken or missing
+niacin form as niacinamide
+copyright terravita distributed by zooscape llc all rights reserved
+do not exceed recommended dose
+produced in a gmp facility that processes other ingredients containing these allergens
+do not use if safety seal is broken or missing
+do not use if seal is broken
+this statement has not been evaluated by the fda
+do not use if seal under cap is broken or missing
+caution for adults only
+made in the usa
+keep this product out of reach of children
+made in the u s a
+warning this product is not intended to diagnose treat cure or prevent any disease
+store in a dry cool place
+keep tightly closed
+in case of accidental overdose call a doctor or poison control center immediately
+always consult a physician before taking any dietary supplement
+conforms to usp for weight
+this product has not been evaluated by the fda and is not intended to diagnose treat cure or prevent any disease
+shake well before using
+caution do not exceed recommended dose
+vitamin b12 form as cyanocobalamin
+refrigerate after opening
+gmp quality assured
+pantothenic acid form as d calcium pantothenate
+vitamin b6 form as pyridoxine hcl
+store in a cool dry place after opening
+natural color variation may occur in this product
+non gmo gluten free
+product not intended to diagnose treat cure or prevent any disease
+statements not evaluated by fda
+these statements have not been evaluated by the food drug administration
+terravita s hallmarks are the highest possible standards of purity potency stability and freshness
+terravita is an exclusive line of premium natural products that use the finest purest and most potent ingredients in the world
+all products are prepared with the greatest quality control from raw materials through the entire manufacturing process right up to the moment your product is sealed for freshness and shipped to you
+hawaii pharm herbal extract highest quality since
+use only if safety seal is intact
+vitamin b12 form as methylcobalamin
+iodine form as potassium iodide
+vitamin a form as beta carotene
+warning keep out of reach of children
+shake well before use
+vegetarian vegan
+notice use this product as a food supplement only
+choline form as choline bitartrate
+suggested use shake well before using
+tamper evident do not use this product if imprinted foil seal under cap is broken or missing
+keep away from children
+settling may occur
+vitamin b 12 form as cyanocobalamin
+not manufactured with wheat gluten soy milk egg fish shellfish or tree nut ingredients
+store tightly closed in a cool dry place
+non gmo project verified nongmoproject org
+magnesium form as magnesium oxide
+store in a cool dry dark place
+bulksupplements com clean pure bulk supplements
+cgmp made in compliance with cgmp cfr in an fda registered and inspected facility
+herbal dietary supplement
+meets usp disintegration for maximum bioavailability
+only natural ingredients purity is laboratory tested and verified
+natural gluten free
+adults take up to one full squeeze of the dropper bulb in 4 fl
+not tested on animals
+free of added sugar soy dairy yeast gluten additives
+warnings keep out of reach of children
+tamper evident do not use if outer seal is broken or missing
+gluten free non gmo
+keep bottle tightly closed
+made in usa hawaii
+vitamin e form as d alpha tocopheryl succinate
+vitamin b6 form as pyridoxine hydrochloride
+please rely on stated quantity
+all rights reserved
+best taken between meals
+store away from heat light
+vitamin d form as cholecalciferol
+do not exceed recommended dosage
+suitable for vegetarians
+contents are sold by weight not volume
+do not eat freshness packet
+use an accurate milligram scale
+as a reminder discuss the supplements and medications you take with your health care providers
+directions stir of a teaspoon into a glass of water and consume times daily with meals
+may have contraindications
+for optimal storage conditions store in a cool dry place
+do not exceed recommended serving
+sealed for your protection
+tamper resistant package do not use if outer seal is missing
+tamper resistant do not use if seal under cap is broken or missing
+pantothenic acid form as calcium pantothenate
+contents may not fill package in order to accommodate required labeling
+protect from heat light and moisture
+use only as directed
+we recommend to seek expert medical advice before taking
+visit www vitaminshoppe com or call 800 223 1216 for more information and to reorder
+zinc form as zinc oxide
+do not use if either tamper evident seal is broken or missing
+in an fda registered facility using good manufacturing practices gmps
+do not exceed recommended daily intake
+extraction rate about 4 up to of dry raw material per of extract
+do not use if safety seal around cap is broken or missing
+suggested use take 40 drops of extract in a small amount of warm water 4 times daily
+keep tightly closed in a cool dry place
+zinc form as zinc citrate
+organic raw material
+calcium form as calcium carbonate
+store at room temperature degrees degrees f degrees to degrees c
+caution keep out of reach of children
+77 f 25 c 65 relative humidity
+store tightly sealed in a cool dry place
+name vitamin b 1
+keep in a cool dry place tightly capped
+contains no artificial colors flavors or preservatives
+vitamin b 6 form as pyridoxine hydrochloride
+to report a serious adverse event or obtain product information contact 866 280 2852
+do not purchase if outer seal is broken or damaged
+clean pure bulk supplements
+gluten free dairy free soy free nut free
+store at room temperature and avoid excessive heat
+name ascorbic acid
+do not purchase if seal is broken
+tamper evident use only if bottle is sealed
+selenium form as l selenomethionine
+this statement has not been evaluated by the food drug administration
+chromium form as chromium picolinate
+name cholecalciferol note
+vitamin e form as dl alpha tocopheryl acetate
+biotin form as d biotin
+made with non gmo ingredients
+vitamin b 6 form as pyridoxine hcl
+certified organic
+do not accept if seal is broken
+caution we recommend to seek expert medical advice before taking
+can cause side effects and adverse reactions
+pantothenic acid form as calcium d pantothenate
+made in usa hawaii in an fda registered facility
+product of canada
+dry herb menstruum ratio
+all the raw materials are gluten free by their nature doesn t contain artificial colors flavors or preservatives
+usa made in united states of america
+warning we recommend to seek expert medical advice before taking
+may have contraindications can cause side effects and adverse reactions
+iodine form from kelp
+some settling may occur
+for freshness store in a cool dry place
+for adults add about 30 drops 1 ml one full squeeze of the dropper bulb to 4 oz of juice or water up to times per day
+read the entire label and follow the directions carefully prior to use
+do not use if tamper seal is damaged
+for adults add about 30 drops 1 ml one full squeeze of the dropper bulb to some juice or water up to times a day
+guaranteed quality laboratory tested
+name vitamin b1
+qa quality assured
+not manufactured with yeast wheat gluten soy milk egg fish shellfish or tree nut ingredients
+suitable for vegans
+for reorder simply scan this qr code or visit www hawaiipharm com
+all the raw materials are gluten free by their nature no artificial colors flavors or preservatives
+food supplement
+do not refrigerate
+as a reminder discuss the supplements and medications that you take with your health care providers
+molybdenum form as sodium molybdate
+certified organic by organic certifiers
+we recommend to seek expert medical advice before taking this or any other herbal supplements
+notice this product has not been evaluated by the fda and is not intended to diagnose treat cure or prevent any disease
+manufactured in the usa in an fda registered facility
+caution may have contraindications
+we used up to of raw material to produce of extract
+direction shake well before use
+oz of juice or water up to times a day
+may have contraindications and cause adverse reaction
+expertly extracted natural premium product
+of juice or water up to times a day
+no artificial ingredients gmo gluten color additives fillers preservatives or binders
+suitable for vegetarians vegans
+of water or juice to times per day
+this product is manufactured and packaged in a facility which may also process milk soy wheat egg peanuts tree nuts fish and crustacean shellfish
+vegetarian formula
+free from artificial colors and preservatives
+manganese form as manganese sulfate
+purity potency guaranteed
+this product is sold by weight not volume
+do not use if safety seal is broken
+scan this qr code to get discount on your next purchase
+limited time deal
+meets usp disintegration
+directions use only as directed
+vitamin e form as d alpha tocopheryl acetate
+made in usa made in an fda registered facility natural gluten free
+name cholecalciferol
+to reorder call toll free 800 437 4148 or visit our website at www swansonvitamins com
+cerevisiae genus s
+extraction rate about 4
+scan to learn about our hypoallergenic supplements
+warning keep out of the reach of children
+made with aloha
+vitamin c form as calcium ascorbate
+store sealed in a cool dry place
+satisfaction guaranteed
+warning do not use if safety seal is broken or missing
+magnesium form as magnesium citrate
+manufactured in an fda registered facility
+guaranteed premium quality
+glycerite liquid extract
+we guarantee our supplements for potency and purity
+do not use this product if the safety seal on the bottle is broken
+suggested use shake well before using add full squeeze of the dropper bulb to
+copper form as copper gluconate
+directions for use shake well before using
+this package is completely recyclable
+fda registered facility made in united states of america usa
+avoid excessive heat and direct sunlight
+is equal to about of dried plant material
+manganese form as manganese gluconate
+storage keep tightly closed in a cool dry place
+guaranteed purity potency
+gluten free non gmo hypoallergenic
+for more information go to www p65warnings ca gov
+potassium form as potassium chloride
+directions take times daily with meals
+scan for product info
+family owned since
+manganese form as manganese citrate
+potassium form as potassium citrate
+warning for adults only
+zinc form as zinc gluconate
+probiotic supplement
+thiamin form as thiamin mononitrate alt
+individual results may vary
+safety sealed for your protection
+vitamin a form as retinyl palmitate
+bluebonnet s kof k certification k 0000700
+keep your licensed health care practitioner informed when using this product
+vitamin supplement
+thiamin form as thiamin mononitrate
+this product contains no yeast wheat gluten soy protein milk dairy corn sodium sugar starch artificial coloring preservatives or flavoring
+certified vegan vegan org
+storage keep closed in a cool dry place out of reach of children
+do not exceed suggested use
+nutrition questions or comments
+solgar s kof k certification k 1250
+food supplements should not be used as a substitute for a varied and balanced diet and healthy lifestyle
+scan to learn more
+suitable for vegetarians and vegans
+product of u s a
+do not use if inner seal is missing or damaged
+gf certified gluten free
+use only as directed on label
+this product is not intended to diagnose treat cure or prevent disease
+store in cool dry place
+chromium form as chromium polynicotinate
+discontinue use and consult your healthcare practitioner if any adverse reactions occur
+do not exceed per day
+quatrefolic is a registered trademark of gnosis s p a
+do not use if either seal is broken or missing
+gmp good manufacturing practice
+selenium form as selenomethionine
+vitamin k form as phytonadione
+calcium form as calcium citrate
+for more information go to www p65warnings ca gov food
+store in a cool dry place out of reach of children
+certified gluten free by the gluten free certification organization www gluten org
+species cerevisiae
+suggested use as a dietary supplement take about tsp once or twice daily or as directed by a physician
+naturally artificially flavored
+do not use if outer bottle seal is missing or damaged
+iron form as ferrous fumarate
+an fda regulated facility
+vitamin d form as d3 alt
+store in a cool dry place away from direct sunlight
+this product has been manufactured at a gmp registered facility
+informed choice org trusted by sport
+certified b corporation
+may be taken with or without food
+manufactured by natural factors to ensure safety and potency in accordance with good manufacturing practices gmp of the fda and health canada
+certified gluten free
+for your protection this container has an outer safety seal
+do not accept if missing or broken
+if any adverse reactions occur stop taking the product and consult your doctor
+when it comes to your health choose the best
+boron form as boron citrate
+this does not alter the potency of the product
+copyright nature s way brands llc
+suggested usage as a dietary supplement adults take daily or as directed by your healthcare professional
+jarrow formulas
+take only as directed
+to reorder item www puritan com 800 645 1030
+our pledge of integrity authenticity cleanliness freshness consistency accuracy
+contains no artificial colors preservatives or sweeteners
+vitamin b 12 form as methylcobalamin
+the energy supplements r
+c natural organics r
+discover nature s answer
+vitamin d form as cholecalciferol alt
+not intended for children
+nature s answer
+triangle k kosher
+store at 30 c 86 f
+do not exceed suggested dosage
+selenium form as sodium selenate
+hypo allergenic
+gluten free no artificial preservatives
+no artificial color flavor or sweetener no preservatives no sugar no starch no milk no lactose no soy no gluten no wheat no yeast no fish
+do not use if inner seal is broken or missing
+contains no alcohol
+avoid excessive heat
+gluten wheat dairy free
+no wheat gluten milk eggs peanuts tree nuts soy crustacean shellfish or fish
+certified organic by oregon tilth
+do not use if product appears to be tampered with or seal is broken
+nature s way brands llc
+warnings keep out of the reach of children
+safety sealed with inner seal
+professional use only
+do not use if outer seal is broken or missing
+gluten free soy free
+calcium form as dicalcium phosphate
+c jarrow formulas r
+this product is not intended to diagnose treat cure or prevent any diseases
+take about 30 drops 1 ml one full squeeze of the dropper bulb to 4 oz of juice or water up to times per day
+yes recyclable packaging yes manufacturing supports wind power
+consult your healthcare practitioner prior to use
+store away from direct light heat and humidity
+store in a dry place and avoid excessive heat
+discontinue use if unusual symptoms occur
+keep out of children s reach
+made and quality tested in the usa with globally sourced ingredients
+exclusive professional formulas
+vitamin d form as ergocalciferol
+suggested use as a dietary supplement take about tsp once daily or as directed by a physician
+no alcohol ethyl artificial ingredients color additives fillers or binders
+chew thoroughly before swallowing
+certified organic by qai
+copyright source naturals inc
+this product is not tested on animals
+for more product information visit www nowfoods com
+quality global sourcing bottled tested in the usa
+safety sealed with printed inner seal
+no wheat no gluten no soybeans no dairy no egg no fish shellfish no peanuts tree nuts
+organic alcohol based
+yes certified gluten free by gfco org
+bioperine is a registered trademark of sabinsa corporation
+quality assured
+vitamin b6 form as pyridoxal phosphate
+unconditionally guaranteed
+not manufactured with wheat gluten milk egg fish shellfish or tree nut ingredients
+this product is a nutritional supplement and should not replace a varied balanced diet
+copyright puritan s pride inc
+suggested use daily
