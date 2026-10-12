@@ -76,8 +76,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
+from datasketch import MinHash, MinHashLSH
+
 from engine.repositories.dsld.labels import store
-from engine.services.dsld_cleaning.schema import CleanedLabel, Segment
+from engine.services.dsld_cleaning.schema import CleanedLabel, Cluster, Segment
 
 # Hand-bumped, and stamped onto every flattened row. 1 = the renderer the pilot
 # and gold set were built with: three skipped statement types, a 25-ingredient
@@ -108,6 +110,9 @@ _AGE_BEFORE = re.compile(r"\b(?:under|over|below|above|aged|age|ages|age\s+of)\s
 _AGE_AFTER = re.compile(r"\s*(?:years?|yrs?|months?)\b")
 _PUNCTUATION = re.compile(r"[^\w\s]|_")
 
+# MinHash's seed is fixed so the same rows always give the same clusters.
+_MINHASH_SEED = 1
+
 # The checklist, read once. Filled in below the class, because each phrase is
 # run through `_normalise` first so it matches what the passages have become.
 _BOILERPLATE_PATH = Path(__file__).with_name("boilerplate.txt")
@@ -116,10 +121,10 @@ _BOILERPLATE_PATH = Path(__file__).with_name("boilerplate.txt")
 class DsldCleaningService:
     """Cleans raw DSLD records into extractor-ready text.
 
-    Holds no state. `clean` and `flatten` do no I/O: raw records come from
-    the repository's loader, so they stay a pure transformation that a test
-    can exercise without a 215k-file dump on disk. `save` hands the flattened
-    rows to the store as a label set, which is what a run reads.
+    Holds no state. `clean`, `flatten` and `cluster` do no I/O: raw records
+    come from the repository's loader, so they stay a pure transformation that
+    a test can exercise without a 215k-file dump on disk. `save` hands the
+    flattened rows to the store as a label set, which is what a run reads.
     """
 
     # --- public -------------------------------------------------------------
@@ -165,6 +170,76 @@ class DsldCleaningService:
                 "created_at": datetime.now(timezone.utc).isoformat(),
             },
         )
+
+    def cluster(self, flattened: list[dict], threshold: float = 0.9,
+                shingle: int = 5, num_perm: int = 128) -> list[Cluster]:
+        """Group near-duplicate labels by MinHash LSH over `passage` (spec 0006).
+
+        Clusters are stars, not connected components: each row joins the most
+        similar existing representative whose estimated Jaccard is at least
+        `threshold` (ties go to the earliest), or becomes a representative
+        itself. Joining every similar pair instead would chain A~B~C into one
+        cluster even when A and C are not alike. The representative is the
+        first row of its cluster in input order, so the caller picks it by
+        ordering the rows. Reads only `dsld_id`, `passage` and
+        `renderer_version`; changes no row.
+        """
+        # Validate: unique ids, one renderer version of at least 4 (an older
+        # passage still has case, amounts and boilerplate, and two versions
+        # are normalised two ways), parameters in range.
+        ids = [r["dsld_id"] for r in flattened]
+        if len(set(ids)) != len(ids):
+            raise ValueError("duplicate dsld_id in the rows to cluster")
+        versions = {r.get("renderer_version") for r in flattened}
+        if None in versions or any(v < 4 for v in versions):
+            raise ValueError(f"clustering needs renderer v4 or later passages, got {versions}")
+        if len(versions) > 1:
+            raise ValueError(f"rows come from more than one renderer version: {versions}")
+        if not 0 < threshold <= 1:
+            raise ValueError(f"threshold must be in (0, 1], got {threshold}")
+        if shingle < 1 or num_perm < 1:
+            raise ValueError(f"shingle and num_perm must be at least 1, got {shingle}, {num_perm}")
+
+        # The LSH only proposes candidates; it is built below the threshold so
+        # pairs just above it still collide, and the join check drops the rest.
+        lsh = MinHashLSH(threshold=max(threshold - 0.1, 0.5), num_perm=num_perm)
+        members: dict[int, list[int]] = {}       # representative -> members, in first-appearance order
+        position: dict[int, int] = {}            # representative -> its cluster_id
+        signatures: dict[int, MinHash] = {}      # representative -> its signature
+        cluster_of: dict[str, int] = {}          # passage seen so far -> its cluster's representative
+
+        for r in flattened:
+            dsld_id, passage = r["dsld_id"], r["passage"]
+
+            # An exact repeat goes with its twin, with no signature or query.
+            # This also gathers every empty passage behind the first one,
+            # which is never put in the LSH, so nothing else can join it.
+            if passage in cluster_of:
+                members[cluster_of[passage]].append(dsld_id)
+                continue
+
+            best = None
+            if passage:
+                signature = self._signature(self._shingles(passage, shingle), num_perm)
+                best_similarity = threshold
+                for candidate in sorted(lsh.query(signature), key=position.__getitem__):
+                    similarity = signature.jaccard(signatures[candidate])
+                    if similarity > best_similarity or (best is None and similarity == best_similarity):
+                        best, best_similarity = candidate, similarity
+
+            if best is not None:
+                members[best].append(dsld_id)
+                cluster_of[passage] = best
+            else:
+                members[dsld_id] = [dsld_id]
+                position[dsld_id] = len(position)
+                cluster_of[passage] = dsld_id
+                if passage:
+                    signatures[dsld_id] = signature
+                    lsh.insert(dsld_id, signature)
+
+        return [Cluster(cluster_id=position[rep], representative=rep, members=m)
+                for rep, m in members.items()]
 
     # --- cleaning steps -----------------------------------------------------
 
@@ -311,6 +386,22 @@ class DsldCleaningService:
             "renderer_version": RENDERER_VERSION,
         }
 
+    # --- clustering ---------------------------------------------------------
+
+    @staticmethod
+    def _shingles(text: str, k: int) -> set[str]:
+        """Every character `k`-gram of the text; a text shorter than `k` is one shingle."""
+        if len(text) < k:
+            return {text}
+        return {text[i:i + k] for i in range(len(text) - k + 1)}
+
+    @staticmethod
+    def _signature(shingles: set[str], num_perm: int) -> MinHash:
+        """MinHash the shingles with the fixed seed, all in one batch."""
+        signature = MinHash(num_perm=num_perm, seed=_MINHASH_SEED)
+        signature.update_batch([s.encode("utf-8") for s in shingles])
+        return signature
+
 
 # Load the checklist: skip blanks and comments, normalise each phrase so one
 # written with a number or punctuation still matches, drop duplicates and
@@ -341,3 +432,8 @@ def clean(records):
 def flatten(cleaned):
     """Render cleaned labels into storable rows. See `DsldCleaningService.flatten`."""
     return _service.flatten(cleaned)
+
+
+def cluster(flattened, threshold=0.9, shingle=5, num_perm=128):
+    """Group near-duplicate labels. See `DsldCleaningService.cluster`."""
+    return _service.cluster(flattened, threshold, shingle, num_perm)

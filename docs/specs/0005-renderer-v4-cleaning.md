@@ -137,7 +137,7 @@ All in `engine/services/dsld_cleaning/service.py`, under `# --- cleaning steps -
 | Function | Does | Calls |
 |---|---|---|
 | `_clean_one(record)` (changed) | as today, but each found `(text, path)` is normalised, boilerplate-stripped unless the path is `fullName`, and dropped if empty, before `_deduplicate` | `_normalise`, `_strip_boilerplate`, `_deduplicate` |
-| `_normalise(text) -> str` (static, new) | lowercase, quantities out (with the age-limit exception), punctuation → space, collapse whitespace | — |
+| `_normalise(text) -> str` (static, new) | lowercase, quantities out (with the age-limit exception, decided per match by a nested `drop_quantity` callback passed to `re.sub`, since it reads the words around the match), punctuation → space, collapse whitespace | — |
 | `_strip_boilerplate(text) -> str` (static, new) | cuts every checklist phrase (word boundaries, longest first) and collapses whitespace | — |
 
 `_collapse_whitespace` stays: the readers still call it on raw text, and `_normalise`

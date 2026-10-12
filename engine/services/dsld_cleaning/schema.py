@@ -54,3 +54,25 @@ class CleanedLabel:
             "name": self.name,
             "segments": [s.to_dict() for s in self.segments],
         }
+
+
+@dataclass(frozen=True)
+class Cluster:
+    """Labels that are near-copies of one representative (spec 0006).
+
+    Every member is at least `threshold` similar to the representative, as
+    estimated from MinHash signatures; members are not promised to be that
+    close to each other. `members` starts with the representative, and its
+    length is how many labels the cluster stands for in the full set.
+    """
+
+    cluster_id: int
+    representative: int
+    members: list[int]
+
+    def to_dict(self) -> dict:
+        return {
+            "cluster_id": self.cluster_id,
+            "representative": self.representative,
+            "members": list(self.members),
+        }

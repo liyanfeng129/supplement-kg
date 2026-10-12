@@ -11,13 +11,15 @@ not. A new path here is a regression against recorded evidence.
 from __future__ import annotations
 
 import json
+import random
 from pathlib import Path
 
 import pytest
 
 from engine.repositories.dsld.raw import loader as raw_loader
 from engine.repositories.dsld.raw import paths as raw_paths
-from engine.services.dsld_cleaning import RENDERER_VERSION, clean, flatten
+from engine.services.dsld_cleaning import (
+    RENDERER_VERSION, DsldCleaningService, clean, cluster, flatten)
 from engine.services.extraction.label_purpose_risk import label_segments
 from engine.services.sources.dsld import parse_label
 
@@ -279,3 +281,135 @@ def test_a_checklist_phrase_written_with_numbers_still_matches():
     """`store at 30 c 86 f` is on the checklist as mined; normalising it at load
     makes it match the line it came from."""
     assert passage_of("Store at 30°C (86°F).") == ""
+
+
+# --- near-duplicate clustering (spec 0006) ----------------------------------
+
+
+def row(dsld_id: int, passage: str, version=4) -> dict:
+    return {"dsld_id": dsld_id, "passage": passage, "renderer_version": version}
+
+
+def words(rng: random.Random, n: int) -> list[str]:
+    """`n` random lowercase words; texts from different draws share almost no shingles."""
+    return ["".join(rng.choices("abcdefghijklmnopqrstuvwxyz", k=rng.randint(4, 9)))
+            for _ in range(n)]
+
+
+def estimate(a: str, b: str, shingle=5, num_perm=128) -> float:
+    """The estimated Jaccard the service judges by, from the service's own signatures."""
+    sig = lambda text: DsldCleaningService._signature(
+        DsldCleaningService._shingles(text, shingle), num_perm)
+    return sig(a).jaccard(sig(b))
+
+
+def together(clusters, a: int, b: int) -> bool:
+    return any(a in c.members and b in c.members for c in clusters)
+
+
+def test_identical_passages_share_a_cluster():
+    clusters = cluster([row(1, "supports sleep"), row(2, "eases joints"), row(3, "supports sleep")])
+    assert together(clusters, 1, 3)
+    assert not together(clusters, 1, 2)
+
+
+def test_one_changed_word_in_a_long_passage_shares_a_cluster():
+    text = words(random.Random(1), 300)
+    changed = list(text)
+    changed[150] = "different"
+    assert together(cluster([row(1, " ".join(text)), row(2, " ".join(changed))]), 1, 2)
+
+
+def test_no_pair_at_or_above_the_threshold_is_lost_to_the_lsh():
+    """Every pair whose estimate clears 0.9 is joined, whatever its true Jaccard.
+
+    A pair just above the threshold is where an LSH tuned at the threshold
+    drops pairs; this checks the margin covers them.
+    """
+    rng = random.Random(2)
+    rows, pairs = [], []
+    for i in range(100):
+        text = words(rng, 200)
+        changed = list(text)
+        for j in rng.sample(range(200), rng.randint(1, 12)):
+            changed[j] = words(rng, 1)[0]
+        a, b = " ".join(text), " ".join(changed)
+        rows += [row(2 * i, a), row(2 * i + 1, b)]
+        pairs.append((2 * i, 2 * i + 1, estimate(a, b)))
+
+    clusters = cluster(rows)
+    expected = [(a, b) for a, b, est in pairs if est >= 0.9]
+    assert len(expected) >= 30, "the planted pairs should straddle the threshold"
+    assert len(expected) < len(pairs), "the planted pairs should straddle the threshold"
+    assert [(a, b) for a, b in expected if not together(clusters, a, b)] == []
+
+
+def test_unrelated_passages_stay_apart():
+    rng = random.Random(3)
+    a, b = " ".join(words(rng, 100)), " ".join(words(rng, 100))
+    assert not together(cluster([row(1, a), row(2, b)]), 1, 2)
+
+
+def test_similarity_does_not_chain_through_a_middle_label():
+    """A~B and B~C, but A and C are not alike: a star keeps A and C apart."""
+    rng = random.Random(4)
+    base = words(rng, 300)
+    a = " ".join(words(rng, 12) + base[12:])
+    b = " ".join(base)
+    c = " ".join(base[:-12] + words(rng, 12))
+    assert estimate(a, b) >= 0.9 and estimate(b, c) >= 0.9
+    assert estimate(a, c) < 0.86
+
+    clusters = cluster([row(1, a), row(2, b), row(3, c)])
+    assert together(clusters, 1, 2)
+    assert not together(clusters, 1, 3)
+
+
+def test_the_first_row_represents_and_ids_follow_first_appearance():
+    clusters = cluster([row(5, "eases joints"), row(9, "supports sleep"),
+                        row(2, "eases joints"), row(7, "supports sleep")])
+    assert [(c.cluster_id, c.representative, c.members) for c in clusters] == [
+        (0, 5, [5, 2]), (1, 9, [9, 7])]
+
+
+def test_every_row_is_in_exactly_one_cluster():
+    rng = random.Random(5)
+    base = [" ".join(words(rng, 50)) for _ in range(20)]
+    rows = [row(i, rng.choice(base)) for i in range(100)]
+    members = [m for c in cluster(rows) for m in c.members]
+    assert sorted(members) == list(range(100))
+
+
+def test_clustering_is_deterministic():
+    rng = random.Random(6)
+    base = words(rng, 200)
+    rows = [row(i, " ".join(base[:200 - i])) for i in range(30)]
+    assert [c.to_dict() for c in cluster(rows)] == [c.to_dict() for c in cluster(rows)]
+
+
+def test_clustering_leaves_the_rows_unchanged():
+    rows = [row(1, "supports sleep"), row(2, "supports sleep"), row(3, "")]
+    before = [dict(r) for r in rows]
+    cluster(rows)
+    assert rows == before
+
+
+def test_empty_passages_form_one_cluster_of_their_own():
+    clusters = cluster([row(1, "a"), row(2, ""), row(3, "a"), row(4, "")])
+    assert [c.members for c in clusters] == [[1, 3], [2, 4]]
+
+
+@pytest.mark.parametrize("rows, kwargs", [
+    ([row(1, "a"), row(1, "b")], {}),
+    ([row(1, "a", version=3)], {}),
+    ([{"dsld_id": 1, "passage": "a"}], {}),
+    ([row(1, "a", version=4), row(2, "b", version=5)], {}),
+    ([row(1, "a")], {"threshold": 0}),
+    ([row(1, "a")], {"threshold": 1.1}),
+    ([row(1, "a")], {"shingle": 0}),
+    ([row(1, "a")], {"num_perm": 0}),
+], ids=["duplicate id", "renderer v3", "no renderer version", "mixed versions",
+        "threshold 0", "threshold above 1", "shingle 0", "num_perm 0"])
+def test_bad_input_is_refused(rows, kwargs):
+    with pytest.raises(ValueError):
+        cluster(rows, **kwargs)

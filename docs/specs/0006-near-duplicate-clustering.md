@@ -4,15 +4,16 @@
 - **Date:** 2026-10-06
 - **Scope:** `engine/services/dsld_cleaning/service.py` (new `cluster` method and
   module-level entry), `engine/services/dsld_cleaning/schema.py` (new `Cluster`),
-  `pyproject.toml` and `requirements-lock.txt` (new dependency `datasketch`), new tests
-  in `tests/test_dsld_cleaning.py`, new `benchmarks/cluster_sweep.py` (the measurement
-  in acceptance 11).
+  `pyproject.toml` and `requirements-lock.txt` (new dependency `datasketch`, which
+  brings `scipy`), new tests in `tests/test_dsld_cleaning.py`.
 
 Builds on `docs/specs/0005-renderer-v4-cleaning.md`: the input is v4 flattened rows,
 already normalised and without boilerplate.
 
 Out of scope: choosing a subset from the clusters (coverage sampling with embeddings),
-which comes in a follow-up spec. Also out of scope: persisting clusters to disk.
+which comes in a follow-up spec. Also out of scope: persisting clusters to disk; the
+sampling spec decides whether and how clusters are saved, since it knows what it reads
+back.
 
 ## Why
 
@@ -38,9 +39,16 @@ at least `threshold`.
   are done by the v4 renderer (spec 0005), so clustering does none of its own; that
   keeps one definition of "the same text" for clustering and extraction.
 - **Shingles:** character `k`-grams of the passage.
-- **Input must be v4.** A v1–v3 passage still has case, punctuation, quantities and
-  boilerplate in it and would give different, worse clusters silently, so `cluster`
-  refuses it.
+- **Input must be v4 or later, and one version.** A v1–v3 passage still has case,
+  punctuation, quantities and boilerplate in it and would give different, worse
+  clusters silently, so `cluster` refuses it. Rows rendered by two different versions
+  are normalised two ways and would be compared silently too, so every row must carry
+  the same `renderer_version`.
+- **Short and long passages are not treated alike.** On a short passage one changed
+  word is a large share of its shingles; on a long one a whole extra sentence may not
+  be. So short labels split more readily and long ones merge more readily. Accepted:
+  splitting short labels costs subset slots, not coverage. Revisit only if the review
+  in acceptance 12 shows it doing harm.
 
 ## Clustering: star, not connected components
 
@@ -50,6 +58,7 @@ built as stars:
 
 ```
 for row in flattened, in input order:
+    if an earlier row had exactly this passage: row joins that row's cluster; next row
     candidates = LSH query over representatives only
     keep candidates whose estimated Jaccard to row ≥ threshold
     if any:  row joins the most similar one (ties: earliest representative)
@@ -58,6 +67,11 @@ for row in flattened, in input order:
 
 - **Every member is ≥ `threshold` to its representative** (as estimated from the
   MinHash signatures). Members are not guaranteed to be that close to each other.
+- **Identical passages always share a cluster.** A row whose passage exactly matches
+  an earlier row's goes straight into that row's cluster, with no shingling, signature
+  or query. Most copies are exact after v4 normalising, so this skips most of the work.
+  It can differ from running the row through the loop (a later copy could have found a
+  newer, closer representative), but the star guarantee holds either way.
 - **The representative is the first row of its cluster in input order.** The caller
   controls the order, so a caller that wants a particular row to represent its cluster
   puts it first. Picking a medoid instead was rejected for now: it costs a full
@@ -109,8 +123,9 @@ def cluster(flattened, threshold=0.9, shingle=5, num_perm=128) -> list[Cluster]:
 - **Deterministic:** the same rows in the same order with the same parameters give the
   same clusters. MinHash uses a fixed seed.
 - Raises `ValueError` on duplicate `dsld_id`s in the input, on any row whose
-  `renderer_version` is missing or below 4, on `threshold` outside (0, 1], and on
-  `shingle` or `num_perm` below 1.
+  `renderer_version` is missing or below 4, on rows with more than one
+  `renderer_version`, on `threshold` outside (0, 1], and on `shingle` or `num_perm`
+  below 1.
 
 ### Where each step lives
 
@@ -120,7 +135,7 @@ methods under `clean`. Nothing goes in `repositories/`: there is no I/O.
 
 | Function | Does | Calls |
 |---|---|---|
-| `cluster(flattened, threshold, shingle, num_perm)` (public) | validates the input (ids, renderer version, parameters); builds one `MinHashLSH(max(threshold − 0.1, 0.5), num_perm)`; runs the star loop over the rows (query the LSH, check the estimated Jaccard against `threshold`, join or become a representative and insert); handles empty passages; returns the `Cluster`s | `_shingles`, `_signature` |
+| `cluster(flattened, threshold, shingle, num_perm)` (public) | validates the input (ids, one renderer version ≥ 4, parameters); builds one `MinHashLSH(max(threshold − 0.1, 0.5), num_perm)`; runs the star loop over the rows (send an exact passage repeat to its twin's cluster, else query the LSH, check the estimated Jaccard against `threshold`, join or become a representative and insert); handles empty passages; returns the `Cluster`s | `_shingles`, `_signature` |
 | `_shingles(text, k) -> set[str]` (static) | every character `k`-gram of the passage; a text shorter than `k` is one shingle, itself | — |
 | `_signature(shingles, num_perm) -> MinHash` (static) | builds the MinHash with the fixed seed and adds every shingle in one `update_batch` call | — |
 
@@ -154,8 +169,11 @@ with more code to own and test.
 1. Two rows with identical passages land in the same cluster.
 2. Two rows whose passages differ by one word in a long passage land in the same
    cluster.
-3. A planted pair at Jaccard ≈ 0.92 (above the 0.9 threshold, inside the band the LSH
-   margin exists for) lands in the same cluster.
+3. **No pair is lost to the LSH.** About 100 planted pairs spread over Jaccard
+   0.85–0.97: every pair whose *estimated* Jaccard (from the same signatures the
+   service builds) is at or above the threshold lands in one cluster. This tests what
+   the LSH margin promises without depending on whether a given pair's estimate
+   happens to fall above or below 0.9.
 4. Two rows whose passages share no shingles land in different clusters.
 5. With A, B, C where J(A,B) and J(B,C) are above the threshold but J(A,C) is clearly
    below it, A and C are not in the same cluster.
@@ -166,10 +184,12 @@ with more code to own and test.
 8. Running twice on the same input gives identical output.
 9. The input rows are unchanged after the call.
 10. Rows with empty passages are all in one cluster; no other row joins it.
-11. Duplicate `dsld_id`s, a row below renderer v4 or without `renderer_version`, and
-    out-of-range parameters raise `ValueError`.
-12. **Sweep on the full v4 flattened dump**, `benchmarks/cluster_sweep.py`: for
-    `threshold` in 0.7, 0.8 and 0.9, record the run time, the number of clusters, the
-    cluster-size distribution, and a hand-checked sample of clusters (do they look like
-    real copies?). The default `threshold` is set from these results. This is a
-    measurement for the user to run, not a unit test.
+11. Duplicate `dsld_id`s, a row below renderer v4 or without `renderer_version`, rows
+    with mixed renderer versions, and out-of-range parameters raise `ValueError`.
+12. **Review on the full v4 label set** (`full214780-r4`), done in conversation, not a
+    script: for `threshold` in 0.7, 0.8 and 0.9, cluster all rows and rank the
+    clusters by size. Read the 30 largest and 30 more spread across the rest of the
+    ranking, comparing each representative against several members drawn from across
+    the cluster: are they the same product, differing only in flavour, size or
+    retailer? Report examples of wrong merges and a recommended threshold; the user
+    confirms the default, which is then written into this spec.
