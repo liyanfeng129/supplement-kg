@@ -1,0 +1,9 @@
+{
+  "name": "gold1000-r4",
+  "source": "the gold1000-r1 ids, in its order, taken from full214780-r4 (passages_sha a599acc842e3fa3c)",
+  "description": "the gold-1000 ids with renderer-4 passages; no annotations were made on this text (only 42/4281 gold evidence spans occur verbatim in it), so the gold stays in gold1000-r1, joined by dsld_id",
+  "renderer_version": 4,
+  "n_labels": 1000,
+  "created_at": "2026-10-12T17:22:28.164064+00:00",
+  "passages_sha": "0801f354cfbd8472"
+}

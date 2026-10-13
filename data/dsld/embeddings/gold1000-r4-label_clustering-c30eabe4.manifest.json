@@ -1,0 +1,12 @@
+{
+  "gold_set": "gold1000-r1",
+  "text_set": "full214780-r4",
+  "text_passages_sha": "a599acc842e3fa3c",
+  "instruction_id": "label_clustering",
+  "instruction": "Identify the main ingredients of the dietary supplement described by this label, the health purposes it claims, and the specific safety risks it warns about, such as side effects, drug interactions, medical conditions and groups who should not take it",
+  "model_path": "/var/tmp/ge74wan/hf_cache/Qwen3-Embedding-0.6B-GGUF/Qwen3-Embedding-0.6B-f16.gguf",
+  "n_embedded": 1000,
+  "failed": {},
+  "dim": 1024,
+  "created_at": "2026-10-12T14:59:16.747725+00:00"
+}
