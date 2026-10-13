@@ -14,6 +14,11 @@ passages it started on are still the ones under that name.
 **One loader instance.** A label set does not change under its name, so it is
 parsed once per process and shared. `reset()` exists for tests.
 
+**An embedding of a set is read by module functions**, not loader methods:
+`read_embedding_manifest`, `embedded_ids` and `load_embedding`. An embedding
+grows while a run writes it, so it is never cached. A vector joins its label by
+`dsld_id`: `load_embedding` gives the ids, `load_flattened` the labels.
+
 A set's `annotations.jsonl` is not read here yet; a loader for it comes when
 scoring is built.
 """
@@ -24,6 +29,8 @@ import hashlib
 import json
 import threading
 from pathlib import Path
+
+import numpy as np
 
 from engine.repositories.dsld.labels import paths
 from engine.repositories.dsld.labels.schema import Label
@@ -134,3 +141,65 @@ def load_flattened(name: str) -> tuple[str, dict[int, Label]]:
 def reset() -> None:
     """Drop the loader and its caches. See `LabelsLoader.reset`."""
     LabelsLoader.reset()
+
+
+# Embeddings of a set: read fresh on every call, as a run may be writing them.
+
+
+def read_embedding_manifest(label_set: str, name: str) -> dict:
+    """Embedding `name` of label set `label_set`: its manifest, as written when it was created."""
+    p = paths.embedding_dir(label_set, name) / paths.MANIFEST_NAME
+    if not p.exists():
+        raise FileNotFoundError(f"no embedding {name!r} of label set {label_set!r} at {p.parent}")
+    return json.loads(p.read_text())
+
+
+def embedded_ids(label_set: str, name: str) -> set[int]:
+    """The ids that need no more work: those in any chunk, and those in `failed.jsonl`.
+
+    A torn last line of `failed.jsonl` -- a crash mid-append -- is not an id;
+    the store cuts it on its next append.
+    """
+    d = paths.embedding_dir(label_set, name)
+    done: set[int] = set()
+    for chunk in sorted((d / paths.CHUNKS_DIR).glob("*.npz")):
+        with np.load(chunk) as data:
+            done.update(int(i) for i in data["dsld_id"])
+    failed = d / paths.FAILED_NAME
+    if failed.exists():
+        text = failed.read_text()
+        whole = text if text.endswith("\n") else text[: text.rfind("\n") + 1]
+        done.update(int(json.loads(line)["dsld_id"]) for line in whole.splitlines() if line.strip())
+    return done
+
+
+def load_embedding(label_set: str, name: str) -> tuple[np.ndarray, np.ndarray]:
+    """Every vector of embedding `name`: `(ids (n,) int64, vectors (n, dim) float32)`.
+
+    Rows follow the manifest's id order; a failed or not-yet-embedded id has no
+    row. Refused if the manifest's `passages_sha` is not the set's: the vectors
+    were made from passages the set no longer holds.
+    """
+    manifest = read_embedding_manifest(label_set, name)
+    set_manifest = json.loads((paths.set_dir(label_set) / paths.MANIFEST_NAME).read_text())
+    if manifest.get("passages_sha") != set_manifest.get("passages_sha"):
+        raise ValueError(
+            f"embedding {name!r} of label set {label_set!r} was made from passages_sha "
+            f"{manifest.get('passages_sha')}, and the set's is {set_manifest.get('passages_sha')}: "
+            "its vectors are not of these passages."
+        )
+
+    ids_parts, vector_parts = [], []
+    for chunk in sorted((paths.embedding_dir(label_set, name) / paths.CHUNKS_DIR).glob("*.npz")):
+        with np.load(chunk) as data:
+            ids_parts.append(data["dsld_id"])
+            vector_parts.append(data["vector"])
+    if not ids_parts:
+        return np.zeros(0, dtype=np.int64), np.zeros((0, 0), dtype=np.float32)
+    ids = np.concatenate(ids_parts)
+    vectors = np.concatenate(vector_parts)
+
+    # Chunk order is completion order; put the rows in the manifest's.
+    row_of = {int(i): r for r, i in enumerate(ids)}
+    order = [row_of[int(i)] for i in manifest["ids"] if int(i) in row_of]
+    return ids[order].astype(np.int64), vectors[order].astype(np.float32)

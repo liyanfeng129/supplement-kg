@@ -8,14 +8,22 @@ created with its ids and manifest together or not at all, and a second run in
 the same minute gets the next number. What is left is read from the rows
 themselves; a torn trailing line costs one record, not the run, and is only
 ever repaired by the store, never by the loader.
+
+An embedding lives inside its label set under its own name: created once with
+its manifest, refused for a used name or a missing set; its chunks are
+numbered, never visible half-written, and read back in the manifest's id
+order; failed ids count as embedded; the set's own files are never touched,
+and an embedding of other passages is refused.
 """
 
 from __future__ import annotations
 
 import json
 
+import numpy as np
 import pytest
 
+from engine.repositories.dsld.labels import loader as label_loader
 from engine.repositories.dsld.labels import paths as label_paths
 from engine.repositories.dsld.labels import store
 from engine.repositories.dsld.runs import loader as runs
@@ -288,3 +296,105 @@ def test_repair_of_a_run_without_rows_creates_nothing(tmp_path):
     run_store.repair(d)
 
     assert not run_paths.rows_path(d).exists()
+
+
+# --- embeddings -------------------------------------------------------------
+
+
+@pytest.fixture
+def labels_root(tmp_path, monkeypatch):
+    """Label sets under a temp root, with one set `tiny` of labels 1 to 4."""
+    root = tmp_path / "labels"
+    monkeypatch.setattr(label_paths, "LABELS_ROOT", root)
+    store.write_label_set("tiny", _labels(1, 2, 3, 4), {"renderer_version": 4})
+    return root
+
+
+def _embedding_manifest(ids, passages_sha=None):
+    sha = passages_sha or _manifest(label_paths.set_dir("tiny"))["passages_sha"]
+    return {"passages_sha": sha, "ids": ids, "instruction": "Find the product", "config_hash": "abc"}
+
+
+def _rows(*ids):
+    """Label `i`'s vector is [i, 0, 0]: a row a test can recognise."""
+    return np.array(ids, dtype=np.int64), np.array([[i, 0, 0] for i in ids], dtype=np.float32)
+
+
+def test_an_embedding_is_a_folder_in_its_label_set_with_its_manifest(labels_root):
+    d = store.create_embedding("tiny", "first", _embedding_manifest([1, 2]))
+
+    assert d == label_paths.embedding_dir("tiny", "first")
+    assert d.parent == labels_root / "tiny" / label_paths.EMBEDDINGS_DIR
+    assert label_loader.read_embedding_manifest("tiny", "first")["ids"] == [1, 2]
+
+
+def test_a_used_embedding_name_is_refused(labels_root):
+    store.create_embedding("tiny", "first", _embedding_manifest([1, 2]))
+
+    with pytest.raises(ValueError, match="already exists"):
+        store.create_embedding("tiny", "first", _embedding_manifest([3]))
+
+    assert label_loader.read_embedding_manifest("tiny", "first")["ids"] == [1, 2]
+
+
+def test_an_embedding_of_a_missing_set_is_refused(labels_root):
+    with pytest.raises(FileNotFoundError, match="no label set"):
+        store.create_embedding("absent", "first", _embedding_manifest([1]))
+
+    assert not (labels_root / "absent").exists()
+
+
+def test_vectors_come_back_in_the_manifest_s_id_order(labels_root):
+    store.create_embedding("tiny", "first", _embedding_manifest([4, 1, 3, 2]))
+    store.append_chunk("tiny", "first", *_rows(3, 1))
+    store.append_chunk("tiny", "first", *_rows(2, 4))
+
+    ids, vectors = label_loader.load_embedding("tiny", "first")
+
+    assert ids.tolist() == [4, 1, 3, 2]
+    assert vectors[:, 0].tolist() == [4.0, 1.0, 3.0, 2.0]
+    assert (ids.dtype, vectors.dtype) == (np.int64, np.float32)
+
+
+def test_a_failed_label_has_no_row_but_counts_as_embedded(labels_root):
+    store.create_embedding("tiny", "first", _embedding_manifest([1, 2, 3]))
+    store.append_chunk("tiny", "first", *_rows(1))
+    store.append_failed("tiny", "first", [{"dsld_id": 2, "failed": "error"}])
+
+    assert label_loader.embedded_ids("tiny", "first") == {1, 2}
+    assert label_loader.load_embedding("tiny", "first")[0].tolist() == [1]
+
+
+def test_a_chunk_is_never_visible_half_written(labels_root, monkeypatch):
+    store.create_embedding("tiny", "first", _embedding_manifest([1, 2]))
+    store.append_chunk("tiny", "first", *_rows(1))
+
+    def crash_mid_write(file, **arrays):
+        file.write(b"PK\x03\x04 half a zip")
+        raise OSError("disk full")
+
+    with monkeypatch.context() as patch, pytest.raises(OSError):
+        patch.setattr(np, "savez", crash_mid_write)
+        store.append_chunk("tiny", "first", *_rows(2))
+
+    assert label_loader.embedded_ids("tiny", "first") == {1}
+    assert label_loader.load_embedding("tiny", "first")[0].tolist() == [1]
+
+
+def test_the_label_set_s_own_files_are_never_touched(labels_root):
+    d = label_paths.set_dir("tiny")
+    before = {p.name: p.read_bytes() for p in d.iterdir() if p.is_file()}
+
+    store.create_embedding("tiny", "first", _embedding_manifest([1, 2]))
+    store.append_chunk("tiny", "first", *_rows(1))
+    store.append_failed("tiny", "first", [{"dsld_id": 2, "failed": "empty"}])
+
+    assert {p.name: p.read_bytes() for p in d.iterdir() if p.is_file()} == before
+
+
+def test_an_embedding_of_other_passages_is_refused(labels_root):
+    store.create_embedding("tiny", "stale", _embedding_manifest([1], passages_sha="0000000000000000"))
+    store.append_chunk("tiny", "stale", *_rows(1))
+
+    with pytest.raises(ValueError, match="passages_sha"):
+        label_loader.load_embedding("tiny", "stale")

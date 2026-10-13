@@ -9,6 +9,11 @@ A set may also hold the annotations made on it, which is what makes it a gold
 or silver set. A run refers to its labels by name and `passages_sha` and never
 copies them, so a result can always be joined back to the passage it was read
 from.
+
+**An embedding of a set lives inside it**, beside the passages it was made
+from, under `embeddings/<name>/`: `create_embedding` writes its manifest once,
+`append_chunk` adds vectors, `append_failed` adds the ids that have none. The
+set's own files are never touched. A chunk is written whole or not at all.
 """
 
 from __future__ import annotations
@@ -19,6 +24,9 @@ import os
 import shutil
 import uuid
 from pathlib import Path
+from typing import Sequence
+
+import numpy as np
 
 from engine.repositories.dsld.labels import paths
 from engine.repositories.dsld.labels.schema import Label
@@ -88,3 +96,99 @@ def write_label_set(
         # A concurrent write won the race; the check above decides again.
         return write_label_set(name, rows, manifest, root)
     return passages_sha
+
+
+def create_embedding(label_set: str, name: str, manifest: dict) -> Path:
+    """Make embedding `name` in label set `label_set` and write its manifest; its directory.
+
+    The manifest is written once, here, and never changed: a resumed run reads
+    it back. A used name is refused -- a different embedding would land among
+    the old one's vectors -- and so is a set that does not exist. The folder is
+    written under a hidden temporary name and renamed into place, so a
+    manifest-less embedding never exists under a name.
+    """
+    if not name or "/" in name or name.startswith("."):
+        raise ValueError(f"{name!r} cannot name an embedding directory")
+    set_d = paths.set_dir(label_set)
+    if not (set_d / paths.PASSAGES_NAME).exists():
+        raise FileNotFoundError(
+            f"no label set {label_set!r} at {set_d}: an embedding is made of a saved set."
+        )
+    d = paths.embedding_dir(label_set, name)
+    if d.exists():
+        raise ValueError(
+            f"embedding {name!r} of label set {label_set!r} already exists at {d}. "
+            "Resume it, or pick a new name."
+        )
+
+    d.parent.mkdir(parents=True, exist_ok=True)
+    tmp = d.parent / f".{name}-{uuid.uuid4().hex}"
+    (tmp / paths.CHUNKS_DIR).mkdir(parents=True)
+    try:
+        (tmp / paths.MANIFEST_NAME).write_text(
+            json.dumps({**manifest, "name": name, "label_set": label_set}, indent=2, ensure_ascii=False)
+        )
+    except BaseException:
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise
+    try:
+        os.rename(tmp, d)
+    except OSError:
+        shutil.rmtree(tmp, ignore_errors=True)
+        if d.exists():
+            # A concurrent create won the race.
+            raise ValueError(
+                f"embedding {name!r} of label set {label_set!r} already exists at {d}."
+            ) from None
+        raise
+    return d
+
+
+def append_chunk(label_set: str, name: str, ids: Sequence[int] | np.ndarray, vectors: np.ndarray) -> None:
+    """Write `ids` (n,) and their `vectors` (n, dim) as the embedding's next chunk.
+
+    Chunks are numbered from `00000.npz`. One is written to a hidden temporary
+    file and renamed, so a crash never leaves a torn chunk for a reader to
+    find. Writing no rows writes nothing.
+    """
+    ids = np.asarray(ids, dtype=np.int64)
+    vectors = np.asarray(vectors, dtype=np.float32)
+    if vectors.ndim != 2 or len(ids) != len(vectors):
+        raise ValueError(f"{len(ids)} ids for vectors of shape {vectors.shape}")
+    if not len(ids):
+        return
+
+    chunks = paths.embedding_dir(label_set, name) / paths.CHUNKS_DIR
+    if not chunks.is_dir():
+        raise FileNotFoundError(f"no embedding {name!r} of label set {label_set!r} at {chunks.parent}")
+    numbers = [int(p.stem) for p in chunks.glob("*.npz") if p.stem.isdigit()]
+    target = chunks / f"{max(numbers, default=-1) + 1:05d}.npz"
+    tmp = chunks / f".{target.stem}-{uuid.uuid4().hex}"
+    try:
+        with tmp.open("wb") as fh:
+            np.savez(fh, dsld_id=ids, vector=vectors)
+        os.rename(tmp, target)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
+
+
+def append_failed(label_set: str, name: str, rows: list[dict]) -> None:
+    """Append `{"dsld_id": ..., "failed": ...}` rows to the embedding's `failed.jsonl`.
+
+    A line torn by an earlier crash is cut first, so it never ends up between
+    two whole ones: it costs that one id, which the next run embeds again.
+    """
+    if not rows:
+        return
+    d = paths.embedding_dir(label_set, name)
+    if not d.is_dir():
+        raise FileNotFoundError(f"no embedding {name!r} of label set {label_set!r} at {d}")
+    target = d / paths.FAILED_NAME
+    if target.exists():
+        data = target.read_bytes()
+        if data and not data.endswith(b"\n"):
+            with target.open("r+b") as fh:
+                fh.truncate(data.rfind(b"\n") + 1)
+    with target.open("a") as fh:
+        fh.write("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows))
