@@ -21,6 +21,7 @@ from dotenv import load_dotenv
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ENV_PATH = REPO_ROOT / ".env"
 QWEN_CONFIG_PATH = REPO_ROOT / "configs" / "qwen.toml"
+EMBED_CONFIG_PATH = REPO_ROOT / "configs" / "embed.toml"
 ENGINE_CONFIG_PATH = REPO_ROOT / "configs" / "engine.toml"
 
 # override=False: an explicitly exported shell var beats the file, which is

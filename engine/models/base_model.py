@@ -8,7 +8,7 @@ does not know what workflow is running it -- there is no "passage" and no
 nothing above it.
 
 **The shapes live here, not in a separate `schema.py`.** `Prompt`,
-`Generation`, `Usage` and `Progress` are the model boundary, and the boundary
+`Generation`, `Embedding`, `Usage` and `Progress` are the model boundary, and the boundary
 and the thing that defines it drift apart the moment they are edited in
 different files for different reasons. Every model imports them from here.
 
@@ -24,6 +24,8 @@ from abc import ABC, abstractmethod
 from concurrent.futures import Future
 from dataclasses import dataclass, field
 from typing import Callable, Sequence
+
+import numpy as np
 
 
 @dataclass(frozen=True)
@@ -115,6 +117,21 @@ class Generation:
 
 
 @dataclass(frozen=True)
+class Embedding:
+    """The vectors for one request's texts, with what they cost.
+
+    Row `i` is text `i`'s vector: float32, shape `(n, dim)`, each row L2-
+    normalised, so cosine similarity is a dot product. `usage.prompt_tokens`
+    is the tokens embedded; `completion_tokens` is 0, as nothing is generated.
+    `Usage` is reused so a token means the same thing for both kinds of model.
+    """
+
+    vectors: np.ndarray
+    latency_ms: int
+    usage: Usage
+
+
+@dataclass(frozen=True)
 class Check:
     """One rule an answer must follow, and what to tell the model when it does not.
 
@@ -191,6 +208,55 @@ class BaseModel(ABC):
         future: Future[Generation] = Future()
         try:
             future.set_result(self.generate(prompt))
+        except Exception as exc:
+            future.set_exception(exc)
+        return future
+
+    def close(self) -> None:
+        """Release resources. Idempotent."""
+
+    def __enter__(self):
+        self.ready()
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self.close()
+
+
+class BaseEmbedModel(ABC):
+    """The interface every embedding model implements.
+
+    A separate class beside `BaseModel`, not a subclass: an embedding model
+    has no prompt and no generation, only texts in and vectors out. The verbs
+    mirror `BaseModel`'s, with the same defaults: one request at a time, and
+    every text accepted.
+
+    **The instruction is the caller's wording; the template is the model's.**
+    How an instruction is combined with a text is specific to each embedding
+    model, as ChatML is to Qwen, so the model applies it. `instruction=None`
+    embeds the raw text.
+    """
+
+    def ready(self) -> None:
+        """Load and verify. Idempotent; safe to call before every batch."""
+
+    @abstractmethod
+    def embed(self, texts: Sequence[str], instruction: str | None = None) -> Embedding:
+        """One vector per text, rows in input order."""
+
+    def fits(self, text: str, instruction: str | None = None) -> bool:
+        """Can this text be embedded at all? The default has no limit to check."""
+        return True
+
+    def submit(self, texts: Sequence[str], instruction: str | None = None) -> Future[Embedding]:
+        """Queue one request; the future resolves to its embedding.
+
+        The default embeds before returning. A concurrent model overrides
+        this and bounds how many run at once itself.
+        """
+        future: Future[Embedding] = Future()
+        try:
+            future.set_result(self.embed(texts, instruction))
         except Exception as exc:
             future.set_exception(exc)
         return future

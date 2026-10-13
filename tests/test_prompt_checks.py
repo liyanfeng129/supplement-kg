@@ -1,7 +1,8 @@
 """The prompt loader, and the purpose/risk checks against real answer shapes.
 
 What is pinned: `load()` returns the prompt with its own checks, stop
-sequences and budget; each check fails on exactly the rule it names and passes
+sequences and budget; `load_instruction()` returns an embedding instruction's
+one sentence; each check fails on exactly the rule it names and passes
 everything else, including the empty answer a label with no claims produces.
 """
 
@@ -44,6 +45,20 @@ def test_load_returns_the_prompt_with_everything_its_format_decides():
 def test_load_an_unknown_prompt_names_the_known_ones():
     with pytest.raises(KeyError, match="purpose_risk"):
         loader.load("no_such_prompt")
+
+
+def test_load_instruction_returns_the_sentence_without_its_newline():
+    assert loader.load_instruction("label_clustering") == (
+        "Identify the main ingredients of the dietary supplement described by this label, "
+        "the health purposes it claims, and the specific safety risks it warns about, "
+        "such as side effects, drug interactions, medical conditions and groups who "
+        "should not take it"
+    )
+
+
+def test_load_instruction_an_unknown_id_names_the_known_instructions():
+    with pytest.raises(KeyError, match="label_clustering"):
+        loader.load_instruction("purpose_risk")
 
 
 # --- checks -----------------------------------------------------------------

@@ -1,0 +1,1 @@
+Identify the main ingredients of the dietary supplement described by this label, the health purposes it claims, and the specific safety risks it warns about, such as side effects, drug interactions, medical conditions and groups who should not take it

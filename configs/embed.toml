@@ -1,0 +1,55 @@
+# Embedding model hyperparameters: experiment inputs, so committed and diffable.
+#
+# Read by engine/models/embed_model.py ([model]) and
+# engine/controllers/embed_controller.py ([controller]). An explicit constructor
+# argument beats anything here; a missing or malformed file falls back to the
+# hardcoded defaults in the code rather than raising.
+#
+# See docs/specs/0007-embed-model-controller.md and
+# docs/specs/0008-label-embedding-service.md. The server, KV and batch values
+# are set by benchmarks/embed_throughput.py, with the numbers recorded beside
+# them.
+
+[model]
+# Qwen/Qwen3-Embedding-0.6B-GGUF, f16 (~1.2 GB, 1024 dimensions, 32k context).
+# Not yet on this machine; fetch it with:
+#   hf download Qwen/Qwen3-Embedding-0.6B-GGUF Qwen3-Embedding-0.6B-f16.gguf \
+#     --local-dir /var/tmp/ge74wan/hf_cache/Qwen3-Embedding-0.6B-GGUF
+model_path = "/var/tmp/ge74wan/hf_cache/Qwen3-Embedding-0.6B-GGUF/Qwen3-Embedding-0.6B-f16.gguf"
+# The same llama-server as Qwen.
+server_path = "/var/tmp/ge74wan/llama.cpp/build/bin/llama-server"
+# Servers on the card, each loading the weights and running one slot: the
+# model's only unit of parallelism (spec 0008). Measured before the model ran
+# servers itself (2,000 v4 passages, runs embed-20261012*, the benchmark's since
+# removed --shard: one copy and one single-slot server per shard): 1 server 10,675 tok/s;
+# 2 -> 1.47x; 3 -> 1.68x (~18,200 tok/s); 4 -> 1.70x, at 4.7 / 9.4 / 14.0 /
+# 18.7 GB peak. A fourth adds nothing but memory.
+# There is no slot setting: one slot per server was the fastest of every count
+# measured (acceptance 13 of spec 0007, clean GPU, runs
+# embed-20261012T150445Z / ...T152447Z) -- np 1: 10,640 tok/s; 2: 9,322;
+# 4: 8,711; 8: 8,408; 16: 7,965; 32: 7,788; 64: 7,482. Packing many texts into
+# one pass does not pay here.
+n_servers = 3
+# Each server's one slot's KV. Speed does not depend on it (np 2: 9,322 tok/s
+# at 32768, 9,312 at 8192; np 1: 10,675 at 4096); it only costs memory (896 MiB
+# at 8192). Must stay >= ubatch.
+n_ctx = 4096
+# One forward pass, and so the most tokens one text may have. The longest
+# templated full214780-r4 passage is 3,352 tokens (dsld 239677; next 2,146), with
+# the label_clustering instruction. Sets the compute buffer: 4,900 MiB at 8192.
+# 4096 runs at the same speed (10,675 vs 10,674 tok/s) for 2.9 GB less.
+ubatch = 4096
+# Per server. Measured peak at np 1, n_ctx 4096, ubatch 4096: 4,712 MiB
+# (weights 1,136, KV 448, compute buffer, CUDA context). Peak plus ~10%
+# headroom. ready() needs n_servers x this free before it starts any.
+min_vram_mib = 5200
+
+[controller]
+# Texts per request. Measured: batch 16, 32 and 64 are within 1% of each other
+# at every slot count; 16 was fastest by a hair.
+batch = 16
+# Requests submitted but not yet settled. More texts must be queued than the
+# model runs at once, so a freed server always finds a request waiting:
+# 2 x 16 = 32 texts > [model].n_servers = 3.
+in_flight = 2
+max_attempts = 3
