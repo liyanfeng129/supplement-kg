@@ -1,0 +1,12 @@
+{
+  "prompt": "purpose_risk",
+  "label_set": "gold1000-r4",
+  "passages_sha": "0801f354cfbd8472",
+  "selection": {
+    "ids": null,
+    "limit": null,
+    "order": null,
+    "seed": null
+  },
+  "config_hash": "dafc5e036ca02b9d"
+}
