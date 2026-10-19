@@ -31,6 +31,25 @@ say, and an attribution would come from a model's general knowledge rather than 
 label, so they stay on the product. The basis travels with every attribution, so a
 reader can always tell the two apart.
 
+## In short
+
+Every claim already belongs to its product: the purpose/risk row is keyed by
+`dsld_id`. This spec only adds a link to an ingredient where the label supports one.
+Per claim, three questions in order:
+
+1. **Is there only one ingredient on the label?** Then the claim, purpose or risk, goes
+   to it. "Only one" means one, not "the main one": after dropping Nutrition Facts
+   rows (Calories, Fat, Sugar, …) and replacing blends by what they contain, exactly
+   one active is left, or several that share one group (two forms of Vitamin C). A
+   botanical with Vitamin C and Zinc has no single ingredient, however obvious the
+   botanical's role.
+2. **Otherwise, does the claim name an active?** Anywhere in its text, as whole words,
+   by the active's name, group or an alternate name, after the same normalisation the
+   passage went through ("supports healthy vitamin b 12 levels" names `Vitamin B-12`).
+   The claim goes to every active it names, possibly several.
+3. **Otherwise** the claim gets no ingredient and stays on the product only
+   (`product_level`): 60–67% of claims in the measurement above.
+
 ## Flow
 
 ```
@@ -167,12 +186,27 @@ No other function. The active-ingredient walk stays inline in `attribute`
 
 ## Open questions
 
-- **Q-A: Generic risks on single-ingredient labels.** "consult your physician if
-  pregnant" on a melatonin-only label becomes a melatonin risk edge. The label does
-  say it about the only ingredient, so this spec attributes it. The alternative is
-  `single_ingredient` for purpose only and `product_level` for risk.
-- **Q-B: Sodium.** Usually a Nutrition Facts line, sometimes the product (sodium
-  bicarbonate, electrolyte mixes). Left **out** of `nutrition_facts.txt`, so a label
+- **Q-A: Generic risks on single-ingredient labels. Decided 2026-10-16: attribute
+  them.** A risk that names a condition of the user (pregnancy, nursing, age, a
+  medication, a named disease) is a real risk: "consult your physician if pregnant"
+  on a melatonin-only label is a melatonin risk. A sentence with no such condition
+  ("consult your healthcare practitioner prior to use") is boilerplate, and so is one
+  whose only condition is about the product's effect ("if symptoms persist or
+  worsen", "if adverse reactions occur"). The renderer v4 checklist already draws
+  this line (the bare "consult…" phrases are on it, no pregnancy or nursing line is),
+  so boilerplate never reaches a claim and `single_ingredient` applies to risks as to
+  purposes. A catch-all list ("if pregnant, nursing, taking any medication or have a
+  medical condition") is one risk; separating its generic clauses belongs to mapping
+  risks to relations, out of scope here. Pregnancy warnings sit on thousands of
+  labels, so whatever ranks risk edges later weighs them by how many labels repeat
+  them.
+- **Q-B: Sodium.** Usually a Nutrition Facts line, sometimes the product (electrolyte
+  mixes). DSLD also groups forms under `Sodium` whose point is another nutrient
+  (`Sodium Molybdate`, `Sodium Selenate`, `Sodium Ascorbate`); nested under their
+  parent they are ignored anyway (rule 3), but a top-level one is a real active.
+  Sodium bicarbonate is mostly its own group, `Sodium Bicarbonate` (sample of dump
+  dirs `000000`–`009999`), so this list does not touch it. Left **out** of
+  `nutrition_facts.txt`, so a label
   listing Sodium plus one botanical is not single-ingredient: it costs coverage, not
   correctness. Calcium is left out for the same reason, more strongly.
 - **Q-C: Saving.** Like spec 0006, this spec returns values and saves nothing. When
