@@ -19,6 +19,7 @@ dev = [
     "pytest",
     "jupyter",
     "ipykernel",
+    "matplotlib",
 ]
 
 [build-system]

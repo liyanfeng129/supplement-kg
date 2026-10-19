@@ -1,0 +1,167 @@
+% Next-steps plan for the supervisor, 2026-10-17.
+% Build from this directory:  tectonic 2026-10-17-next-steps.tex
+% Figures are the PNGs in graphs/ at the repo root (exported from notebook 14).
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{../../graphs/}}
+
+\definecolor{ink2}{HTML}{52514E}
+\captionsetup{font={small,color=ink2},labelfont={small,color=ink2},justification=raggedright,
+              singlelinecheck=false,skip=3pt}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.4em}
+\setlist{itemsep=0.25em,topsep=0.3em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlength{\intextsep}{8pt}
+\renewcommand{\arraystretch}{1.25}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+\hypersetup{pdftitle={Supplement KG next steps},pdfauthor={Yanfeng Li}}
+
+% One full-width figure from graphs/.
+\newcommand{\fig}[2]{%
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{#1}
+    \caption{#2}
+  \end{figure}}
+
+\newcommand{\rel}[1]{\emph{#1}}
+
+\begin{document}
+
+{\LARGE\bfseries Supplement knowledge graph: observations and next steps}\\[0.3em]
+{\small\color{ink2} Yanfeng Li \textperiodcentered{} 17 October 2026}
+
+\section*{Summary}
+\begin{itemize}
+  \item iDISK 2.0's ingredient relations (\rel{is effective for}, \rel{has adverse reaction},
+        \rel{interacts with}) all come from \textbf{MSKCC}, and cover a few hundred ingredients.
+  \item DSLD and NHP contribute no relations. iDISK takes only names and composition from DSLD, and
+        keeps NHP's Purpose and Risk as free text on the product.
+  \item The extracted DSLD claims, NHP's Purpose/Risk texts and the \textbf{EU health-claims register}
+        could all add ingredient relations. Doing so raises several open problems (Section~4).
+\end{itemize}
+
+\section{Observation: iDISK's relations come only from MSKCC}
+
+\fig{05_idisk_relation_gap.png}{Effect edges in the iDISK 2.0 release, by source.}
+
+\begin{table}[H]
+\small
+\begin{tabularx}{\linewidth}{@{}l r l L@{}}
+\toprule
+Relation (iDISK 2.0 release) & Edges & Source & Ingredients covered \\
+\midrule
+\rel{is effective for} (ingredient $\rightarrow$ disease)    & 827   & MSKCC only & 266 \\
+\rel{has adverse reaction} (ingredient $\rightarrow$ symptom) & 1,342 & MSKCC only & 219 \\
+\rel{interacts with} (ingredient $\rightarrow$ drug)        & 535   & MSKCC only & 179 \\
+\rel{has ingredient} (product $\rightarrow$ ingredient)      & 317,062 & NHP (99.7\%), DSLD & -- \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Only 285 of the 7,876 ingredients in iDISK have an effect edge, all from MSKCC's 279 herb
+monographs. In iDISK 1.0, NMCD supplied most of these relations (e.g.\ 4,307 \rel{is effective for}
+edges), but the 2.0 release files contain only the MSKCC edges.
+
+\section{Observation: DSLD and NHP claims are not used as relations}
+
+\begin{table}[H]
+\small
+\begin{tabularx}{\linewidth}{@{}l L L@{}}
+\toprule
+& \textbf{What iDISK 2.0 takes} & \textbf{What is left unused} \\
+\midrule
+DSLD (US labels) &
+  Product name, company, ingredient names, \rel{has ingredient} links (but only 520 of the 92,442
+  DSLD-only products have any). &
+  All label statements. Purpose/Risk are filled only for the 208 products that are also in NHP
+  (LNHPD). \\
+NHP (Canadian licences) &
+  Product name, ingredients, \rel{has ingredient}, and Purpose (65,097 products) and Risk (63,623)
+  as \textbf{free text on the product}. &
+  Which ingredient a Purpose or Risk is about. They never become relations, even for the 32,968
+  products with a Purpose and exactly one ingredient. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+iDISK builds its data from fields each source already structures (names, ingredient lists), and does
+not extract anything from free text. Our extraction reads the label text itself: 466,630 purpose and
+355,134 risk items from all 214,780 DSLD labels. So the claims now exist, but as text attached to a
+product.
+
+\section{Observation: the EU health-claims register}
+
+The EU Register of nutrition and health claims lists, for each substance, the claims EFSA assessed and
+its verdict: 269 \textbf{authorised} claims over 94 substances, and 2,067 \textbf{non-authorised}
+claims over 1,177 substances.
+
+\begin{table}[H]
+\small
+\begin{tabularx}{\linewidth}{@{}l r L@{}}
+\toprule
+EU claim type & Authorised & Example \\
+\midrule
+Art.\ 13: general function & 242 & ``Selenium contributes to the normal function of the immune system'' \\
+Art.\ 14(1)(a): disease-risk reduction & 15 & ``Plant sterols have been shown to lower blood
+  cholesterol. High cholesterol is a risk factor in the development of coronary heart disease.'' \\
+Art.\ 14(1)(b): children's development & 12 & Function claims restricted to children. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Compared with label claims, an EU claim already names its \textbf{substance}, not a product, and
+carries a \textbf{regulator's verdict}. Its wording is close to label wording: authorised claims read
+like NHP Purpose, and rejected ones read like DSLD label claims.
+
+\section{Open problems}
+
+\begin{enumerate}
+  \item \textbf{Claims belong to products, not ingredients.} A label claim is made about the whole
+        product. For single-ingredient products the link is clear. For multi-ingredient products it is
+        often unclear which ingredient, if any, a claim is about. The same holds for NHP.
+  \item \textbf{Most claims are not about diseases.} iDISK's effect relations point to diseases and
+        symptoms, but by a rough keyword estimate about 90\% of DSLD purposes are about normal body
+        functions (``supports healthy digestion''), as are 242 of the 269 authorised EU claims. iDISK
+        has no concept for these.
+  \item \textbf{Positive and negative effects.} Label purposes and EU claims describe benefits, and
+        label risks describe harms. Both need to be represented, possibly as one general effect
+        relation with a direction, but this is not settled.
+  \item \textbf{Claims are not evidence of effect.} A label claim is what a manufacturer states, and a
+        non-authorised EU claim is one EFSA rejected. The graph needs to record where a relation comes
+        from and how strong its support is, so these are not read as established facts.
+  \item \textbf{Matching names across sources.} Label ingredients, NHP ingredients and EU substances
+        have to be matched to the same iDISK ingredient. iDISK 2.0 merges entities on ``same CUI or
+        same name'', which over-merges, whereas iDISK 1.0 used a stricter process.
+  \item \textbf{Data quality.} The EU register has leftover HTML, encoding errors, cells holding
+        several claims, and one claim repeated over several rows.
+\end{enumerate}
+
+\section{Next steps}
+
+\begin{enumerate}
+  \item \textbf{Evaluate the extraction} (see the progress report), so later steps start from
+        measured quality.
+  \item \textbf{Work out what each claim is about}: first the entities named in the claims (diseases,
+        symptoms, body functions), then which ingredient a claim belongs to.
+  \item \textbf{Decide how claims enter iDISK}, once the entities are known: which relation types and
+        concept types are needed, and how source and verdict are recorded.
+  \item \textbf{Bring in the EU register} the same way, as a regulator-checked reference for the
+        ingredients it covers.
+\end{enumerate}
+
+\end{document}

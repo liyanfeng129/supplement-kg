@@ -1,0 +1,153 @@
+% Progress report for the supervisor, 2026-10-17.
+% Build from this directory:  tectonic 2026-10-17-progress-report.tex
+% Figures are the PNGs in graphs/ at the repo root (exported from notebook 14).
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{../../graphs/}}
+
+\definecolor{ink2}{HTML}{52514E}
+\captionsetup{font={small,color=ink2},labelfont={small,color=ink2},justification=raggedright,singlelinecheck=false}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.4em}
+\setlist{itemsep=0.25em,topsep=0.3em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlength{\intextsep}{8pt}
+\captionsetup{skip=3pt}
+\renewcommand{\arraystretch}{1.25}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+\definecolor{codebg}{HTML}{F6F6F4}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,keepspaces=true,
+        backgroundcolor=\color{codebg},frame=single,rulecolor=\color{ink2!40},
+        xleftmargin=4pt,xrightmargin=4pt,aboveskip=6pt,belowskip=6pt}
+
+\hypersetup{pdftitle={Supplement KG progress report},pdfauthor={Yanfeng Li}}
+
+% One figure from graphs/; the optional first argument is its width (default: full width).
+\newcommand{\fig}[3][\linewidth]{%
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=#1]{#2}
+    \caption{#3}
+  \end{figure}}
+
+\begin{document}
+
+{\LARGE\bfseries Supplement knowledge graph: progress report}\\[0.3em]
+{\small\color{ink2} Yanfeng Li \textperiodcentered{} 17 October 2026}
+
+\section*{Summary}
+\begin{itemize}
+  \item Purpose and risk claims have been extracted from \textbf{all 214,780 DSLD labels}, with no
+        failures: 466,630 purpose items and 355,134 risk items, about 98\% copied verbatim from the label.
+  \item The main run \textbf{finished on 15 October} after \textbf{42.6 hours} (13 Oct 18:22 to
+        15 Oct 13:00 UTC), averaging \textbf{74 generated tokens/s} overall with 4 requests in
+        parallel (18.6 tokens/s per request). It got 214,773 labels right first time. The other 7 had
+        outputs too long for the output-token limit, so on 16 October they were rerun with a longer
+        limit, and all 7 came back ok.
+  \item Next, the extraction will be evaluated for faithfulness and correctness, with two LLM judges
+        and a human reviewer.
+\end{itemize}
+
+\section{Extraction results}
+
+A local LLM (Qwen, run on our own GPU) read each DSLD label and extracted two kinds of statements:
+\textbf{purposes} (a claimed effect or use) and \textbf{risks} (warnings, contraindications,
+interactions, side effects). Each item is meant to be a verbatim piece of the label, so that it can be
+checked against the source and used on its own by a later NER step. The full prompt is in
+Appendix~\ref{app:prompt}.
+
+\fig{02_extraction_groups.png}{Labels grouped by what was extracted. The labels with neither are
+mostly very short (median 26 words).\label{fig:groups}}
+
+\fig{03_faithfulness.png}{Faithfulness to the label, checked automatically on every item.\label{fig:faith}}
+
+The label text is split into \textbf{segments}, one per statement or ingredient note. Each item falls
+into one of four types:
+\begin{itemize}
+  \item \textbf{Verbatim:} the item appears in the label exactly, character for character.
+  \item \textbf{Stitched within a segment:} not verbatim, but every word comes from the same
+        segment. The model built it from words of one label sentence, leaving out some words in between.
+  \item \textbf{Spread over segments:} every word is in the label, but taken from more than one segment.
+  \item \textbf{Invented words:} the item contains at least one word that is not in the label.
+\end{itemize}
+
+Stitched items usually come from the model taking one benefit out of a list, as the prompt asks it to
+put one claim per line:
+
+\begin{table}[H]
+\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.33\linewidth} L@{}}
+\toprule
+Extracted item & Label segment it came from (left-out words in bold) \\
+\midrule
+promotes heart and circulatory health & promotes \textbf{sugar metabolism} heart and circulatory health \\
+support vision & \ldots{} reduce oxidative stress and support \textbf{healthy cell development
+  cardiovascular function and} vision \ldots \\
+increase energy & \ldots{} may help you increase \textbf{the body s metabolic rate and} energy \ldots \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+These keep the label's meaning. Occasionally stitching changes it: one item reads ``feel the euphoria
+turns into a feeling of intensity aggression and rage'', joining words from far apart in a long
+marketing paragraph. So a stitched item is not necessarily wrong, but it cannot be verified
+automatically. Whether its meaning was kept is checked in the evaluation (Section~\ref{sec:eval}).
+
+Being verbatim shows that the model almost never invents text. It does not show that each item is a
+correct claim in the right bucket. That is what the evaluation measures.
+
+\section{Evaluation plan}\label{sec:eval}
+
+The evaluation checks two things: whether each item is \textbf{faithful} to the label, and whether it
+is in the \textbf{right bucket} (a real purpose, a real risk, or neither).
+
+\begin{itemize}
+  \item \textbf{Precision} (per item): from a sample stratified by the four item types above
+        (verbatim, stitched, spread over segments, invented words), 100 items per type for purposes and
+        for risks, reweighted afterwards (Figure~\ref{fig:itemsample}). A plain random sample would be
+        almost all verbatim, so the rarer types could not be measured. Errors are split into \emph{not a claim}, \emph{wrong
+        bucket} and \emph{unfaithful}.
+  \item \textbf{False negative and false positive rates} (per label): whether each label's purposes and
+        risks were missed, or extracted when the label has none. From a sample stratified by the four
+        groups in Figure~\ref{fig:groups}, 150 labels each, reweighted to the catalog afterwards. A label's group
+        decides which errors it can show (Figure~\ref{fig:labelsample}).
+  \item Every rate is reported with a 95\% confidence interval.
+\end{itemize}
+
+\fig{08_eval_item_sampling.png}{Stratified item sample. Equal samples per type make sure the rare
+types, which most need checking, are well covered.\label{fig:itemsample}}
+
+\fig{06_eval_sampling.png}{Stratified label sample. Equal samples per group make sure the small
+groups, where missed claims can show up, are well covered.\label{fig:labelsample}}
+
+\fig{07_eval_judging_flow.png}{Judging workflow.}
+
+Two LLM judges label each item independently. I decide every case where they disagree, and I audit a
+random 10\% of the cases where they agree, labelling first without seeing their verdicts. The audit
+tells how far their agreement can be trusted. A judge that says a claim was missed has to quote the
+label, and the quote is checked automatically. A 50-item pilot fixes the rubric first. Judge
+reliability is reported as Cohen's $\kappa$.
+
+\appendix
+\section{Extraction prompt}\label{app:prompt}
+
+The system prompt used for the full run, verbatim. The label text is given to the model as the
+user message, and the model answers in the line format at the end.
+
+\lstinputlisting[basicstyle=\ttfamily\fontsize{7.5}{9}\selectfont]{../../engine/repositories/prompts/purpose_risk/prompt.md}
+
+\end{document}

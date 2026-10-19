@@ -48,3 +48,7 @@ datasets/*
 # Claude Code hook state (which engine/ diff was last reviewed)
 .claude/state/
 logs/
+
+# Converted third-party papers (reading copies) and LaTeX build outputs.
+docs/papers_md/
+docs/reports/*.pdf
