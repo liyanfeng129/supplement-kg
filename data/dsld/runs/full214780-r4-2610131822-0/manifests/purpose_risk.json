@@ -1,0 +1,12 @@
+{
+  "prompt": "purpose_risk",
+  "label_set": "full214780-r4",
+  "passages_sha": "a599acc842e3fa3c",
+  "selection": {
+    "ids": null,
+    "limit": null,
+    "order": "random",
+    "seed": 20261013
+  },
+  "config_hash": "dafc5e036ca02b9d"
+}
