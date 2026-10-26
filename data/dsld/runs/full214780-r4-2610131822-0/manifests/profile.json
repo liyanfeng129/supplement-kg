@@ -1,0 +1,72 @@
+{
+  "run": "full214780-r4-2610131822-0",
+  "config_hash": "dafc5e036ca02b9d",
+  "passages_sha": "a599acc842e3fa3c",
+  "classifier_version": 1,
+  "failed_ids": [],
+  "claim_counts": {
+    "both": {
+      "purpose": {
+        "verbatim": 385655,
+        "stitched": 8960,
+        "spread": 417,
+        "invented": 577
+      },
+      "risk": {
+        "verbatim": 267691,
+        "stitched": 828,
+        "spread": 131,
+        "invented": 305
+      }
+    },
+    "purpose_only": {
+      "purpose": {
+        "verbatim": 69388,
+        "stitched": 1448,
+        "spread": 91,
+        "invented": 94
+      },
+      "risk": {
+        "verbatim": 0,
+        "stitched": 0,
+        "spread": 0,
+        "invented": 0
+      }
+    },
+    "risk_only": {
+      "purpose": {
+        "verbatim": 0,
+        "stitched": 0,
+        "spread": 0,
+        "invented": 0
+      },
+      "risk": {
+        "verbatim": 85869,
+        "stitched": 230,
+        "spread": 53,
+        "invented": 27
+      }
+    },
+    "neither": {
+      "purpose": {
+        "verbatim": 0,
+        "stitched": 0,
+        "spread": 0,
+        "invented": 0
+      },
+      "risk": {
+        "verbatim": 0,
+        "stitched": 0,
+        "spread": 0,
+        "invented": 0
+      }
+    }
+  },
+  "label_counts": {
+    "both": 124647,
+    "purpose_only": 25418,
+    "risk_only": 46860,
+    "neither": 17855
+  },
+  "rows_sha": "6db3f40fd104fc62"
+}
