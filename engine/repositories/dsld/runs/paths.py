@@ -2,7 +2,8 @@
 
 A run is a directory under `RUNS_ROOT`, `<set name>-<YYMMDDHHMM>-<n>/`, holding
 `raw/ids.jsonl` (its ids, in run order), `raw/purpose_risk.jsonl` (its rows)
-and `manifests/purpose_risk.json`. A test redirects runs by patching
+and `manifests/purpose_risk.json`, and once profiled `raw/profile.jsonl` and
+`manifests/profile.json`. A test redirects runs by patching
 `RUNS_ROOT` here, and nowhere else: it is read at call time, never bound as a
 default argument.
 """
@@ -19,6 +20,10 @@ RUNS_ROOT = REPO_ROOT / "data" / "dsld" / "runs"
 IDS_NAME = "ids.jsonl"
 ROWS_NAME = "purpose_risk.jsonl"
 MANIFEST_NAME = "purpose_risk.json"
+
+# A finished run's profile: `raw/profile.jsonl` and `manifests/profile.json`.
+PROFILE_NAME = "profile.jsonl"
+PROFILE_MANIFEST_NAME = "profile.json"
 
 
 def run_id() -> str:

@@ -14,6 +14,11 @@ its manifest, refused for a used name or a missing set; its chunks are
 numbered, never visible half-written, and read back in the manifest's id
 order; failed ids count as embedded; the set's own files are never touched,
 and an embedding of other passages is refused.
+
+A run's profile is written once, beside the run, and read back as written;
+it is refused if either of its files exists, and on read it is refused when
+the run's rows or manifest are not the ones it was computed from, or when its
+labels were written without their manifest.
 """
 
 from __future__ import annotations
@@ -29,6 +34,7 @@ from engine.repositories.dsld.labels import store
 from engine.repositories.dsld.runs import loader as runs
 from engine.repositories.dsld.runs import paths as run_paths
 from engine.repositories.dsld.runs import store as run_store
+from engine.repositories.dsld.runs.schema import ProfiledLabel
 
 
 def _write(d, rows):
@@ -398,3 +404,85 @@ def test_an_embedding_of_other_passages_is_refused(labels_root):
 
     with pytest.raises(ValueError, match="passages_sha"):
         label_loader.load_embedding("tiny", "stale")
+
+
+# --- profiles ---------------------------------------------------------------
+
+
+_PROFILED = [
+    ProfiledLabel(1, "both", ["verbatim", "stitched"], ["invented"]),
+    ProfiledLabel(2, "neither", [], []),
+]
+
+
+@pytest.fixture
+def profiled_run(tmp_path):
+    """A run with two rows and a manifest, not yet profiled."""
+    d = tmp_path / "tiny-2610220000-0"
+    _write(d, [{"dsld_id": 1, "status": "ok"}, {"dsld_id": 2, "status": "ok"}])
+    run_paths.manifest_path(d).parent.mkdir(parents=True)
+    run_paths.manifest_path(d).write_text(json.dumps({"config_hash": "abc", "passages_sha": "def"}))
+    return d
+
+
+def _write_profile(d):
+    run_store.write_profile(
+        d, _PROFILED, {"run": d.name, "config_hash": "abc", "passages_sha": "def", "classifier_version": 1}
+    )
+
+
+def test_a_profile_reads_back_as_written_with_the_rows_sha(profiled_run):
+    _write_profile(profiled_run)
+
+    manifest, labels = runs.read_profile(profiled_run)
+    assert labels == _PROFILED
+    assert manifest["classifier_version"] == 1
+    assert len(manifest["rows_sha"]) == 16
+
+
+def test_a_second_profile_is_refused(profiled_run):
+    _write_profile(profiled_run)
+
+    with pytest.raises(FileExistsError):
+        _write_profile(profiled_run)
+
+
+def test_profile_labels_without_their_manifest_are_refused_on_write_and_read(profiled_run):
+    _write_profile(profiled_run)
+    run_paths.manifest_path(profiled_run, run_paths.PROFILE_MANIFEST_NAME).unlink()
+
+    with pytest.raises(ValueError, match="crashed write"):
+        runs.read_profile(profiled_run)
+    with pytest.raises(FileExistsError):
+        _write_profile(profiled_run)
+
+
+def test_a_run_without_a_profile_raises_on_read(profiled_run):
+    with pytest.raises(FileNotFoundError):
+        runs.read_profile(profiled_run)
+
+
+def test_rows_changed_in_place_make_the_profile_stale(profiled_run):
+    _write_profile(profiled_run)
+    _write(profiled_run, [{"dsld_id": 1, "status": "ok"}, {"dsld_id": 2, "status": "error"}])
+
+    with pytest.raises(ValueError, match="rows_sha"):
+        runs.read_profile(profiled_run)
+
+
+@pytest.mark.parametrize("field", ["config_hash", "passages_sha"])
+def test_another_run_manifest_makes_the_profile_stale(profiled_run, field):
+    _write_profile(profiled_run)
+    m = json.loads(run_paths.manifest_path(profiled_run).read_text())
+    m[field] = "other"
+    run_paths.manifest_path(profiled_run).write_text(json.dumps(m))
+
+    with pytest.raises(ValueError, match=field):
+        runs.read_profile(profiled_run)
+
+
+def test_a_profile_write_leaves_no_temporary_files(profiled_run):
+    _write_profile(profiled_run)
+
+    hidden = [p.name for p in profiled_run.rglob(".*")]
+    assert hidden == []

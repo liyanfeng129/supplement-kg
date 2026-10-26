@@ -1,4 +1,4 @@
-"""The entry to save runs: `new_run`, `repair` and `Sink`, as JSONL under `paths.RUNS_ROOT`.
+"""The entry to save runs: `new_run`, `repair`, `Sink` and `write_profile`, as JSONL under `paths.RUNS_ROOT`.
 
 **A run is created whole, then only appended to.** `new_run` writes
 a run directory with its ids, in run order, and its manifest together, so a
@@ -13,19 +13,26 @@ is no status field to update: JSONL cannot change a line in place, and a
 status beside a result is two facts that a crash can leave disagreeing. A
 torn trailing line -- a crash mid-write -- costs that one label, which resume
 re-runs; the `Sink` repairs it before appending.
+
+**A profile is written once, beside the finished run.** `write_profile` saves
+each label's group and claim types and the profile's manifest, never over an
+existing one: re-profiling means deleting both files by hand.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
 import time
 import uuid
+from dataclasses import asdict
 from pathlib import Path
 
 from engine import config
 from engine.repositories.dsld.runs import paths
+from engine.repositories.dsld.runs.schema import ProfiledLabel
 
 # Used when `configs/engine.toml` has no `[store]` value.
 _FALLBACK_FLUSH_EVERY = 64
@@ -190,3 +197,43 @@ def new_run(name: str, ids: list[int], manifest: dict, root: str | Path | None =
         shutil.rmtree(tmp, ignore_errors=True)
         raise
     return d
+
+
+def write_profile(d: str | Path, labels: list[ProfiledLabel], manifest: dict) -> None:
+    """Save a run's profile: `raw/profile.jsonl`, then `manifests/profile.json`, all or nothing.
+
+    Refuses if either file exists: a profile is never overwritten, and one
+    file without the other is a crashed write to clean up by hand. The
+    manifest gets `rows_sha`, the first 16 hex digits of the sha256 of the
+    run's rows file, so a read can tell rows replaced in place.
+
+    Each file is written to a hidden temporary name in its own folder, fsynced
+    and renamed into place, the labels first and the manifest last: the
+    manifest is the commit marker, so a profile exists only if it does.
+    """
+    labels_p = paths.rows_path(d, paths.PROFILE_NAME)
+    manifest_p = paths.manifest_path(d, paths.PROFILE_MANIFEST_NAME)
+    for p in (labels_p, manifest_p):
+        if p.exists():
+            raise FileExistsError(
+                f"{p} exists: a profile is never overwritten. Delete both profile files "
+                f"(and the run's eva/, drawn from them) by hand to re-profile."
+            )
+    rows_sha = hashlib.sha256(paths.rows_path(d).read_bytes()).hexdigest()[:16]
+    manifest = {**manifest, "rows_sha": rows_sha}
+
+    # Labels first, manifest last, each through a temporary name in its own folder.
+    for target, data in (
+        (labels_p, "".join(json.dumps(asdict(l), ensure_ascii=False) + "\n" for l in labels)),
+        (manifest_p, json.dumps(manifest, indent=2, ensure_ascii=False)),
+    ):
+        target.parent.mkdir(parents=True, exist_ok=True)
+        tmp = target.parent / f".{target.name}-{uuid.uuid4().hex}"
+        try:
+            with tmp.open("w") as fh:
+                fh.write(data)
+                fh.flush()
+                os.fsync(fh.fileno())
+            os.replace(tmp, target)
+        finally:
+            tmp.unlink(missing_ok=True)
