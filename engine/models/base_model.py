@@ -1,7 +1,8 @@
 """What every model is, and the shapes that cross its boundary.
 
 A model owns **its own lifecycle and its own hosting strategy**: it loads
-itself, checks its own memory, enforces one instance, and closes itself. It
+itself, checks its own memory, enforces one instance when it holds something
+exclusive (a GPU), and closes itself. It
 does not know what workflow is running it -- there is no "passage" and no
 "purpose/risk" at this layer, only a prompt in and a generation out. Moving
 `QwenModel` from in-process llama.cpp to `llama-server` therefore changes
@@ -108,12 +109,17 @@ class Generation:
     `stop_reason` is carried because a generation cut off at `max_tokens` and
     one that finished are indistinguishable from the text alone, and the
     difference is the single most useful signal when output looks truncated.
+
+    `model` says what answered, for a model that cannot pin its own runtime: a
+    CLI model records `<model id>@<cli>-<version>` here, because the CLI updates
+    itself. Empty for a model whose settings already say what ran.
     """
 
     text: str
     latency_ms: int
     usage: Usage = field(default_factory=Usage)
     stop_reason: str = ""
+    model: str = ""
 
 
 @dataclass(frozen=True)

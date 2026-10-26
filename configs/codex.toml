@@ -1,0 +1,32 @@
+# Codex settings: experiment inputs, so committed and diffable.
+#
+# Read by engine/models/codex_model.py ([model]) and
+# engine/controllers/codex_controller.py ([controller]). An explicit constructor
+# argument beats anything here; a missing or malformed file falls back to the
+# hardcoded defaults in codex_model.py rather than raising. See
+# docs/specs/0012-claude-codex-model-controller.md.
+
+[model]
+# Codex on the user's ChatGPT login, never an API key. The binary inside the
+# active VSCode extension: it moves when VSCode updates the extension, and then
+# ready() fails naming this line. Update it by hand; nothing discovers it.
+binary = "~/.vscode-server/extensions/openai.chatgpt-26.1021.22027-linux-x64/bin/linux-x86_64/codex"
+# The pinned model. gpt-6-terra is rejected on a ChatGPT account.
+model = "gpt-6-luna"
+effort = "medium"
+# CLI calls running at once.
+n_parallel = 4
+# Per call. A starting value, not measured on long labels.
+timeout_s = 300
+# A rate limit is waited out: rate_limit_wait_s, doubling, rate_limit_waits
+# times; still limited after that stops the run (a quota, not a hiccup).
+rate_limit_wait_s = 60
+rate_limit_waits = 3
+# Failed calls in a row, of any kind, that stop the run: 2 x n_parallel.
+max_consecutive_failures = 8
+
+[controller]
+max_attempts = 3
+# Prompts submitted but not yet settled. 0001's rule is ~2x n_parallel; 4 until
+# the rate limits are known.
+in_flight = 4

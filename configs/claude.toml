@@ -1,0 +1,31 @@
+# Claude settings: experiment inputs, so committed and diffable.
+#
+# Read by engine/models/claude_model.py ([model]) and
+# engine/controllers/claude_controller.py ([controller]). An explicit constructor
+# argument beats anything here; a missing or malformed file falls back to the
+# hardcoded defaults in claude_model.py rather than raising. See
+# docs/specs/0012-claude-codex-model-controller.md.
+
+[model]
+# Claude Code on the user's subscription, never an API key. The auto-updating
+# symlink: ready() resolves it once, so a run keeps one version throughout.
+binary = "~/.local/bin/claude"
+# The pinned model. Its id is matched against the answer's modelUsage.
+model = "claude-sonnet-5-5"
+effort = "medium"
+# CLI calls running at once.
+n_parallel = 4
+# Per call. A starting value, not measured on long labels.
+timeout_s = 300
+# A rate limit is waited out: rate_limit_wait_s, doubling, rate_limit_waits
+# times; still limited after that stops the run (a quota, not a hiccup).
+rate_limit_wait_s = 60
+rate_limit_waits = 3
+# Failed calls in a row, of any kind, that stop the run: 2 x n_parallel.
+max_consecutive_failures = 8
+
+[controller]
+max_attempts = 3
+# Prompts submitted but not yet settled. 0001's rule is ~2x n_parallel; 4 until
+# the rate limits are known.
+in_flight = 4
