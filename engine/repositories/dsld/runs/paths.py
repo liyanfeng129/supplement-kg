@@ -3,7 +3,9 @@
 A run is a directory under `RUNS_ROOT`, `<set name>-<YYMMDDHHMM>-<n>/`, holding
 `raw/ids.jsonl` (its ids, in run order), `raw/purpose_risk.jsonl` (its rows)
 and `manifests/purpose_risk.json`, and once profiled `raw/profile.jsonl` and
-`manifests/profile.json`. A test redirects runs by patching
+`manifests/profile.json`. Its evaluation lives in its `eva/` folder: the
+sampled labels in `eva/pilot.jsonl` and `eva/evaluation_set.jsonl`, their
+manifests in `eva/manifests/`. A test redirects runs by patching
 `RUNS_ROOT` here, and nowhere else: it is read at call time, never bound as a
 default argument.
 """
@@ -25,6 +27,12 @@ MANIFEST_NAME = "purpose_risk.json"
 PROFILE_NAME = "profile.jsonl"
 PROFILE_MANIFEST_NAME = "profile.json"
 
+# The run's evaluation sample: `eva/<name>.jsonl` and `eva/manifests/<name>.json`.
+PILOT_NAME = "pilot.jsonl"
+PILOT_MANIFEST_NAME = "pilot.json"
+EVALUATION_SET_NAME = "evaluation_set.jsonl"
+EVALUATION_SET_MANIFEST_NAME = "evaluation_set.json"
+
 
 def run_id() -> str:
     """The current UTC minute, `YYMMDDHHMM`: the time part of a run's name."""
@@ -39,3 +47,13 @@ def rows_path(d: str | Path, name: str = ROWS_NAME) -> Path:
 def manifest_path(d: str | Path, name: str = MANIFEST_NAME) -> Path:
     """Where a run's manifest lives. `name` selects which artifact in the run."""
     return Path(d) / "manifests" / name
+
+
+def eva_path(d: str | Path, name: str) -> Path:
+    """Where one of a run's evaluation files lives, in its `eva/` folder."""
+    return Path(d) / "eva" / name
+
+
+def eva_manifest_path(d: str | Path, name: str) -> Path:
+    """Where the manifest of one of a run's evaluation files lives."""
+    return Path(d) / "eva" / "manifests" / name

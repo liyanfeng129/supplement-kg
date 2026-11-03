@@ -1,4 +1,4 @@
-"""The entry to read runs: `read_manifest`, `read_ids`, `read_rows`, `todo_ids` and `read_profile`.
+"""The entry to read runs: `read_manifest`, `read_ids`, `read_rows`, `todo_ids`, `read_profile`, `read_pilot` and `read_evaluation_set`.
 
 The store writes runs; this module only reads them, and never imports the
 store. Where a run's files live is `paths.py`'s business.
@@ -15,6 +15,9 @@ writer is still writing. The `Sink` repairs the tail before it appends.
 
 **A stored profile is checked against its run on every read.** It is only
 trusted while the run's rows and manifest are the ones it was computed from.
+So is a stored sample, against the profile and rows it was drawn from; its
+read joins each sampled label with its claims' text (from the rows) and type
+(from the profile).
 """
 
 from __future__ import annotations
@@ -24,7 +27,7 @@ import json
 from pathlib import Path
 
 from engine.repositories.dsld.runs import paths
-from engine.repositories.dsld.runs.schema import ProfiledLabel
+from engine.repositories.dsld.runs.schema import Claim, ProfiledLabel, SampledCase, SampledLabel
 
 
 def read_manifest(d: str | Path) -> dict:
@@ -123,3 +126,112 @@ def read_profile(d: str | Path) -> tuple[dict, list[ProfiledLabel]]:
         for r in (json.loads(line) for line in labels_p.read_text().splitlines() if line.strip())
     ]
     return manifest, labels
+
+
+def read_pilot(d: str | Path) -> list[SampledCase]:
+    """The run's pilot, each label joined with its claims, in stored order.
+
+    Raises if there is none, if `pilot.jsonl` exists without its manifest (a
+    crashed write), and if it is stale: the run's profile or rows are not the
+    ones it was drawn from. The pilot's human part is `c.label.in_human`.
+    """
+    lines_p = paths.eva_path(d, paths.PILOT_NAME)
+    manifest_p = paths.eva_manifest_path(d, paths.PILOT_MANIFEST_NAME)
+    if not manifest_p.exists():
+        if lines_p.exists():
+            raise ValueError(f"{lines_p} exists without {manifest_p}: a crashed write. Delete it and draw again.")
+        raise FileNotFoundError(f"no pilot of run {d}: build_pilot() draws one")
+    manifest = json.loads(manifest_p.read_text())
+
+    # Stale: the profile or rows are not the ones the pilot was drawn from.
+    current = {
+        "profile_sha": hashlib.sha256(paths.rows_path(d, paths.PROFILE_NAME).read_bytes()).hexdigest()[:16],
+        "rows_sha": hashlib.sha256(paths.rows_path(d).read_bytes()).hexdigest()[:16],
+    }
+    for field, value in current.items():
+        if manifest.get(field) != value:
+            raise ValueError(
+                f"pilot of run {d} is stale: its {field} is {manifest.get(field)} but the run's is "
+                f"{value}. Its strata may no longer hold."
+            )
+
+    # Join each label with its claims: text from the row, type from the profile, by index.
+    _, profiled = read_profile(d)
+    types = {p.dsld_id: p for p in profiled}
+    rows = {int(r["dsld_id"]): r for r in read_rows(d)}
+    cases = []
+    for line in lines_p.read_text().splitlines():
+        if not line.strip():
+            continue
+        r = json.loads(line)
+        dsld_id = int(r["dsld_id"])
+        label = SampledLabel(r["case_id"], dsld_id, (r["group"], r["rarest"]), r["rank"], r["in_human"])
+        cases.append(
+            SampledCase(
+                label,
+                [
+                    Claim(f"claim:{dsld_id}:purpose:{i}", item["text"], types[dsld_id].purpose_types[i])
+                    for i, item in enumerate(rows[dsld_id]["purpose"])
+                ],
+                [
+                    Claim(f"claim:{dsld_id}:risk:{i}", item["text"], types[dsld_id].risk_types[i])
+                    for i, item in enumerate(rows[dsld_id]["risk"])
+                ],
+            )
+        )
+    return cases
+
+
+def read_evaluation_set(d: str | Path) -> list[SampledCase]:
+    """The run's evaluation set (the large set), each label joined with its claims, in stored order.
+
+    Raises as `read_pilot` does, and also if the pilot it was drawn after has
+    changed. The human set is the cases with `c.label.in_human`.
+    """
+    lines_p = paths.eva_path(d, paths.EVALUATION_SET_NAME)
+    manifest_p = paths.eva_manifest_path(d, paths.EVALUATION_SET_MANIFEST_NAME)
+    if not manifest_p.exists():
+        if lines_p.exists():
+            raise ValueError(f"{lines_p} exists without {manifest_p}: a crashed write. Delete it and draw again.")
+        raise FileNotFoundError(f"no evaluation set of run {d}: build_evaluation_set() draws one")
+    manifest = json.loads(manifest_p.read_text())
+
+    # Stale: the profile, rows or pilot are not the ones the set was drawn from.
+    pilot_p = paths.eva_path(d, paths.PILOT_NAME)
+    current = {
+        "profile_sha": hashlib.sha256(paths.rows_path(d, paths.PROFILE_NAME).read_bytes()).hexdigest()[:16],
+        "rows_sha": hashlib.sha256(paths.rows_path(d).read_bytes()).hexdigest()[:16],
+        "pilot_sha": hashlib.sha256(pilot_p.read_bytes()).hexdigest()[:16] if pilot_p.exists() else None,
+    }
+    for field, value in current.items():
+        if manifest.get(field) != value:
+            raise ValueError(
+                f"evaluation set of run {d} is stale: its {field} is {manifest.get(field)} but the "
+                f"run's is {value}. Its strata or weights may no longer hold."
+            )
+
+    # Join each label with its claims: text from the row, type from the profile, by index.
+    _, profiled = read_profile(d)
+    types = {p.dsld_id: p for p in profiled}
+    rows = {int(r["dsld_id"]): r for r in read_rows(d)}
+    cases = []
+    for line in lines_p.read_text().splitlines():
+        if not line.strip():
+            continue
+        r = json.loads(line)
+        dsld_id = int(r["dsld_id"])
+        label = SampledLabel(r["case_id"], dsld_id, (r["group"], r["rarest"]), r["rank"], r["in_human"])
+        cases.append(
+            SampledCase(
+                label,
+                [
+                    Claim(f"claim:{dsld_id}:purpose:{i}", item["text"], types[dsld_id].purpose_types[i])
+                    for i, item in enumerate(rows[dsld_id]["purpose"])
+                ],
+                [
+                    Claim(f"claim:{dsld_id}:risk:{i}", item["text"], types[dsld_id].risk_types[i])
+                    for i, item in enumerate(rows[dsld_id]["risk"])
+                ],
+            )
+        )
+    return cases

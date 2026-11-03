@@ -9,7 +9,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from engine.repositories.dsld.runs.schema import Group, Kind, ProfiledLabel, Type
+from engine.repositories.dsld.runs.schema import (
+    Group,
+    Kind,
+    ProfiledLabel,
+    SampledLabel,
+    StratumSize,
+    Type,
+)
 
 
 @dataclass(frozen=True)
@@ -25,3 +32,23 @@ class Profile:
     claim_counts: dict[tuple[Group, Kind, Type], int]
     label_counts: dict[Group, int]
     failed_ids: list[int]
+
+
+@dataclass(frozen=True)
+class Quota:
+    """How many labels of one stratum each set takes, before "all" is applied."""
+
+    pilot: int
+    pilot_human: int  # ≤ pilot
+    large: int
+    human: int  # ≤ large
+
+
+@dataclass(frozen=True)
+class Sample:
+    """The pilot, the large set (human set flagged) and every stratum's sizes."""
+
+    seed: int
+    pilot: list[SampledLabel]
+    large: list[SampledLabel]  # stratum order, then rank; human set = in_human
+    sizes: list[StratumSize]  # all 10 strata

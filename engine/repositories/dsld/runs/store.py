@@ -1,4 +1,4 @@
-"""The entry to save runs: `new_run`, `repair`, `Sink` and `write_profile`, as JSONL under `paths.RUNS_ROOT`.
+"""The entry to save runs: `new_run`, `repair`, `Sink`, `write_profile`, `save_pilot` and `save_evaluation_set`, as JSONL under `paths.RUNS_ROOT`.
 
 **A run is created whole, then only appended to.** `new_run` writes
 a run directory with its ids, in run order, and its manifest together, so a
@@ -17,6 +17,10 @@ re-runs; the `Sink` repairs it before appending.
 **A profile is written once, beside the finished run.** `write_profile` saves
 each label's group and claim types and the profile's manifest, never over an
 existing one: re-profiling means deleting both files by hand.
+
+**An evaluation sample is written once, in the run's `eva/`.** The pilot and
+the evaluation set each go in their own file and manifest, never over an
+existing one; each manifest pins the profile and rows it was drawn from.
 """
 
 from __future__ import annotations
@@ -32,7 +36,7 @@ from pathlib import Path
 
 from engine import config
 from engine.repositories.dsld.runs import paths
-from engine.repositories.dsld.runs.schema import ProfiledLabel
+from engine.repositories.dsld.runs.schema import ProfiledLabel, SampledLabel
 
 # Used when `configs/engine.toml` has no `[store]` value.
 _FALLBACK_FLUSH_EVERY = 64
@@ -227,6 +231,107 @@ def write_profile(d: str | Path, labels: list[ProfiledLabel], manifest: dict) ->
         (labels_p, "".join(json.dumps(asdict(l), ensure_ascii=False) + "\n" for l in labels)),
         (manifest_p, json.dumps(manifest, indent=2, ensure_ascii=False)),
     ):
+        target.parent.mkdir(parents=True, exist_ok=True)
+        tmp = target.parent / f".{target.name}-{uuid.uuid4().hex}"
+        try:
+            with tmp.open("w") as fh:
+                fh.write(data)
+                fh.flush()
+                os.fsync(fh.fileno())
+            os.replace(tmp, target)
+        finally:
+            tmp.unlink(missing_ok=True)
+
+
+def save_pilot(d: str | Path, pilot: list[SampledLabel], manifest: dict) -> None:
+    """Save a run's pilot: `eva/pilot.jsonl`, then `eva/manifests/pilot.json`, all or nothing.
+
+    Refuses if either file exists. A line is a `SampledLabel` with its
+    stratum as two flat fields, `group` and `rarest`. The manifest gets
+    `profile_sha` and `rows_sha`, the first 16 hex digits of the sha256 of the
+    run's profile and rows files, so a read can tell either changed. Written
+    as `write_profile` writes: lines first, manifest last as the commit marker.
+    """
+    lines_p = paths.eva_path(d, paths.PILOT_NAME)
+    manifest_p = paths.eva_manifest_path(d, paths.PILOT_MANIFEST_NAME)
+    for p in (lines_p, manifest_p):
+        if p.exists():
+            raise FileExistsError(
+                f"{p} exists: a pilot is never overwritten. Delete both pilot files (and the "
+                f"evaluation set, drawn after it) by hand to draw it again."
+            )
+    manifest = {
+        **manifest,
+        "profile_sha": hashlib.sha256(paths.rows_path(d, paths.PROFILE_NAME).read_bytes()).hexdigest()[:16],
+        "rows_sha": hashlib.sha256(paths.rows_path(d).read_bytes()).hexdigest()[:16],
+    }
+    lines = "".join(
+        json.dumps(
+            {
+                "case_id": l.case_id,
+                "dsld_id": l.dsld_id,
+                "group": l.stratum[0],
+                "rarest": l.stratum[1],
+                "rank": l.rank,
+                "in_human": l.in_human,
+            }
+        )
+        + "\n"
+        for l in pilot
+    )
+
+    # Lines first, manifest last, each through a temporary name in its own folder.
+    for target, data in ((lines_p, lines), (manifest_p, json.dumps(manifest, indent=2, ensure_ascii=False))):
+        target.parent.mkdir(parents=True, exist_ok=True)
+        tmp = target.parent / f".{target.name}-{uuid.uuid4().hex}"
+        try:
+            with tmp.open("w") as fh:
+                fh.write(data)
+                fh.flush()
+                os.fsync(fh.fileno())
+            os.replace(tmp, target)
+        finally:
+            tmp.unlink(missing_ok=True)
+
+
+def save_evaluation_set(d: str | Path, large: list[SampledLabel], manifest: dict) -> None:
+    """Save a run's evaluation set: `eva/evaluation_set.jsonl`, then its manifest, all or nothing.
+
+    As `save_pilot`, and the manifest also gets `pilot_sha`, of
+    `eva/pilot.jsonl`, the pilot it was drawn after. The human set is the
+    lines with `in_human`.
+    """
+    lines_p = paths.eva_path(d, paths.EVALUATION_SET_NAME)
+    manifest_p = paths.eva_manifest_path(d, paths.EVALUATION_SET_MANIFEST_NAME)
+    for p in (lines_p, manifest_p):
+        if p.exists():
+            raise FileExistsError(
+                f"{p} exists: an evaluation set is never overwritten. Delete both of its files "
+                f"(and every later file in eva/, joined on it) by hand to draw it again."
+            )
+    manifest = {
+        **manifest,
+        "profile_sha": hashlib.sha256(paths.rows_path(d, paths.PROFILE_NAME).read_bytes()).hexdigest()[:16],
+        "rows_sha": hashlib.sha256(paths.rows_path(d).read_bytes()).hexdigest()[:16],
+        "pilot_sha": hashlib.sha256(paths.eva_path(d, paths.PILOT_NAME).read_bytes()).hexdigest()[:16],
+    }
+    lines = "".join(
+        json.dumps(
+            {
+                "case_id": l.case_id,
+                "dsld_id": l.dsld_id,
+                "group": l.stratum[0],
+                "rarest": l.stratum[1],
+                "rank": l.rank,
+                "in_human": l.in_human,
+            }
+        )
+        + "\n"
+        for l in large
+    )
+
+    # Lines first, manifest last, each through a temporary name in its own folder.
+    for target, data in ((lines_p, lines), (manifest_p, json.dumps(manifest, indent=2, ensure_ascii=False))):
         target.parent.mkdir(parents=True, exist_ok=True)
         tmp = target.parent / f".{target.name}-{uuid.uuid4().hex}"
         try:
