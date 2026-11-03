@@ -40,7 +40,7 @@ from pathlib import Path
 
 from engine import config
 from engine.repositories.dsld.runs import paths
-from engine.repositories.dsld.runs.schema import HumanVerdict, ProfiledLabel, SampledLabel
+from engine.repositories.dsld.runs.schema import Adjudication, HumanVerdict, ProfiledLabel, SampledLabel
 
 # Used when `configs/engine.toml` has no `[store]` value.
 _FALLBACK_FLUSH_EVERY = 64
@@ -377,5 +377,38 @@ def save_human_verdict(d: str | Path, verdict: HumanVerdict) -> None:
 
     with path.open("a") as fh:
         fh.write(json.dumps(asdict(verdict), ensure_ascii=False) + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
+
+
+def save_adjudication(d: str | Path, adjudication: Adjudication) -> None:
+    """Append one decision to the run's `eva/adjudication_pilot.jsonl`.
+
+    The line is the decision as a dict (`asdict`), written whole and fsynced. A
+    tail without its newline is mended first, by `repair`'s rule: one that
+    parses gets its newline, anything else was a torn write and is cut off,
+    so the new line is never glued onto it.
+    """
+    path = paths.eva_path(d, paths.ADJUDICATION_PILOT_NAME)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Mend a torn tail: the file is small, so it is read whole.
+    if path.exists():
+        data = path.read_bytes()
+        if data and not data.endswith(b"\n"):
+            start = data.rfind(b"\n") + 1
+            try:
+                json.loads(data[start:])
+            except ValueError:
+                data = data[:start]
+            else:
+                data += b"\n"
+            with path.open("wb") as fh:
+                fh.write(data)
+                fh.flush()
+                os.fsync(fh.fileno())
+
+    with path.open("a") as fh:
+        fh.write(json.dumps(asdict(adjudication), ensure_ascii=False) + "\n")
         fh.flush()
         os.fsync(fh.fileno())

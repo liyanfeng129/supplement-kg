@@ -28,6 +28,7 @@ from pathlib import Path
 
 from engine.repositories.dsld.runs import paths
 from engine.repositories.dsld.runs.schema import (
+    Adjudication,
     Claim,
     ClaimVerdict,
     HumanVerdict,
@@ -282,3 +283,31 @@ def read_human_verdicts(d: str | Path) -> dict[str, HumanVerdict]:
             active_seconds=int(r["active_seconds"]),
         )
     return verdicts
+
+
+def read_adjudications(d: str | Path) -> dict[tuple[str, str], Adjudication]:
+    """The human's decisions after the reveal, by `(case_id, item)`: the last decision on each item.
+
+    Empty when none is stored. A torn tail is skipped, as `read_human_verdicts`
+    skips one; a bad line before it raises, naming the line.
+    """
+    path = paths.eva_path(d, paths.ADJUDICATION_PILOT_NAME)
+    if not path.exists():
+        return {}
+    *lines, tail = path.read_bytes().split(b"\n")
+    decisions = {}
+    for n, line in enumerate(lines, 1):
+        if not line.strip():
+            continue
+        try:
+            r = json.loads(line)
+        except ValueError as exc:
+            raise ValueError(f"{path}:{n}: {exc}") from exc
+        decisions[(r["case_id"], r["item"])] = Adjudication(**r)
+    if tail.strip():
+        try:
+            r = json.loads(tail)
+        except ValueError:
+            return decisions  # torn trailing write; that decision is lost
+        decisions[(r["case_id"], r["item"])] = Adjudication(**r)
+    return decisions

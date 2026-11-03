@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reveal</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --ink: #1d2420; --muted: #66706a; --line: #d9ddd8;
+    --accent: #3d6fa8; --accent-soft: #e3ecf7; --ok: #2f7d4f; --ok-soft: #e1f1e7;
+    --warn: #a35a00; --warn-soft: #fbecd9; --bad: #b3261e; --bad-soft: #fbe3e1;
+    --hl: #ffd84d; --hl-edge: #c78f00; --hl-soft: #eef2e6;
+    --purpose: #3d6fa8; --risk: #a3402e; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161a18; --panel: #1f2421; --ink: #e6e9e7; --muted: #9aa39e; --line: #353c38;
+      --accent: #7fa8d8; --accent-soft: #24344a; --ok: #6cc290; --ok-soft: #1d3326;
+      --warn: #e0a050; --warn-soft: #3a2c18; --bad: #f08a80; --bad-soft: #3d2220;
+      --purpose: #7fa8d8; --risk: #e08a78; --hl: #8a6d00; --hl-edge: #f0c64a; --hl-soft: #2b3329;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { position: sticky; top: 0; z-index: 2; background: var(--panel); border-bottom: 1px solid var(--line);
+           padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+  .dots { display: flex; gap: 4px; flex-wrap: wrap; }
+  .dot { width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--line); background: var(--bg);
+         font-size: 11px; display: grid; place-items: center; cursor: pointer; color: var(--muted); }
+  .dot.saved { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+  .dot.current { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .spacer { flex: 1; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+           border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: .5; cursor: default; }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding: 16px; align-items: start; }
+  main.with-rules { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, .8fr); }
+  /* The label text stays in view under the header while the items scroll; --head is the header's height. */
+  .textpane { position: sticky; top: calc(var(--head, 60px) + 16px); max-height: calc(100vh - var(--head, 60px) - 32px); overflow: auto; }
+  @media (max-width: 900px) { main, main.with-rules { grid-template-columns: minmax(0, 1fr); }
+                              .textpane { position: static; max-height: none; } }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; min-width: 0; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 8px; }
+  .passage { font-family: var(--mono); font-size: 13px; }
+  .passage .ln { padding: 2px 4px; border-bottom: 1px dashed var(--line); white-space: pre-wrap; word-break: break-word; }
+  .passage .h1 { background: var(--hl-soft); border-radius: 2px; }
+  .passage .h2 { background: var(--hl); border-radius: 2px; box-shadow: 0 0 0 2px var(--hl-edge); font-weight: 600; }
+  .passage .ln.has-pick { background: var(--accent-soft); }
+  .hlnote { font-size: 12px; color: var(--muted); margin-top: 6px; min-height: 1em; }
+  .item { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; margin-bottom: 10px; cursor: pointer; }
+  .item.done { border-left: 4px solid var(--ok); }
+  .item.picked { box-shadow: 0 0 0 2px var(--hl-edge); }
+  .ask { font-weight: 600; margin-bottom: 6px; }
+  .claimtext { font-family: var(--mono); font-size: 13px; margin-bottom: 8px; word-break: break-word; }
+  .tag { display: inline-block; font-weight: 700; margin-right: 6px; }
+  .tag.purpose { color: var(--purpose); } .tag.risk { color: var(--risk); }
+  .who { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 2px 8px; padding: 4px 0; border-top: 1px dashed var(--line); }
+  .who .name { color: var(--muted); font-size: 12px; padding-top: 1px; }
+  .who.you .name { color: var(--accent); font-weight: 600; }
+  .value { font-weight: 600; }
+  .meta { color: var(--muted); font-size: 12px; margin-left: 6px; }
+  .none { color: var(--muted); }
+  .quote { font-family: var(--mono); font-size: 12.5px; border-bottom: 1px dotted var(--muted); cursor: pointer; word-break: break-word; }
+  .reason { font-size: 13px; }
+  .decide { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+  .row { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; margin: 4px 0; }
+  .row .lbl { width: 88px; color: var(--muted); font-size: 12px; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .seg label { padding: 2px 8px; cursor: pointer; border-right: 1px solid var(--line); font-size: 13px; user-select: none; }
+  .seg label:last-child { border-right: 0; }
+  .seg input { display: none; }
+  .seg label:has(input:checked) { background: var(--accent); color: #fff; }
+  .seg label:has(input:disabled) { opacity: .4; cursor: default; }
+  .mine { font-size: 11px; opacity: .8; }
+  input[type=text] { font: inherit; width: 100%; border: 1px solid var(--line); border-radius: 6px;
+                     background: var(--bg); color: var(--ink); padding: 3px 6px; }
+  .empty { color: var(--muted); font-style: italic; }
+  .problems { background: var(--bad-soft); color: var(--bad); border-radius: 6px; padding: 6px 10px; margin-top: 6px; }
+  [hidden] { display: none !important; }
+  .status { font-size: 12px; color: var(--muted); }
+  .status.ok { color: var(--ok); } .status.changed { color: var(--warn); }
+  .rules { white-space: pre-wrap; font-size: 12.5px; max-height: calc(100vh - var(--head, 60px) - 32px); overflow: auto; position: sticky; top: calc(var(--head, 60px) + 16px); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Reveal</h1>
+  <span class="status" id="runname"></span>
+  <div class="dots" id="dots"></div>
+  <span class="problems" id="down" hidden>Server not reachable: your clicks are NOT being saved. Rerun the notebook cell, then refresh this page.</span>
+  <span class="spacer"></span>
+  <button id="prev" title="previous label (Alt+←)">← prev</button>
+  <span id="pos" class="status"></span>
+  <button id="next" title="next label (Alt+→)">next →</button>
+  <button class="primary" id="nextOpen">next undecided →</button>
+  <button id="optionalBtn"></button>
+  <button id="rulesBtn">rules</button>
+</header>
+<main id="main">
+  <section class="textpane">
+    <h2>Label text</h2>
+    <div class="passage" id="passage"></div>
+    <div class="hlnote" id="hlnote"></div>
+  </section>
+  <section>
+    <h2 id="itemsTitle"></h2>
+    <div id="items"></div>
+  </section>
+  <section class="rules" id="rules" hidden></section>
+</main>
+<script>
+"use strict";
+let DATA = null;       // {run, judges, labels, decided, rulebook}; `labels` holds only labels with items
+let idx = 0;
+let picked = null;     // the text highlighted in the label
+let showOptional = true;  // whether undecided optional items are shown; hiding is opt-in
+const decided = {};    // key -> {final, gap}: what is stored
+const drafts = {};     // key -> {faithful, kind, gap}: a claim's half-made choice, and a note not stored yet
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const keyOf = (label, it) => `${label.case_id}\n${it.item}`;
+const words = (v) => v.replace("meaning_changed", "meaning changed").replace("/", " · ");
+const titled = (j) => j[0].toUpperCase() + j.slice(1);
+
+// The header wraps as the label dots grow: the sticky panes sit below whatever height it has.
+new ResizeObserver(() => document.documentElement.style.setProperty(
+  "--head", `${document.querySelector("header").offsetHeight}px`)).observe(document.querySelector("header"));
+
+// Optional: a missed item you did not list and only one judge did, so two of the three say it is no claim.
+const optional = (it) => it.item_kind === "missed" && it.blind === "none" && DATA.judges.some((j) => !it.opinions[j].length);
+// A decided item stays shown, so a decision can always be seen and changed.
+const shownItems = (label) => label.items.filter((it) => showOptional || !optional(it) || decided[keyOf(label, it)]);
+const undecided = (label) => shownItems(label).filter((it) => !decided[keyOf(label, it)]).length;
+
+function renderDots() {
+  $("dots").innerHTML = DATA.labels.map((label, i) => {
+    const cls = ["dot", undecided(label) ? "" : "saved", i === idx ? "current" : ""].join(" ");
+    return `<div class="${cls}" data-i="${i}" title="${esc(label.case_id)}: ${undecided(label)} left">${i + 1}</div>`;
+  }).join("");
+  const left = DATA.labels.reduce((n, label) => n + undecided(label), 0);
+  const open = DATA.labels.flatMap((label) => label.items.filter((it) => optional(it) && !decided[keyOf(label, it)]));
+  $("pos").textContent = `label ${idx + 1} of ${DATA.labels.length} · ${left} left to check`;
+  $("optionalBtn").textContent = showOptional ? `hide ${open.length} optional` : `show ${open.length} optional`;
+  $("optionalBtn").title = "missed items you did not list and only one judge did";
+  $("nextOpen").disabled = !DATA.labels.some(undecided);
+}
+
+// Where `text` sits in `passage`, as [start, end) ranges. Every exact occurrence if it is one
+// piece; otherwise the pieces it is stitched from, as on the human sheet.
+function locate(passage, text) {
+  const ranges = [];
+  if (!text) return ranges;
+  for (let at = passage.indexOf(text); at !== -1; at = passage.indexOf(text, at + 1)) ranges.push([at, at + text.length]);
+  if (ranges.length) return ranges;
+  const parts = text.split(/\s+/).filter(Boolean);
+  const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  let i = 0, after = 0;
+  while (i < parts.length) {
+    let found = null;
+    for (let j = parts.length; j > i && !found; j--) {
+      if (j - i === 1 && parts[i].length < 4) break;
+      const re = new RegExp(`(?<![\\w])${parts.slice(i, j).map(reEsc).join(" ")}(?![\\w])`, "g");
+      re.lastIndex = after;
+      let m = re.exec(passage);
+      if (!m) { re.lastIndex = 0; m = re.exec(passage); }
+      if (m) found = [m.index, m.index + m[0].length, j];
+    }
+    if (found) { ranges.push([found[0], found[1]]); after = found[1]; i = found[2]; } else i++;
+  }
+  return ranges;
+}
+
+// What a card highlights when clicked: the claim, or the longest quote of a missed item.
+function mainText(it) {
+  return it.item_kind === "claim" ? it.claim.text : [...it.item.split(" | ")].sort((a, b) => b.length - a.length)[0];
+}
+
+// The passage with two layers: every item's text (soft), and the picked one (strong).
+function renderPassage() {
+  const label = DATA.labels[idx];
+  const p = label.passage;
+  const level = new Uint8Array(p.length);
+  const paint = (ranges, n) => { for (const [a, b] of ranges) for (let k = a; k < b; k++) level[k] = Math.max(level[k], n); };
+  for (const it of shownItems(label)) paint(locate(p, mainText(it)), 1);
+  const ranges = locate(p, picked);
+  paint(ranges, 2);
+  let off = 0;
+  $("passage").innerHTML = p.split("\n").map((line) => {
+    const start = off;
+    off += line.length + 1;
+    let html = "", k = 0, pick = false;
+    while (k < line.length) {
+      const lv = level[start + k];
+      let e = k;
+      while (e < line.length && level[start + e] === lv) e++;
+      const piece = esc(line.slice(k, e));
+      html += lv ? `<span class="h${lv}">${piece}</span>` : piece;
+      if (lv === 2) pick = true;
+      k = e;
+    }
+    return `<div class="ln${pick ? " has-pick" : ""}">${html}</div>`;
+  }).join("");
+  $("hlnote").textContent = !picked ? "click a card or a dotted quote to find it in the label"
+    : !ranges.length ? "not found in the label text"
+    : p.includes(picked) ? (ranges.length > 1 ? `found ${ranges.length} times` : "found as one piece")
+    : `found in ${ranges.length} piece${ranges.length > 1 ? "s" : ""}, not as one`;
+  // Bring the highlight into view inside the label pane only, so the clicked card stays in sight.
+  const first = $("passage").querySelector(".h2");
+  const pane = document.querySelector(".textpane");
+  if (first) {
+    const f = first.getBoundingClientRect(), b = pane.getBoundingClientRect();
+    if (f.top < b.top) pane.scrollTop += f.top - b.top - 24;
+    else if (f.bottom > b.bottom) pane.scrollTop += f.bottom - b.bottom + 48;
+  }
+}
+
+function quoteSpan(q) { return `<span class="quote" data-hl="${esc(q)}">${esc(q)}</span>`; }
+
+function opinionsHtml(it) {
+  return DATA.judges.map((j) => {
+    const ops = it.opinions[j];
+    if (!ops.length) return `<div class="who"><span class="name">${titled(j)}</span><span class="none">did not list it</span></div>`;
+    return `<div class="who"><span class="name">${titled(j)}</span><div>${ops.map((o) => `<div>
+      <span class="value">${esc(words(o.value))}</span><span class="meta">${esc(o.confidence)}${o.rule ? " · " + esc(o.rule) : ""}</span>
+      ${o.reason ? `<div class="reason">${esc(o.reason)}</div>` : ""}
+      ${o.quote ? `<div>${quoteSpan(o.quote)}</div>` : ""}</div>`).join("")}</div></div>`;
+  }).join("");
+}
+
+function seg(name, value, options, disabled) {
+  return `<span class="seg">${options.map(([v, t]) =>
+    `<label><input type="radio" name="${esc(name)}" value="${v}" ${value === v ? "checked" : ""} ${disabled ? "disabled" : ""}>${t}</label>`).join("")}</span>`;
+}
+
+function statusHtml(label, it) {
+  const d = decided[keyOf(label, it)];
+  if (!d) return `<span class="status">not decided yet</span>`;
+  return d.final === it.blind ? `<span class="status ok">kept your answer</span>`
+    : `<span class="status changed">changed from ${esc(words(it.blind))}</span>`;
+}
+
+function itemHtml(label, it) {
+  const key = keyOf(label, it);
+  const d = decided[key];
+  const note = drafts[key] && drafts[key].gap !== undefined ? drafts[key].gap : d ? d.gap : "";
+  const mineMark = (v) => v === it.blind ? ` <span class="mine">(yours)</span>` : "";
+  let body;
+  if (it.item_kind === "missed") {
+    const you = it.quotes.length
+      ? `<div><span class="value">${esc(it.blind)}</span></div>${it.quotes.map((q) => `<div>${quoteSpan(q)}</div>`).join("")}`
+      : `<span class="none">you did not list it</span>`;
+    body = `<div class="ask">Should Qwen have extracted this?</div>
+      <div class="who you"><span class="name">You</span><div>${you}${it.comment ? `<div class="reason">${esc(it.comment)}</div>` : ""}</div></div>
+      ${opinionsHtml(it)}
+      <div class="decide"><div class="row">${seg("final|" + key, d ? d.final : null,
+        [["none", "no, not a claim" + mineMark("none")], ["purpose", "yes, a purpose" + mineMark("purpose")], ["risk", "yes, a risk" + mineMark("risk")]])}
+        ${statusHtml(label, it)}</div>`;
+  } else {
+    const draft = drafts[key] || {};
+    const [fd, kd] = d ? (d.final === "invented" ? ["invented", null] : d.final.split("/")) : [null, null];
+    const faithful = draft.faithful || fd;
+    const kind = faithful === "invented" ? null : (draft.kind || kd);
+    const [fb, kb] = it.blind === "invented" ? ["invented", null] : it.blind.split("/");
+    body = `<div class="ask">Is your answer on this claim still right?</div>
+      <div class="claimtext"><span class="tag ${it.claim.kind}">${it.claim.kind === "purpose" ? "P" : "R"}:</span>${esc(it.claim.text)}</div>
+      <div class="who you"><span class="name">You</span><div><span class="value">${esc(words(it.blind))}</span>${it.comment ? `<div class="reason">${esc(it.comment)}</div>` : ""}</div></div>
+      ${opinionsHtml(it)}
+      <div class="decide"><div class="row"><button data-keep="1">keep my answer</button>${statusHtml(label, it)}</div>
+      <div class="row"><span class="lbl">or: faithful</span>${seg("faithful|" + key, faithful,
+        [["yes", "yes"], ["invented", "invented"], ["meaning_changed", "meaning changed"]].map(([v, t]) => [v, t + (v === fb ? ` <span class="mine">(yours)</span>` : "")]))}</div>
+      <div class="row"><span class="lbl">actual kind</span>${seg("kind|" + key, kind,
+        ["purpose", "risk", "neither", "both"].map((v) => [v, v + (v === kb ? ` <span class="mine">(yours)</span>` : "")]), faithful === "invented")}</div>`;
+  }
+  return `<div class="item ${d ? "done" : ""}" data-key="${esc(key)}">${body}
+      <div class="row"><input type="text" data-note="1" placeholder="do the rules leave this open? note it here (optional)" value="${esc(note)}"></div>
+      <div class="err"></div></div></div>`;
+}
+
+function render() {
+  const label = DATA.labels[idx];
+  const items = shownItems(label);
+  const missed = items.filter((it) => it.item_kind === "missed").length;
+  $("itemsTitle").textContent = `${label.case_id} · to decide: ${missed} missed, ${items.length - missed} claims`;
+  $("items").innerHTML = items.map((it) => itemHtml(label, it)).join("") || `<p class="empty">Nothing to check on this label.</p>`;
+  $("prev").disabled = idx === 0;
+  $("next").disabled = idx === DATA.labels.length - 1;
+  renderDots();
+  renderPassage();
+}
+
+const itemOf = (box) => DATA.labels[idx].items.find((it) => keyOf(DATA.labels[idx], it) === box.dataset.key);
+
+// Store one decision, then redraw only its card, so the others keep their place and focus.
+async function decide(box, final) {
+  const label = DATA.labels[idx];
+  const it = itemOf(box);
+  const key = keyOf(label, it);
+  const noteEl = box.querySelector("[data-note]");
+  const gap = noteEl.value;
+  // A failed save redraws the card from what is stored, so no button looks chosen that was not saved.
+  const failed = (message) => {
+    drafts[key] = {gap};
+    const shown = [...document.querySelectorAll(".item")].find((el) => el.dataset.key === key);
+    if (shown) {
+      shown.outerHTML = itemHtml(label, it);
+      [...document.querySelectorAll(".item")].find((el) => el.dataset.key === key)
+        .querySelector(".err").innerHTML = `<div class="problems">Not saved: ${esc(message)}</div>`;
+    }
+  };
+  try {
+    const r = await fetch("api/decision", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({case_id: label.case_id, item: it.item, final, gap})});
+    const res = await r.json();
+    $("down").hidden = true;
+    if (res.problems.length) { failed(res.problems.join("; ")); return; }
+    decided[key] = {final, gap};
+    delete drafts[key];
+    const shown = [...document.querySelectorAll(".item")].find((el) => el.dataset.key === key);
+    if (shown) shown.outerHTML = itemHtml(label, it);
+    renderDots();
+  } catch (err) {
+    $("down").hidden = false;
+    failed(`${err}. Is the server still running?`);
+  }
+}
+
+$("items").addEventListener("click", (e) => {
+  const box = e.target.closest(".item"); if (!box) return;
+  if (e.target.dataset.keep) { decide(box, itemOf(box).blind); return; }
+  if (e.target.closest(".seg, input, button")) return;
+  const q = e.target.closest("[data-hl]");
+  picked = q ? q.dataset.hl : mainText(itemOf(box));
+  document.querySelectorAll(".item").forEach((el) => el.classList.toggle("picked", el === box));
+  renderPassage();
+});
+
+$("items").addEventListener("change", (e) => {
+  const box = e.target.closest(".item"); if (!box) return;
+  const it = itemOf(box);
+  const key = keyOf(DATA.labels[idx], it);
+  if (e.target.dataset.note) {
+    // A note on a decided item is stored now; on an undecided one, with its decision.
+    if (decided[key]) decide(box, decided[key].final);
+    return;
+  }
+  if (e.target.type !== "radio") return;
+  const field = e.target.name.split("|")[0];
+  if (field === "final") { decide(box, e.target.value); return; }
+
+  // A claim: a choice on one control takes the other from what is decided, else from the blind answer.
+  const base = decided[key] ? decided[key].final : it.blind;
+  const [fb, kb] = base === "invented" ? ["invented", null] : base.split("/");
+  const draft = drafts[key] = {...drafts[key], faithful: (drafts[key] || {}).faithful || fb, kind: (drafts[key] || {}).kind || kb};
+  draft[field] = e.target.value;
+  draft.gap = box.querySelector("[data-note]").value;
+  if (draft.faithful === "invented") { decide(box, "invented"); return; }
+  if (draft.kind) { decide(box, `${draft.faithful}/${draft.kind}`); return; }
+  box.outerHTML = itemHtml(DATA.labels[idx], it);  // yes or meaning changed from invented: a kind is still needed
+});
+
+$("items").addEventListener("input", (e) => {
+  const box = e.target.closest(".item");
+  if (box && e.target.dataset.note) {
+    const key = box.dataset.key;
+    drafts[key] = {...drafts[key], gap: e.target.value};
+  }
+});
+
+function go(i) {
+  if (i >= 0 && i < DATA.labels.length) { idx = i; picked = null; render(); window.scrollTo(0, 0); }
+}
+$("prev").addEventListener("click", () => go(idx - 1));
+$("next").addEventListener("click", () => go(idx + 1));
+$("nextOpen").addEventListener("click", () => {
+  const n = DATA.labels.length;
+  for (let k = 1; k <= n; k++) if (undecided(DATA.labels[(idx + k) % n])) { go((idx + k) % n); return; }
+});
+$("dots").addEventListener("click", (e) => { if (e.target.dataset.i) go(+e.target.dataset.i); });
+document.addEventListener("keydown", (e) => {
+  if (e.altKey && e.key === "ArrowLeft") go(idx - 1);
+  if (e.altKey && e.key === "ArrowRight") go(idx + 1);
+});
+$("optionalBtn").addEventListener("click", () => { showOptional = !showOptional; render(); });
+$("rulesBtn").addEventListener("click", () => {
+  $("rules").hidden = !$("rules").hidden;
+  $("main").classList.toggle("with-rules", !$("rules").hidden);
+});
+
+fetch("api/labels").then((r) => r.json()).then((data) => {
+  // A label with nothing to decide is not shown.
+  DATA = {...data, labels: data.labels.filter((label) => label.items.length)};
+  for (const a of data.decided) decided[`${a.case_id}\n${a.item}`] = {final: a.final, gap: a.gap};
+  $("runname").textContent = data.run;
+  $("rules").textContent = data.rulebook;
+  const first = DATA.labels.findIndex(undecided);
+  go(first === -1 ? 0 : first);
+}).catch((err) => { document.body.innerHTML = `<p style="padding:16px">Could not load: ${esc(String(err))}</p>`; });
+</script>
+</body>
+</html>

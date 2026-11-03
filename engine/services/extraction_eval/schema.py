@@ -75,3 +75,39 @@ class SheetCase:
     dsld_id: int
     passage: str  # the r4 passage the extraction saw
     claims: list[SheetClaim]  # purposes then risks, in the row's order
+
+
+@dataclass(frozen=True)
+class RevealOpinion:
+    """What one judge said on one reveal item."""
+
+    value: str  # missed: its kind; claim: "invented", or faithful and kind as "yes/risk"
+    confidence: str
+    rule: str
+    quote: str  # missed: the quote; claim: the evidence, "" when none
+    reason: str  # claim only: the judges give no reason for a missed claim
+
+
+@dataclass(frozen=True)
+class RevealItem:
+    """One item on which the human and the judges do not all give the same answer."""
+
+    item_kind: str  # "missed" or "claim"
+    item: str  # a claim's id, or a missed item's quotes sorted and joined with " | "
+    blind: str  # the human's value on the sheet: "none" for a missed item they did not list
+    claim: SheetClaim | None  # the claim, on a claim item
+    quotes: list[str]  # what the human listed, on a missed item
+    comment: str  # the human's comment on the sheet; "" when none
+    opinions: dict[str, list[RevealOpinion]]  # by judge; an empty list when the judge did not list it
+
+
+@dataclass(frozen=True)
+class RevealLabel:
+    """One reviewed label with its reveal items: missed claims, then claims."""
+
+    case_id: str  # label:<dsld_id>
+    dsld_id: int
+    passage: str
+    prompt_sha: str  # the judges' prompt these verdicts came under
+    items: list[RevealItem]
+

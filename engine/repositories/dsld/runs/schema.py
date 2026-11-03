@@ -121,3 +121,18 @@ class HumanVerdict:
     opened_at: str  # ISO 8601, UTC
     saved_at: str
     active_seconds: int  # time on the label since its last save, paused time left out
+
+
+@dataclass(frozen=True)
+class Adjudication:
+    """The human's decision on one item after seeing the judges (0011.03 Q15), beside their blind value."""
+
+    case_id: str  # label:<dsld_id>
+    dsld_id: int
+    item_kind: str  # "missed" or "claim"
+    item: str  # a claim's id, or a missed item's quotes sorted and joined with " | "
+    blind: str  # the human's value on the sheet: as `final`
+    final: str  # missed: "purpose", "risk" or "none"; claim: "invented", or "yes" or "meaning_changed" with a kind, "yes/risk"
+    gap: str  # what the rulebook leaves open; "" when nothing
+    prompt_sha: str  # the judges' prompt the item was shown under
+    decided_at: str  # ISO 8601, UTC

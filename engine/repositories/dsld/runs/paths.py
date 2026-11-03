@@ -36,6 +36,7 @@ EVALUATION_SET_MANIFEST_NAME = "evaluation_set.json"
 
 # The human's verdicts on the pilot's human part, appended per save: `eva/human_pilot.jsonl`.
 HUMAN_PILOT_NAME = "human_pilot.jsonl"
+ADJUDICATION_PILOT_NAME = "adjudication_pilot.jsonl"
 
 
 def run_id() -> str:
