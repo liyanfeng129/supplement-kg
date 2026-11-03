@@ -14,7 +14,7 @@ binary = "~/.local/bin/claude"
 model = "claude-sonnet-5-5"
 effort = "medium"
 # CLI calls running at once.
-n_parallel = 4
+n_parallel = 8
 # Per call. A starting value, not measured on long labels.
 timeout_s = 300
 # A rate limit is waited out: rate_limit_wait_s, doubling, rate_limit_waits
@@ -22,10 +22,10 @@ timeout_s = 300
 rate_limit_wait_s = 60
 rate_limit_waits = 3
 # Failed calls in a row, of any kind, that stop the run: 2 x n_parallel.
-max_consecutive_failures = 8
+max_consecutive_failures = 16
 
 [controller]
 max_attempts = 3
-# Prompts submitted but not yet settled. 0001's rule is ~2x n_parallel; 4 until
-# the rate limits are known.
-in_flight = 4
+# Prompts submitted but not yet settled. 0001's rule is ~2x n_parallel; equal to
+# n_parallel until the rate limits are known (8 from 2026-10-28, was 4).
+in_flight = 8

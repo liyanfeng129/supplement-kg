@@ -2,7 +2,9 @@
 
 - **Status:** draft, agreed in a grilling session 2026-10-22, revised in a second one
   2026-10-26 (stopping on quota, process groups, resolved binary); built 2026-10-26
-  (ADR 0002 v6)
+  (ADR 0002 v6). Codex moved off the CLI to the Responses API on the ChatGPT plan
+  2026-10-28: see [Codex on the plan token](#codex-on-the-plan-token-agreed-and-built-2026-10-28-adr-0002-v8)
+  (ADR 0002 v8)
 - **Date:** 2026-10-22
 - **Scope:** new `engine/models/claude_model.py`, `engine/models/codex_model.py`,
   `engine/controllers/claude_controller.py`, `engine/controllers/codex_controller.py`,
@@ -108,6 +110,7 @@ codex exec
   -c model_instructions_file='<temp>/instructions.md'
   -C <temp>  -s read-only
   --ephemeral  --skip-git-repo-check  --ignore-user-config  --ignore-rules
+  <_STRIP: what Codex adds to the prompt, switched off>
   --json  -o <temp>/last.txt
   -
 ```
@@ -115,8 +118,22 @@ codex exec
 - `model_instructions_file` **replaces** Codex's base instructions. `base_instructions` and
   `experimental_instructions_file` are silently ignored on 0.162 (a warning appears only as
   an `error` item in the `--json` events) and the model then answers as a coding agent.
-- What Codex still sends beyond the prompt: its tool definitions (~10k tokens). No flag
-  removes them. This is the one known difference from Claude's request.
+- What Codex adds beyond the prompt is switched off by `_STRIP` (2026-10-27), each switch
+  checked with `codex debug prompt-input` on 0.164, which renders the model-visible input
+  without a call. Off: the environment block (`include_environment_context`), the
+  permissions text (`include_permissions_instructions`), the collaboration-mode text
+  (`include_collaboration_mode_instructions`), the skills list
+  (`skills.include_instructions`), the multi-agent role and its tools (`agents.enabled`),
+  `request_user_input` (`tools.experimental_request_user_input.enabled`), web search, and
+  the tools features bring (`--disable` shell_tool, unified_exec, apps, plugins,
+  remote_plugin, sleep_tool, tool_suggest, view_image, image_generation). Not `code_mode_host`:
+  with it off, `codex exec` refuses to start ("Code Mode is unavailable because code-mode host
+  is disabled"), and it adds nothing to the prompt.
+  Rendered context: ~37k chars before, ~10k after. What is left is the `exec` tool (a
+  JavaScript cell holding only MCP-resource helpers and a clock) and its `wait`. No switch
+  found removes them, and this is the one known difference from Claude's request. A key
+  Codex does not know is silently ignored, so the switches are checked again when the
+  binary moves.
 - `--ignore-user-config` drops `~/.codex/config.toml`'s model and effort, so both are
   always passed explicitly.
 - `last.txt` → `Generation.text`; `turn.completed.usage` → usage; `turn.failed` /
@@ -206,14 +223,14 @@ like `qwen.toml`. Same precedence: constructor argument, then file, then hardcod
 | table | key | Claude | Codex |
 |---|---|---|---|
 | `[model]` | `binary` | `~/.local/bin/claude` (the auto-updating symlink) | the full path in the active VSCode extension, today `~/.vscode-server/extensions/openai.chatgpt-26.1021.22027-linux-x64/bin/linux-x86_64/codex` (codex-cli 0.164; 26.1007 held 0.162) |
-| `[model]` | `model` | `claude-sonnet-5-5` | `gpt-6-luna` |
+| `[model]` | `model` | `claude-sonnet-5-5` | `gpt-6.1-terra` |
 | `[model]` | `effort` | `medium` | `medium` |
-| `[model]` | `n_parallel` | 4 | 4 |
+| `[model]` | `n_parallel` | 8 | 8 |
 | `[model]` | `timeout_s` | 300 | 300 |
 | `[model]` | `rate_limit_wait_s`, `rate_limit_waits` | 60, 3 | 60, 3 |
-| `[model]` | `max_consecutive_failures` | 8 (2 × `n_parallel`) | 8 (2 × `n_parallel`) |
+| `[model]` | `max_consecutive_failures` | 16 (2 × `n_parallel`) | 16 (2 × `n_parallel`) |
 | `[controller]` | `max_attempts` | 3 (as `qwen.toml`) | 3 (as `qwen.toml`) |
-| `[controller]` | `in_flight` | 4 | 4 |
+| `[controller]` | `in_flight` | 8 | 8 |
 
 **Paths are pinned; CLI versions are recorded, not enforced.** Claude Code updates itself
 (2.1.303 on 2026-10-19, 2.1.308 on 2026-10-22), and enforcing a version would fail
@@ -277,7 +294,98 @@ every working call: `P: supports healthy joints` / `R: do not take if pregnant` 
 | `model_instructions_file` for Codex | input tokens: `base_instructions` (ignored) 14,156 and a generic "what would you like me to do" reply; `experimental_instructions_file` (ignored) same; `developer_instructions` (adds on top) 14,675; `model_instructions_file` and `instructions` (replace) 10,591 |
 | the same on codex-cli 0.164 (2026-10-26) | `model_instructions_file` still replaces: 11,171 input tokens, the expected three lines |
 | `gpt-6-luna` | works on the ChatGPT account; `gpt-6-terra` is rejected there (400: "not supported when using Codex with a ChatGPT account") |
+| `gpt-6.1-terra` (2026-10-28) | works on the ChatGPT account; replaces `gpt-6-luna`, which failed the answer checks on 4 of 50 pilot judge labels (Sonnet: 0) |
 | version from `modelUsage` for Claude | `modelUsage` names `claude-sonnet-5-5` (and the Haiku side call separately); Codex reports no model |
+
+## Codex on the plan token **[agreed and built 2026-10-28, ADR 0002 v8]**
+
+Replaces the Codex half of [The calls](#the-calls), the Codex rows of the tables above, and
+the Codex readiness and failure rules. Claude is unchanged.
+
+**Why.** `codex exec` cannot be stripped bare: its `exec` and `wait` tools (9,510 chars,
+~2,900 tokens) go with every call, and nothing turns them off. OpenAI's Sign in with
+ChatGPT for open-source and locally hosted apps
+(<https://developers.openai.com/siwc/token-sharing-open-source>) lets an app call the
+ordinary Responses API with an OAuth token that bills the user's ChatGPT plan, not an API
+key. Measured 2026-10-28, pilot label 239596, `gpt-6.1-terra`, effort medium: 2,180 input
+tokens (2,036 instructions + 142 label + 2), no tools, 2.4 s, the same verdict as through
+`codex exec` at 5,009 input tokens.
+
+**What stays.** The class names `CodexModel` / `CodexController`, `configs/codex.toml`, the
+public verbs (`ready`, `generate`, `submit`, `close`), the pool of `n_parallel` workers,
+rate-limit waits, `max_consecutive_failures`, tripped-until-`close()`, and the controller,
+which does not change at all. Nothing above the model knows the transport changed.
+
+**New public verb `sign_in()`.** Interactive, once per machine (the refresh token then
+lasts 30 days and renews itself). The OpenAI OAuth flow with PKCE: first sign-in uses
+`client_id=dynamic_agent_client`, `agent_name_hint="supplement-kg judge"` and an
+`ext_agent_host_id` (`urn:uuid:…`, created once and kept); scopes `openid profile email
+offline_access resource.invoke chatgpt.tokens.use.direct`; `resource=https://api.openai.com/v1`;
+redirect `http://127.0.0.1:1455/auth/callback`. It prints the authorize URL, waits up to 10
+minutes on a threaded loopback listener (an idle connection must not block the callback:
+VSCode's port forwarder opens one), exchanges the code at
+`https://auth.openai.com/api/accounts/oauth/token`, checks `iss`, `aud`, `exp`, `nonce` and
+that the scope holds `chatgpt.tokens.use.direct`, and stores the credentials. Called from a
+notebook 15 cell. The ID token's signature is not checked: it comes straight from the token
+endpoint over TLS (OIDC Core 3.1.3.7).
+
+**Credentials** live in `[model].credentials_dir`, default
+`~/.config/supplement-kg/chatgpt-plan/`, outside the repo: `host.json` (the host id),
+`<client_id>.json` (tokens, scope, expiry, `sub`), `current.json` (which client is in use).
+Directory `0700`, files `0600`, written atomically. Never logged, never in a `Generation`.
+
+| verb | Codex now |
+|---|---|
+| `ready()` | Credentials exist and hold `chatgpt.tokens.use.direct`; the access token is refreshed if it expires within 5 minutes. Then one test call (instructions "Reply with OK.", input "OK", ~20 tokens): a model listing is a catalog, not an entitlement check, and only a completed call proves the plan accepts this client. The controller readies the model once there is work, so this is one call per run. Missing credentials, a refused refresh, or a test call refused with 401/403 → `ModelUnavailable`: "the ChatGPT sign-in has expired or was revoked; run `CodexModel().sign_in()`". Any other failed test call → `ModelUnavailable` naming the error. Starts the pool. |
+| `generate(prompt)` | One streamed `POST https://api.openai.com/v1/responses` (below). Refreshes first if the token expires within 5 minutes. |
+| `close()` | Cancels queued prompts; running calls stop reading their stream at the next event and are discarded. Clears a tripped state. |
+
+**The request.** `urllib.request`, as `qwen_model.py`:
+
+```
+POST https://api.openai.com/v1/responses
+Authorization: Bearer <access token>
+{"model": <[model].model>, "instructions": Prompt.system,
+ "input": [{"role": "user", "content": [{"type": "input_text", "text": Prompt.user}]}],
+ "reasoning": {"effort": <[model].effort>}, "store": false, "stream": true}
+```
+
+No `tools`, so the model sees `Prompt.system` and `Prompt.user` and nothing else. The
+stream's `response.output_text.delta` events build the text; `response.completed` ends a
+success. `temperature`, `max_output_tokens` and the like are not accepted on this route, so
+`Prompt.max_tokens`, `Prompt.stop` and `Prompt.schema` stay ignored.
+
+**Refresh.** `POST` the token endpoint, form `grant_type=refresh_token`, the issued
+`client_id`, `refresh_token`, `resource`; the replacement refresh token is stored with the
+new access token. Serialized with an `fcntl` lock on the credentials file, so two notebook
+kernels never race a rotating token; after taking the lock the file is read again.
+
+**Tool guard.** Kept, though no tool is sent: an output item other than `message` or
+`reasoning` fails the call.
+
+| what happened | the model raises |
+|---|---|
+| no credentials, scope missing, refresh refused (`invalid_grant`, `refresh_token_expired`, `refresh_token_reused`, …) | `ModelUnavailable`: sign in again |
+| HTTP 429 or `subscription_sharing_usage_limit_exceeded` | waits `rate_limit_wait_s`, doubling, `rate_limit_waits` times; still limited → `ModelUnavailable` (tripped) |
+| 503 / `subscription_sharing_usage_unavailable` / `subscription_sharing_user_unavailable` | the request's own error; the controller retries |
+| 401, 403, `subscription_sharing_user_not_eligible`, `subscription_sharing_unsupported_capability` | `ModelUnavailable` (no retry helps) |
+| `response.failed` / `response.incomplete`, a stream cut short, timeout | the request's own error |
+
+**A generation records** `text`; `latency_ms` (the request's wall time); `usage` from
+`response.completed` (`input_tokens`, `output_tokens`); `stop_reason` `"completed"` or the
+`incomplete_details.reason`; `model` = `<response model>@responses`.
+
+**Settings.** `[model].binary` goes; `[model].credentials_dir` comes. The rest unchanged.
+
+**Testing.** `urllib.request.urlopen` is faked: a scripted event stream, HTTP errors by code,
+an expiring token (refresh called, file rewritten `0600`), a refused refresh
+(`ModelUnavailable`), the usage-limit code (waits counted, then tripped), a tool item
+(guard), the request body (no `tools`, `store: false`, `stream: true`, the
+instructions as given), and `ready()`'s test call: one request, refused with 401 →
+`ModelUnavailable` asking to sign in again, and not repeated by a second `ready()`. `sign_in()` is not unit-tested; notebook 15 is its live check.
+
+**ADR.** ADR 0002 v7 says `codex_model.py` runs one CLI call per prompt; v8 says it calls the
+Responses API on the user's ChatGPT plan.
 
 ## Open
 
@@ -303,6 +411,7 @@ From `QwenController`/`QwenModel` (spec 0001), on purpose:
    tripped until `close()`.
 5. **Codex tool guard.** A tool event makes the answer a failed request.
 6. **`Generation.model`**, a new field on the shared shape, set by these two models only.
-7. **No "Hello" check in `ready()`.** Readiness is binary + login; a model call there would
-   spend subscription quota on every `ready()`.
+7. **No "Hello" check in `ready()` for Claude.** Readiness is binary + login; a model call
+   there would spend subscription quota on every `ready()`. Codex on the plan token does make
+   one (~20 tokens): its sign-in can expire or be revoked, and only a completed call shows it.
 8. **`close()` kills, not waits.** Running calls are killed with their process group.

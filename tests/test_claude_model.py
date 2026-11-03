@@ -159,8 +159,8 @@ def test_the_committed_file_supplies_the_settings():
 
     assert m.binary == os.path.expanduser("~/.local/bin/claude")
     assert (m.model, m.effort) == ("claude-sonnet-5-5", "medium")
-    assert (m.n_parallel, m.timeout_s) == (4, 300)
-    assert (m.rate_limit_wait_s, m.rate_limit_waits, m.max_consecutive_failures) == (60, 3, 8)
+    assert (m.n_parallel, m.timeout_s) == (8, 300)
+    assert (m.rate_limit_wait_s, m.rate_limit_waits, m.max_consecutive_failures) == (60, 3, 16)
 
 
 def test_an_explicit_argument_beats_the_file():

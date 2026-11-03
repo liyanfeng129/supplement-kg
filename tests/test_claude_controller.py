@@ -328,7 +328,7 @@ def test_an_empty_stream_does_not_load_the_model():
 
 
 def test_in_flight_comes_from_the_committed_file():
-    assert ClaudeController(ScriptedClaude([])).in_flight == 4
+    assert ClaudeController(ScriptedClaude([])).in_flight == 8
 
 
 def test_in_flight_from_a_missing_file_falls_back(monkeypatch, tmp_path):
