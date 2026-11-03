@@ -31,6 +31,27 @@ say, and an attribution would come from a model's general knowledge rather than 
 label, so they stay on the product. The basis travels with every attribution, so a
 reader can always tell the two apart.
 
+### Why not iDISK's `has_ingredient`
+
+iDISK 2.0 links products to ingredients (`dsp_dsi.csv`), but it cannot stand in for
+`ingredientRows` on DSLD labels ([spot check](../dsp-dsi-dsld-spot-check.md),
+2026-09-19):
+
+- **Coverage.** Only 2,156 of its 317,062 links lead to a DSLD label, covering 1,477
+  label ids, under 1% of the 214,780 in the full run.
+- **Completeness.** The DSLD-sourced links are often incomplete: "Resveratrol 500 mg"
+  links only Grape, though the label also lists Japanese knotweed and quercetin; a
+  "Best L-Tryptophan 500 mg" product links a vitamin B6 form but not L-tryptophan. The
+  NHP-sourced links in the same check matched the label (8 selected products, not a
+  random sample).
+- **It says what a product contains, not what a claim is about.** At best it gives
+  the `single_ingredient` basis; it does not settle a `product_level` claim.
+
+For NHP products the links are the right source: they hold medicinal ingredients only,
+so a product with exactly one link is a single-ingredient product (36,860 of them).
+Spec [0010](0010-nhp-claim-ingredient-attribution.md) attributes NHP Purpose and Risk
+that way.
+
 ## In short
 
 Every claim already belongs to its product: the purpose/risk row is keyed by
@@ -213,3 +234,8 @@ No other function. The active-ingredient walk stays inline in `attribute`
   the full run is attributed, the output is a derived file of one run; where it lives
   (inside the run directory beside `purpose_risk.jsonl`, or its own data source) is
   decided by whoever reads it back.
+- **Q-D: A check set for ingredient matching.** Mapping a DSLD ingredient to an iDISK
+  DSI is out of scope here, but the 1,477 DSLD labels iDISK already links (see
+  [Why not iDISK's `has_ingredient`](#why-not-idisks-has_ingredient)) give known
+  label–DSI pairs to measure a matcher against, the NHP-sourced ones first, as the
+  DSLD-sourced ones are incomplete.
