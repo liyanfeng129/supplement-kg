@@ -52,3 +52,26 @@ class Sample:
     pilot: list[SampledLabel]
     large: list[SampledLabel]  # stratum order, then rank; human set = in_human
     sizes: list[StratumSize]  # all 10 strata
+
+
+@dataclass(frozen=True)
+class SheetClaim:
+    """One claim as the human sheet shows it: its id, kind and text, nothing about how it was made."""
+
+    claim_id: str  # claim:<dsld_id>:<kind>:<i>
+    kind: Kind
+    text: str
+
+
+@dataclass(frozen=True)
+class SheetCase:
+    """One label as the human sheet shows it: the passage and its claims, blind (spec 0011.04).
+
+    No stratum, group, claim type or rank: any of them would tell the human
+    where the sample looks harder.
+    """
+
+    case_id: str  # label:<dsld_id>
+    dsld_id: int
+    passage: str  # the r4 passage the extraction saw
+    claims: list[SheetClaim]  # purposes then risks, in the row's order

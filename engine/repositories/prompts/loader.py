@@ -7,6 +7,9 @@ holds `CHECKS`, `<id>/parse.py` holds `parse`, and `<id>/__init__.py` holds
 An embedding instruction is a folder too, holding only `<id>/instruction.md`:
 one sentence, and no Python files, because an embedding has no checks, parser,
 stop sequences or budget.
+
+A rulebook is `<id>/rulebook.md`: the rules a judge and the human both apply,
+read as text (spec 0011.03).
 """
 
 from __future__ import annotations
@@ -44,4 +47,13 @@ def load_instruction(prompt_id: str) -> str:
     if not path.is_file():
         known = sorted(p.parent.name for p in PROMPTS_DIR.glob("*/instruction.md"))
         raise KeyError(f"no instruction {prompt_id!r}; known: {known}")
+    return path.read_text().rstrip("\n")
+
+
+def load_rulebook(prompt_id: str) -> str:
+    """The rulebook `prompt_id`: the text of `<id>/rulebook.md`."""
+    path = PROMPTS_DIR / prompt_id / "rulebook.md"
+    if not path.is_file():
+        known = sorted(p.parent.name for p in PROMPTS_DIR.glob("*/rulebook.md"))
+        raise KeyError(f"no rulebook {prompt_id!r}; known: {known}")
     return path.read_text().rstrip("\n")

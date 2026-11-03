@@ -1,4 +1,4 @@
-"""The entry to save runs: `new_run`, `repair`, `Sink`, `write_profile`, `save_pilot` and `save_evaluation_set`, as JSONL under `paths.RUNS_ROOT`.
+"""The entry to save runs: `new_run`, `repair`, `Sink`, `write_profile`, `save_pilot`, `save_evaluation_set` and `save_human_verdict`, as JSONL under `paths.RUNS_ROOT`.
 
 **A run is created whole, then only appended to.** `new_run` writes
 a run directory with its ids, in run order, and its manifest together, so a
@@ -21,6 +21,10 @@ existing one: re-profiling means deleting both files by hand.
 **An evaluation sample is written once, in the run's `eva/`.** The pilot and
 the evaluation set each go in their own file and manifest, never over an
 existing one; each manifest pins the profile and rows it was drawn from.
+
+**The human's verdicts are appended, one line per save.** A label saved again
+gets a new line, and the loader takes the last one per label; every earlier
+save stays as history. A torn last line is cut before the next append.
 """
 
 from __future__ import annotations
@@ -36,7 +40,7 @@ from pathlib import Path
 
 from engine import config
 from engine.repositories.dsld.runs import paths
-from engine.repositories.dsld.runs.schema import ProfiledLabel, SampledLabel
+from engine.repositories.dsld.runs.schema import HumanVerdict, ProfiledLabel, SampledLabel
 
 # Used when `configs/engine.toml` has no `[store]` value.
 _FALLBACK_FLUSH_EVERY = 64
@@ -342,3 +346,36 @@ def save_evaluation_set(d: str | Path, large: list[SampledLabel], manifest: dict
             os.replace(tmp, target)
         finally:
             tmp.unlink(missing_ok=True)
+
+
+def save_human_verdict(d: str | Path, verdict: HumanVerdict) -> None:
+    """Append one human verdict to the run's `eva/human_pilot.jsonl`.
+
+    The line is the verdict as a dict (`asdict`), written whole and fsynced. A
+    tail without its newline is mended first, by `repair`'s rule: one that
+    parses gets its newline, anything else was a torn write and is cut off,
+    so the new line is never glued onto it.
+    """
+    path = paths.eva_path(d, paths.HUMAN_PILOT_NAME)
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Mend a torn tail: the file is small, so it is read whole.
+    if path.exists():
+        data = path.read_bytes()
+        if data and not data.endswith(b"\n"):
+            start = data.rfind(b"\n") + 1
+            try:
+                json.loads(data[start:])
+            except ValueError:
+                data = data[:start]
+            else:
+                data += b"\n"
+            with path.open("wb") as fh:
+                fh.write(data)
+                fh.flush()
+                os.fsync(fh.fileno())
+
+    with path.open("a") as fh:
+        fh.write(json.dumps(asdict(verdict), ensure_ascii=False) + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())

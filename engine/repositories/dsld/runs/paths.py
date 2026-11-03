@@ -5,7 +5,8 @@ A run is a directory under `RUNS_ROOT`, `<set name>-<YYMMDDHHMM>-<n>/`, holding
 and `manifests/purpose_risk.json`, and once profiled `raw/profile.jsonl` and
 `manifests/profile.json`. Its evaluation lives in its `eva/` folder: the
 sampled labels in `eva/pilot.jsonl` and `eva/evaluation_set.jsonl`, their
-manifests in `eva/manifests/`. A test redirects runs by patching
+manifests in `eva/manifests/`, and the human's verdicts on the pilot in
+`eva/human_pilot.jsonl`. A test redirects runs by patching
 `RUNS_ROOT` here, and nowhere else: it is read at call time, never bound as a
 default argument.
 """
@@ -32,6 +33,9 @@ PILOT_NAME = "pilot.jsonl"
 PILOT_MANIFEST_NAME = "pilot.json"
 EVALUATION_SET_NAME = "evaluation_set.jsonl"
 EVALUATION_SET_MANIFEST_NAME = "evaluation_set.json"
+
+# The human's verdicts on the pilot's human part, appended per save: `eva/human_pilot.jsonl`.
+HUMAN_PILOT_NAME = "human_pilot.jsonl"
 
 
 def run_id() -> str:

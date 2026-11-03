@@ -1,4 +1,4 @@
-"""The entry to read runs: `read_manifest`, `read_ids`, `read_rows`, `todo_ids`, `read_profile`, `read_pilot` and `read_evaluation_set`.
+"""The entry to read runs: `read_manifest`, `read_ids`, `read_rows`, `todo_ids`, `read_profile`, `read_pilot`, `read_evaluation_set` and `read_human_verdicts`.
 
 The store writes runs; this module only reads them, and never imports the
 store. Where a run's files live is `paths.py`'s business.
@@ -27,7 +27,15 @@ import json
 from pathlib import Path
 
 from engine.repositories.dsld.runs import paths
-from engine.repositories.dsld.runs.schema import Claim, ProfiledLabel, SampledCase, SampledLabel
+from engine.repositories.dsld.runs.schema import (
+    Claim,
+    ClaimVerdict,
+    HumanVerdict,
+    MissedClaim,
+    ProfiledLabel,
+    SampledCase,
+    SampledLabel,
+)
 
 
 def read_manifest(d: str | Path) -> dict:
@@ -235,3 +243,42 @@ def read_evaluation_set(d: str | Path) -> list[SampledCase]:
             )
         )
     return cases
+
+
+def read_human_verdicts(d: str | Path) -> dict[str, HumanVerdict]:
+    """The human's verdicts on the run's pilot, by `case_id`: the last save of each label.
+
+    Empty when none is saved. A torn tail is skipped, as `read_rows` skips
+    one; a bad line before it raises, naming the line.
+    """
+    path = paths.eva_path(d, paths.HUMAN_PILOT_NAME)
+    if not path.exists():
+        return {}
+    *lines, tail = path.read_bytes().split(b"\n")
+    records = []
+    for n, line in enumerate(lines, 1):
+        if not line.strip():
+            continue
+        try:
+            records.append(json.loads(line))
+        except ValueError as exc:
+            raise ValueError(f"{path}:{n}: {exc}") from exc
+    if tail.strip():
+        try:
+            records.append(json.loads(tail))
+        except ValueError:
+            pass  # torn trailing write; that save is lost
+
+    # Later lines replace earlier ones: the last save of a label is its verdict.
+    verdicts = {}
+    for r in records:
+        verdicts[r["case_id"]] = HumanVerdict(
+            case_id=r["case_id"],
+            dsld_id=int(r["dsld_id"]),
+            claims=[ClaimVerdict(**c) for c in r["claims"]],
+            missed=[MissedClaim(**m) for m in r["missed"]],
+            opened_at=r["opened_at"],
+            saved_at=r["saved_at"],
+            active_seconds=int(r["active_seconds"]),
+        )
+    return verdicts

@@ -5,7 +5,8 @@ finished run -- each label's group and the type of each of its claims -- is
 stored beside them, and its shape lives here, with the store and loader that
 write and read it, not with the service that computes it (ADR 0002 §5). So
 does the evaluation's sample of a run (spec 0011.02): the labels drawn, their
-strata, and the claims a read joins to them.
+strata, and the claims a read joins to them; and the human's verdicts on them
+(spec 0011.04).
 """
 
 from __future__ import annotations
@@ -81,3 +82,42 @@ class SampledCase:
     label: SampledLabel
     purpose: list[Claim]  # in the row's order: purpose[i] is claim:<dsld_id>:purpose:<i>
     risk: list[Claim]
+
+
+# The human's verdict on one sampled label (spec 0011.03, 0011.04).
+Faithful = Literal["yes", "invented", "meaning_changed"]
+ActualKind = Literal["purpose", "risk", "neither", "both"]  # both: one line holding a purpose and a risk
+
+
+@dataclass(frozen=True)
+class ClaimVerdict:
+    """The verdict on one of the label's claims: does the label say it, and what is it."""
+
+    claim_id: str  # claim:<dsld_id>:<kind>:<i>
+    faithful: Faithful
+    actual_kind: ActualKind | None  # None exactly when invented
+    unsure: bool
+    comment: str  # "" when none
+
+
+@dataclass(frozen=True)
+class MissedClaim:
+    """A claim the label states that none of its extracted claims holds."""
+
+    quote: str  # a piece of the passage
+    kind: Kind
+    unsure: bool
+    comment: str
+
+
+@dataclass(frozen=True)
+class HumanVerdict:
+    """The human's whole verdict on one label, as one save stores it."""
+
+    case_id: str  # label:<dsld_id>
+    dsld_id: int
+    claims: list[ClaimVerdict]  # purposes then risks, in the row's order
+    missed: list[MissedClaim]
+    opened_at: str  # ISO 8601, UTC
+    saved_at: str
+    active_seconds: int  # time on the label since its last save, paused time left out
