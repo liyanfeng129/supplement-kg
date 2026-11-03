@@ -24,6 +24,10 @@ Every decision below is tagged:
 
 Questions keep their session numbers (Q1–Q29) so the transcript can be followed.
 
+**The pilot is closed (2026-11-03).** Rulebook frozen, sizes final, judges pinned, no routing on
+the large set: see [03](03-rules.md#who-judges-and-how-verdicts-become-final). Where this overview
+says otherwise, notably steps 7 and 8 of the process, 03 and 04 win.
+
 ## Terms
 
 | term | meaning |
@@ -177,7 +181,7 @@ the same colours; their grey entry and exit nodes carry the edge labels above.
 ```mermaid
 flowchart TD
   IN["labels tagged group × rarest type<br/>(from Profile)"]:::io
-  PSAMP["Pilot sample · ~50 labels<br/>same strata, separate seed<br/>never reused in the main sample"]:::auto
+  PSAMP["Pilot sample · 50 labels<br/>5 per stratum, head of the seeded order<br/>never reused in the main sample"]:::auto
   PEXT["Pilot extraction<br/>Claude + Codex on all ~50<br/>same prompt as Qwen"]:::llm
   PYOU["Pilot answer key<br/>human, blind, ~20 of them, timed"]:::you
   DEC["Pilot decides<br/>prompt stays frozen:<br/>unclear definitions only logged"]:::auto
@@ -447,6 +451,12 @@ on thousands of labels, collisions within a label) and is fragile as a key.
 | agreement-was-right | judge | audited 10% |
 | deterministic rates (type shares, sources, lexicon, collisions, run health) | every claim | profile |
 
+**Missed claims and recall are reported apart [agreed 2026-11-03]:** as their own, weaker
+estimate, beside the claim-level faithfulness and kind results and never described as measured
+against ground truth. The reference is a careful non-expert review plus two judges, each of whom
+misses claims the others find. On the pilot, 39 of the judges' 48 missed claims were routed, so
+without routing most will be `unresolved` and the range wide.
+
 All rates with 95% Wilson CIs. BLEU/ROUGE/BERTScore/perplexity are not used (design doc).
 
 Later and optional, after the promised core: the gold1000 agreement baseline and the ~300
@@ -663,7 +673,8 @@ written out.
 - Which Claude and Codex models (and versions) judge; whether to pin them.
 - How many judge calls run in parallel, and subscription rate limits.
 - The human sheet's exact format and how the reveal is shown.
-- How the pilot's 50 cases split between claim and label cases, and by stratum.
-- Re-running the pilot after a rubric change: same 50 or a new draw.
+- ~~How the pilot's 50 cases split~~: label cases only, 5 per stratum; the human's answer
+  key covers the first 2 per stratum (20) **[agreed 2026-10-26, see 02]**.
+- ~~Re-running the pilot after a rubric change~~: the same 50 **[agreed 2026-10-26, see 02]**.
 - Module interfaces (types in and out) for the service, controller and models.
 - Build order and acceptance criteria.

@@ -1,6 +1,7 @@
 # 0011.02 Sample: a seeded, stratified draw of labels for the pilot, the large set and the human set
 
-- **Status:** draft, design in progress (2026-10-21; storage and entries agreed 2026-10-21)
+- **Status:** design agreed (storage and entries 2026-10-21; definitions, sizes, edge cases
+  2026-10-26), ready to implement
 - **Date:** 2026-10-21
 - **Part of:** [0011 overview](00-overview.md), step 3 of the process (phase 3 of the
   [phases](00-overview.md#phases-of-the-reference-extraction-design-grilling)); the pilot
@@ -23,8 +24,9 @@ reference extraction, claims come along with their labels.
 
 Take a profile, put every label in one **stratum**, and return three nested sets of labels:
 
-- the **pilot**: ~50 labels, drawn first, never counted in the metrics,
-- the **large set**: the labels Claude and Codex extract on (dry run: 1,592),
+- the **pilot**: 50 labels, drawn first, never counted in the metrics; its first 20 (2 per
+  stratum) are the ones the human writes an answer key for,
+- the **large set**: the labels Claude and Codex extract on (starting quotas: 1,582),
 - the **human set**: the labels the human annotates blind (dry run: 150), a subset of the
   large set,
 
@@ -53,18 +55,16 @@ decide where the sample looks harder. Three rules keep it that way:
 
 ## Flow
 
-Process (same colours as the overview, grey = handoff to or from another phase, dashed =
-**[open]**):
+Process (same colours as the overview, grey = handoff to or from another phase):
 
 ```mermaid
 flowchart TD
   IN["stored profile<br/>(from Profile)"]:::io
   STRAT["Stratum per label<br/>group × rarest type"]:::auto
   RANK["Seeded order per stratum<br/>rank = sha256(seed:dsld_id)"]:::auto
-  PILOT["Pilot = head of each order<br/>5 per stratum, 50 labels"]:::auto
+  PILOT["Pilot = head of each order<br/>5 per stratum, 50 labels<br/>first 2 per stratum flagged for the human"]:::auto
   PSTORE["store pilot<br/>runs/&lt;run&gt;/eva/pilot.jsonl"]:::auto
   SIZES["sizes<br/>(from Pilot)"]:::io
-  CUT["Stitched strata: 150 → 75 per group?<br/>[open]"]:::auto
   LARGE["Large set = next n_s per stratum<br/>(all, if fewer)"]:::auto
   HUMAN["Human set = first k_s of the large set<br/>per stratum"]:::auto
   W["Weights per stratum<br/>N_s / n_s and N_s / k_s"]:::auto
@@ -77,7 +77,6 @@ flowchart TD
   RANK --> LARGE
   SIZES --> LARGE
   SIZES --> HUMAN
-  CUT -.-> LARGE
   LARGE --> HUMAN
   LARGE --> W
   HUMAN --> W
@@ -87,7 +86,6 @@ flowchart TD
 
   classDef auto fill:#e3ecf7,stroke:#5d7ea6,color:#1d2420
   classDef io fill:#eeeeee,stroke:#888888,color:#1d2420
-  style CUT stroke-dasharray: 5 5
 ```
 
 The pilot is drawn and stored first; the large and human sets are drawn later, once the
@@ -120,7 +118,7 @@ in the manifests; the table below is their starting value.
 
 ## Definitions
 
-### Rarest type, per label **[proposed]**
+### Rarest type, per label **[agreed 2026-10-26]**
 
 Over all of the label's claims, both kinds together, first match wins:
 
@@ -134,54 +132,64 @@ Over all of the label's claims, both kinds together, first match wins:
 Computed here from each `ProfiledLabel`'s `purpose_types` + `risk_types`, not stored in the
 profile: it exists only to define strata, so it belongs to the sampler.
 
-### Stratum **[proposed]**
+### Stratum **[agreed 2026-10-26]**
 
 `(group, rarest)`: 3 groups × 3 rarest types + `(neither, none)` = **10 strata**. They
 partition the run: every `ok` label has exactly one. A stratum with no labels is kept with
 zeros, so every table has the same rows.
 
-### Seeded order **[proposed]**
+### Seeded order **[agreed 2026-10-26]**
 
 Within a stratum, labels are sorted by `sha256(f"{seed}:{dsld_id}")`. Every set is a prefix
 of this order:
 
 ```
-stratum order:  [ pilot p_s | large set n_s                    | rest ]
-                            [ human k_s | ...                  ]
+stratum order:  [ pilot p_s          | large set n_s                    | rest ]
+                [ human q_s | ...  ]  [ human k_s | ...                  ]
 ```
 
 A hash rank rather than `random.Random(seed).shuffle`, because a label's position then
 depends only on the seed and its own id: not on the order of the run's rows, not on which
 other labels are in the stratum, and not on the Python version. The overview's "separate
 seed" for the pilot is replaced by "the head of the same order": one seed, and the pilot is
-excluded from the large set by construction **[proposed]**.
+excluded from the large set by construction. The human's part of the pilot is the head of
+the pilot, `q_s` labels per stratum (`Quota.pilot_human`), flagged `in_human` like the human
+set in the large set.
+
+A pilot re-run (after a rubric change) uses the same 50 labels: the pilot is never counted,
+and a new draw would need a new seed, which reshuffles the large set too.
 
 The dry run (seed 20261020) used a different draw, not in the repo; its stratum sizes
 reproduce, its exact labels need not.
 
-### Quotas **[proposed, from the overview's dry run; sizes final after the pilot]**
+### Quotas **[agreed 2026-10-26; final 2026-11-03: the starting values stand]**
 
-| group | rarest | in run N_s | pilot p_s | large n_s | human k_s |
-|---|---|---|---|---|---|
-| both | rare | 1,274 | 5 | 100 | 10 |
-| both | stitched | 5,096 | 5 | 150 | 10 |
-| both | verbatim | 118,277 | 5 | 300 | 20 |
-| purpose_only | rare | 147 | 5 | 100 | 10 |
-| purpose_only | stitched | 811 | 5 | 150 | 10 |
-| purpose_only | verbatim | 24,460 | 5 | 150 | 20 |
-| risk_only | rare | 80 | 5 | 75 (all) | 10 |
-| risk_only | stitched | 112 | 5 | 107 (all) | 10 |
-| risk_only | verbatim | 46,668 | 5 | 150 | 20 |
-| neither | — | 17,855 | 5 | 300 | 30 |
-| **total** | | **214,780** | **50** | **1,582** | **150** |
+| group | rarest | in run N_s | pilot p_s | pilot human q_s | large n_s | human k_s |
+|---|---|---|---|---|---|---|
+| both | rare | 1,274 | 5 | 2 | 100 | 10 |
+| both | stitched | 5,096 | 5 | 2 | 150 | 10 |
+| both | verbatim | 118,277 | 5 | 2 | 300 | 20 |
+| purpose_only | rare | 147 | 5 | 2 | 100 | 10 |
+| purpose_only | stitched | 811 | 5 | 2 | 150 | 10 |
+| purpose_only | verbatim | 24,460 | 5 | 2 | 150 | 20 |
+| risk_only | rare | 80 | 5 | 2 | 75 (all) | 10 |
+| risk_only | stitched | 112 | 5 | 2 | 107 (all) | 10 |
+| risk_only | verbatim | 46,668 | 5 | 2 | 150 | 20 |
+| neither | — | 17,855 | 5 | 2 | 300 | 30 |
+| **total** | | **214,780** | **50** | **20** | **1,582** | **150** |
+
+The in-run sizes are recounted from the stored profile (2026-10-26) and match the dry run.
+5 per stratum, not proportional to claims: the pilot looks for Claude vs Codex disagreement,
+which is likeliest in the small rare and stitched strata.
 
 A quota above what is left after the pilot takes all of it ("all"). The two small
 `risk_only` strata lose their 5 pilot labels, hence 75 and 107 (dry run: 80 and 112).
 
-Whether the stitched strata drop from 150 to 75 per group (≈ 6,600 → 5,200 claims to
-reference) is still **[open]**; it changes only the quota table.
+The pilot changed none of the sizes: the stitched strata stay at 150 per group, and the
+human set at 150 with the split above. The quota values the notebook passes are recorded in
+`manifests/evaluation_set.json`.
 
-### Weights **[proposed]**
+### Weights **[agreed 2026-10-26]**
 
 Per stratum, for the large set and the human set separately:
 
@@ -197,7 +205,7 @@ Check: `Σ n_s × w_s = 214,780`.
 The overview's weight column (share of run ÷ share of large set) is the same number divided
 by N / n; the store keeps `N_s`, `n_s` and `k_s`, and Score uses `w_s`.
 
-## Interface **[agreed 2026-10-21; field details proposed]**
+## Interface **[agreed 2026-10-21; field details 2026-10-26]**
 
 The stored and returned types live in the run's repository (as in [01](01-profile.md#interface-agreed-2026-10-21));
 `Quota` and `Sample` stay in the service.
@@ -213,13 +221,14 @@ class SampledLabel:
     dsld_id: int
     stratum: Stratum
     rank: int            # position in the stratum's seeded order, 0-based
-    in_human: bool       # always False in the pilot
+    in_human: bool       # pilot: the first pilot_human; large set: the first human
 
 @dataclass(frozen=True)
 class StratumSize:
     stratum: Stratum
     in_run: int          # N_s
     pilot: int           # p_s
+    pilot_human: int     # q_s
     large: int           # n_s, after "all" is applied
     human: int           # k_s
 
@@ -241,6 +250,7 @@ class SampledCase:
 @dataclass(frozen=True)
 class Quota:
     pilot: int
+    pilot_human: int     # ≤ pilot
     large: int
     human: int           # ≤ large
 
@@ -294,6 +304,11 @@ data/dsld/runs/full214780-r4-2610131822-0/
     manifests/evaluation_set.json  the same, plus pilot_sha
 ```
 
+A stored line holds the stratum as two flat fields, `group` and `rarest` (`null` for
+`neither`), beside `case_id`, `dsld_id`, `rank` and `in_human`; the manifests hold `quotas`
+and `sizes` as lists of `{group, rarest, ...}` objects in the fixed order of the 10 strata.
+In Python the stratum stays the tuple `Stratum`.
+
 `profile_sha` is the sha256 of `raw/profile.jsonl`, `pilot_sha` of `eva/pilot.jsonl`, 16 hex
 chars like `passages_sha`.
 
@@ -317,11 +332,11 @@ locations, `store.py` gains `save_pilot` and `save_evaluation_set`, `loader.py` 
 Later steps (reference extractions, answer key, verdicts) add their own files and manifests
 under `eva/`.
 
-## Edge cases **[proposed]**
+## Edge cases **[agreed 2026-10-26]**
 
 - **A quota for a stratum not in the 10** raises; **a stratum with no quota** raises (no
   stratum is skipped silently).
-- **`human > large`** in a quota raises.
+- **`human > large`** or **`pilot_human > pilot`** in a quota raises.
 - **A stratum smaller than its pilot quota** gives all its labels to the pilot and none to
   the large set; its weight is then undefined and `draw` raises, since the metrics could not
   cover it.
@@ -338,14 +353,14 @@ On `full214780-r4-2610131822-0`, seed 20261020, the quotas above:
 | check | expected |
 |---|---|
 | strata | 10, in-run sizes as in the quota table, summing to 214,780 |
-| pilot | 50 labels, 5 per stratum |
+| pilot | 50 labels, 5 per stratum, the first 2 of each `in_human` (20) |
 | large set | 1,582 labels, sizes as in the table, disjoint from the pilot |
 | human set | 150 labels, the first k_s of each stratum's large set |
 | weights | `Σ n_s × N_s / n_s = 214,780` |
 | determinism | two draws give identical files; row order of the run does not matter |
 
 Unit tests on a small hand-built profile: rarest type for each rule; stratum partition;
-nesting (pilot, then human, then large, one order); "all" when the quota exceeds the
+nesting (pilot human, then pilot, then human, then large, one order); "all" when the quota exceeds the
 stratum; `draw` raising on a pilot that does not match; each edge case above. Store and
 loader, on a run in a temporary `RUNS_ROOT`: save then read gives `SampledCase`s whose
 claims match the rows' text and the profile's types by index; a second save refuses; a
@@ -363,8 +378,4 @@ changed profile or rows file makes the read raise.
 
 ## Open questions
 
-- Stitched strata: 150 or 75 per group?
-- Pilot: 5 per stratum, or proportional to how many claims a stratum's labels carry (the
-  pilot measures Claude vs Codex disagreement, which happens per claim)?
-- Is a human set of 150 split 10 / 10 / 20 per group (and 30 for `neither`) right, or should
-  it follow the pilot's minutes-per-label?
+None. The sizes are final (see Quotas).
