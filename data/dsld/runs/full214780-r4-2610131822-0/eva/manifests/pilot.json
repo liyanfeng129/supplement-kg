@@ -1,0 +1,152 @@
+{
+  "run": "full214780-r4-2610131822-0",
+  "classifier_version": 1,
+  "seed": 20261020,
+  "failed": 0,
+  "quotas": [
+    {
+      "group": "both",
+      "rarest": "rare",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 100,
+      "human": 10
+    },
+    {
+      "group": "both",
+      "rarest": "stitched",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 150,
+      "human": 10
+    },
+    {
+      "group": "both",
+      "rarest": "verbatim",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 300,
+      "human": 20
+    },
+    {
+      "group": "purpose_only",
+      "rarest": "rare",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 100,
+      "human": 10
+    },
+    {
+      "group": "purpose_only",
+      "rarest": "stitched",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 150,
+      "human": 10
+    },
+    {
+      "group": "purpose_only",
+      "rarest": "verbatim",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 150,
+      "human": 20
+    },
+    {
+      "group": "risk_only",
+      "rarest": "rare",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 100,
+      "human": 10
+    },
+    {
+      "group": "risk_only",
+      "rarest": "stitched",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 150,
+      "human": 10
+    },
+    {
+      "group": "risk_only",
+      "rarest": "verbatim",
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 150,
+      "human": 20
+    },
+    {
+      "group": "neither",
+      "rarest": null,
+      "pilot": 5,
+      "pilot_human": 2,
+      "large": 300,
+      "human": 30
+    }
+  ],
+  "sizes": [
+    {
+      "group": "both",
+      "rarest": "rare",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "both",
+      "rarest": "stitched",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "both",
+      "rarest": "verbatim",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "purpose_only",
+      "rarest": "rare",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "purpose_only",
+      "rarest": "stitched",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "purpose_only",
+      "rarest": "verbatim",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "risk_only",
+      "rarest": "rare",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "risk_only",
+      "rarest": "stitched",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "risk_only",
+      "rarest": "verbatim",
+      "pilot": 5,
+      "pilot_human": 2
+    },
+    {
+      "group": "neither",
+      "rarest": null,
+      "pilot": 5,
+      "pilot_human": 2
+    }
+  ],
+  "profile_sha": "79d035076f08c760",
+  "rows_sha": "6db3f40fd104fc62"
+}
