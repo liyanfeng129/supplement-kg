@@ -1,0 +1,11 @@
+# Files not authored by hand or by agents. The pre-commit size check
+# (.githooks/pre-commit) skips anything marked linguist-generated; GitHub also
+# collapses these in diffs.
+*.lock                    linguist-generated
+*-lock.txt                linguist-generated
+*.egg-info/**             linguist-generated
+*.ipynb                   linguist-generated
+data/**                   linguist-generated
+datasets/**               linguist-generated
+graphs/**                 linguist-generated
+docs/pdfs/**              linguist-generated

@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# Pre-commit: reject staged files over MAX_TOKENS, where tokens = bytes / 4.
+#
+# Measures the staged blob (what will be committed), not the working tree.
+# Skips deletions, binary files, and anything .gitattributes marks
+# linguist-generated (lockfiles, codegen, data, notebooks).
+#
+# Enable once per clone: git config core.hooksPath .githooks
+set -euo pipefail
+
+MAX_TOKENS=5000
+
+offenders=()
+while IFS= read -r -d '' path; do
+  if [ "$(git check-attr linguist-generated -- "$path" | sed 's/.*: //')" != unspecified ]; then
+    continue
+  fi
+  # numstat prints "-<TAB>-" for binary files.
+  if git diff --cached --numstat -- "$path" | grep -q $'^-\t-\t'; then
+    continue
+  fi
+  bytes=$(git cat-file -s ":$path")
+  tokens=$((bytes / 4))
+  if [ "$tokens" -gt "$MAX_TOKENS" ]; then
+    offenders+=("$tokens	$path")
+  fi
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if [ ${#offenders[@]} -eq 0 ]; then
+  exit 0
+fi
+
+{
+  echo "pre-commit: staged files over $MAX_TOKENS tokens (tokens = bytes/4, limit $((MAX_TOKENS * 4)) bytes):"
+  echo
+  for o in "${offenders[@]}"; do
+    printf '  %6s tokens  %s\n' "${o%%	*}" "${o#*	}"
+  done
+  cat <<'EOF'
+
+Split each file into smaller files, each under the limit. Do not bypass this
+with --no-verify, and do not just delete comments or docstrings to squeeze under.
+
+How to split:
+
+  1. Find the seams. List the file's top-level units (classes, functions,
+     markdown "##" sections) and group them by responsibility: things that
+     change together stay together.
+
+  2. Python module  engine/foo/bar.py
+       - Turn it into a package: engine/foo/bar/__init__.py plus one module per
+         group, e.g. engine/foo/bar/parsing.py, engine/foo/bar/client.py.
+       - Re-export the public names from __init__.py so existing
+         `from engine.foo.bar import X` imports keep working.
+       - Private helpers move with the only group that uses them; shared ones
+         go in a small _common.py.
+       - Under engine/: check docs/adr/0002-engine-architecture/ (latest vN.md)
+         so each new module sits in the layer that owns it.
+
+  3. Test file  tests/test_bar.py
+       - Split by behaviour under test: tests/test_bar_parsing.py,
+         tests/test_bar_client.py. Move shared fixtures to tests/conftest.py.
+
+  4. Markdown doc  docs/specs/0042-thing.md
+       - Make a directory with one file per top-level section, numbered for
+         reading order: docs/specs/0042-thing/00-overview.md, 01-<topic>.md, ...
+         (see docs/specs/0011-extraction-evaluation/ for the pattern).
+       - 00-overview.md keeps the summary and links to the other files.
+       - Update links elsewhere in the repo: grep -rn '0042-thing.md' .
+
+  5. Other text (scripts, configs): split along the same responsibility lines
+     and have the entry point source/include the parts.
+
+  6. Verify: run the tests, re-stage the new files AND the removal of the old
+     one (git add -A <dir>), and commit again.
+
+If a file is genuinely generated (lockfile, codegen, data dump), mark it
+linguist-generated in .gitattributes instead of splitting it.
+EOF
+} >&2
+exit 1
